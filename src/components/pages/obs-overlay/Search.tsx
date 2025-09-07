@@ -1,0 +1,92 @@
+import { CheckIcon, ChevronDownIcon, PlusIcon } from "lucide-react"
+
+import type { SearchProps } from "@/types/data/obs-overlay"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { presets } from "@/data/obs-overlay"
+
+export default function Select(props: SearchProps) {
+  const { array, open, onOpenChange, value, onValueChange } = props
+
+  return (
+      <Popover open={open} onOpenChange={onOpenChange}>
+        <PopoverTrigger asChild>
+          <Button
+            role="combobox"
+            variant="outline"
+            aria-expanded={open}
+            className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
+          >
+            <span className={cn("truncate", !value && "text-muted-foreground")}>
+              {value
+                ? array.find((preset) => preset === value)
+                : "Chọn Preset"}
+            </span>
+            <ChevronDownIcon
+              size={16}
+              className="text-muted-foreground/80 rotate-180 shrink-0"
+              aria-hidden="true"
+            />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+          align="center"
+        >
+          <Command>
+            <CommandInput placeholder="Tìm Preset..." />
+            <CommandList>
+              <CommandEmpty>Không có</CommandEmpty>
+              <CommandGroup>
+                {presets.map((preset) => (
+                  <CommandItem
+                    key={preset}
+                    value={preset}
+                    onSelect={(currentValue) => {
+                      onValueChange(currentValue === value ? "" : currentValue)
+                      onOpenChange(false)
+                    }}
+                  >
+                    {preset === '' ? 'Mặc Định' : preset}
+                    {value === preset && (
+                      <CheckIcon size={16} className="ml-auto" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              <CommandSeparator />
+              <CommandGroup>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start font-normal"
+                >
+                  <PlusIcon
+                    size={16}
+                    className="-ms-2 opacity-60"
+                    aria-hidden="true"
+                  />
+                  <div className="flex-col flex items-start">
+                    Thêm
+                  </div>
+                </Button>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+  )
+}

@@ -1,0 +1,24 @@
+{
+  "projectName": "obs-software-donate!_mylenti",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "npm",
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "eslint",
+    "start",
+    "form",
+    "db",
+    "sentry",
+    "shadcn",
+    "store",
+    "table",
+    "tanstack-query",
+    "tRPC",
+    "t3env",
+    "tanchat"
+  ]
+}

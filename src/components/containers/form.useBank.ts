@@ -1,0 +1,39 @@
+import { useMemo } from "react";
+import { Route } from "@/routes/ngan-hang"
+import useAuthInfo from "@/hooks/useAuthInfo";
+import { createMutation } from "@/hooks/createMutations";
+import { useAppForm } from "@/hooks/useFormHook";
+import { handleBanks } from "@/func/db.Bank";
+import { bankSchema } from "@/schema/bank.schema";
+import { BankDisplayInfo } from "@/data/bank";
+import { bankPropsStore } from "@/store/bank-store";
+
+const useBankInfo = () => Route.useLoaderData()
+
+export default function useBankForm() {
+    const ownerBankInfo = useBankInfo()
+    const authInfo = useAuthInfo()
+
+    const mutation = createMutation(handleBanks, {
+        successMessage: 'Đã nhập thông tin'
+    })
+
+    const form = useAppForm({
+        defaultValues: {
+            ...ownerBankInfo,
+            email: authInfo.email,
+            user_name: authInfo.currentUser
+        },
+        validators: { onSubmit: bankSchema },
+        onSubmit({ value }) { mutation.mutate({ data: value }) }
+    })
+
+    const bankProps = useMemo(() => ({
+       form,
+       checkboxData: BankDisplayInfo.map(b => b.name),
+       avatar: authInfo.display_avatar
+    }), [])
+    bankPropsStore.setState(bankProps)
+
+    return form
+}

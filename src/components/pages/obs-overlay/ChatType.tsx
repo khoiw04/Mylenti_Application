@@ -1,0 +1,13 @@
+import { useStore } from "@tanstack/react-store"
+import { VerifiedType } from "./ui-chattype/VerifiedChat"
+import { OBSOverlaySettingStragery } from "@/store/obs-overlay-store"
+
+export const VerifiedChat = () => {
+    const { getCorrectChatTypeDataStragery } = useStore(OBSOverlaySettingStragery)
+    const data = getCorrectChatTypeDataStragery('Verified')
+
+    return <VerifiedType
+        showAvatar={data?.config.commenter_avatar}
+        showCommenter={data?.config.commenter_name}
+    />
+}
