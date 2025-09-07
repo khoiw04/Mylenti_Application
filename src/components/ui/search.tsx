@@ -209,7 +209,7 @@ const MultipleSelector = ({
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
+  }, [open])
 
   const EmptyItem = React.useCallback(() => {
     if (!emptyIndicator) return undefined

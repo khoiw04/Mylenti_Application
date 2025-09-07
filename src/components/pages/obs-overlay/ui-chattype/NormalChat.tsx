@@ -1,50 +1,53 @@
 import * as React from "react"
-import {  cva } from "class-variance-authority"
-import type {VariantProps} from "class-variance-authority"
-import { cn } from "@/lib/utils"
-
-const normalTypeVariants = cva("",
-  {
-    variants: {
-      container: {
-        default:
-          "inline-flex gap-4 items-center",
-      },
-      commenter_name: {
-        default: "font-extrabold",
-      },
-    },
-    defaultVariants: {
-      container: "default",
-      commenter_name: "default",
-    },
-  }
-)
+import { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "./cva";
+import type { chatTypeVariatntsProps } from "@/types/func/returntype";
+import type { chatTypeProps } from "@/types/ui/chattype";
+import { cn, truncateMessage } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { commentParagraphTest } from "@/data/obs-overlay";
 
 function NormalType({
-  className,
-  container,
-  commenter_name,
+  styleContainer,
+  emphasis,
+  tone,
+  userContainer,
+  classNameMainContainer,
+  classNameUserContainer,
+  classNameCommenter,
+  classNameComment,
   showAvatar = true,
   showCommenter = true,
+  showComment = false,
   ...props
-}: React.ComponentProps<"span"> &
-  VariantProps<typeof normalTypeVariants> & {
-    showAvatar?: boolean
-    showCommenter?: boolean
-  }) {
-    
-    const containerVarient = normalTypeVariants({ container });
-    const commenterNameVariant = normalTypeVariants({ commenter_name });
+}: React.ComponentProps<"div"> & 
+  chatTypeVariatntsProps & 
+  chatTypeProps
+) {
+  const containerVarient = containerMainVariants({ styleContainer });
+  const userContainerVarient = infoUserContainerVariants({ userContainer });
+  const commenterNameVariant = commenterNameVariants({ emphasis });
+  const commentVariant = commentVariants({ tone });
 
-    return (
-        <span {...props} className={cn(containerVarient, className)}>
-            {showCommenter &&
-            <h2 className={cn(commenterNameVariant, className)}>
-                TEST
-            </h2>}
+  return (
+    <div {...props} className={cn(containerVarient, classNameMainContainer)}>
+        <span className={cn(userContainerVarient, classNameUserContainer)}>
+          {showAvatar && (
+          <Avatar>
+            <AvatarImage src="./avatar-80-07.jpg" alt="Kelly King" />
+            <AvatarFallback>KK</AvatarFallback>
+          </Avatar>
+          )}
+          {showCommenter && (
+            <h2 className={cn(commenterNameVariant, classNameCommenter)}>TEST</h2>
+          )}
         </span>
-    )
+        {showComment && (
+          <p className={cn(commentVariant, classNameComment)}>
+            {truncateMessage(commentParagraphTest)}
+          </p>
+        )}
+    </div>
+  );
 }
 
-export { NormalType, normalTypeVariants }
+export { NormalType }

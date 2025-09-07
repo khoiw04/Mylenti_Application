@@ -1,59 +1,54 @@
 import * as React from "react"
-import {  cva } from "class-variance-authority"
-import type {VariantProps} from "class-variance-authority"
-import type { VerifiedIconStrategyKeyType } from "@/types/func/stragery"
-import { cn } from "@/lib/utils"
+import { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "./cva"
+import type { chatTypeVariatntsProps } from "@/types/func/returntype"
+import type { VertifedIconType } from "@/types/func/stragery"
+import type { chatTypeProps } from "@/types/ui/chattype"
+import { cn, truncateMessage } from "@/lib/utils"
 import { VerifiedIconStrategy } from "@/func/stragery"
-
-const verifiedTypeVariants = cva("",
-  {
-    variants: {
-      container: {
-        default:
-          "inline-flex gap-4 items-center",
-      },
-      commenter_name: {
-        default: "font-extrabold",
-      },
-      verified_icon: {
-        default: null
-      }
-    },
-    defaultVariants: {
-      container: "default",
-      commenter_name: "default",
-      verified_icon: "default"
-    },
-  }
-)
+import { commentParagraphTest } from "@/data/obs-overlay"
 
 function VerifiedType({
+  tone,
+  emphasis,
   className,
-  container,
-  commenter_name,
+  userContainer,
+  styleContainer,
   showAvatar = true,
+  showComment = false,
   showCommenter = true,
-  verified_icon = 'default',
+  classNameMainContainer,
+  classNameUserContainer,
+  classNameCommenter,
+  classNameComment,
+  verifiedIconStyle = 'default',
   ...props
-}: React.ComponentProps<"span"> &
-  VariantProps<typeof verifiedTypeVariants> & {
-    showAvatar?: boolean
-    showCommenter?: boolean
-  }) {
-    
-    const containerVarient = verifiedTypeVariants({ container });
-    const commenterNameVariant = verifiedTypeVariants({ commenter_name });
-    const IconComponent = VerifiedIconStrategy[verified_icon as VerifiedIconStrategyKeyType];
+}: React.ComponentProps<"div"> &
+  chatTypeVariatntsProps & 
+  chatTypeProps & {
+    verifiedIconStyle: VertifedIconType
+  }) {    
+    const containerVarient = containerMainVariants({ styleContainer });
+    const userContainerVarient = infoUserContainerVariants({ userContainer });
+    const commenterNameVariant = commenterNameVariants({ emphasis });
+    const commentVariant = commentVariants({ tone });
+    const IconComponent = VerifiedIconStrategy[verifiedIconStyle];
 
     return (
-        <span {...props} className={cn(containerVarient, className)}>
-            {showAvatar && <IconComponent />}
-            {showCommenter &&
-            <h2 className={cn(commenterNameVariant, className)}>
-                TEST
-            </h2>}
-        </span>
+        <div {...props} className={cn(containerVarient, classNameMainContainer)}>
+              <span className={cn(userContainerVarient, classNameUserContainer)}>
+                {showAvatar && <IconComponent />}
+                {showCommenter &&
+                <h2 className={cn(commenterNameVariant, classNameCommenter)}>
+                    TEST
+                </h2>}
+              </span>
+              {showComment && (
+                <p className={cn(commentVariant, classNameComment)}>
+                  {truncateMessage(commentParagraphTest)}
+                </p>
+              )}
+        </div>
     )
 }
 
-export { VerifiedType, verifiedTypeVariants }
+export { VerifiedType }

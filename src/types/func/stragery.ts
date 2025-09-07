@@ -1,4 +1,3 @@
-import type { VerifiedTypeVariantProps } from "./returntype";
 import type { OBSOverlayChatLabelPropsType } from "../store/obs-overlay";
 import type { BankDataType, DonateDataType, ProfileDataType } from "@/types/hooks/returnType";
 import type { Provider } from "@supabase/supabase-js";
@@ -29,5 +28,5 @@ export type ChatTypeStrategyType = Record<
   (() => JSX.Element) | null
 >
 
-export type VerifiedIconStrategyKeyType = Exclude<VerifiedTypeVariantProps[keyof VerifiedTypeVariantProps], null | undefined>
-export type VerifiedIconStrategyType = Record<VerifiedIconStrategyKeyType, () => JSX.Element>
+export type VertifedIconType = 'default'
+export type VerifiedIconStrategyType = Record<VertifedIconType, () => JSX.Element>

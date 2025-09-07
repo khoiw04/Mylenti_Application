@@ -73,6 +73,13 @@ export function calculateChangePercent(current: number, previous: number): numbe
   return ((current - previous) / previous) * 100
 }
 
+export function truncateMessage(message: string, maxLength: number = 200): string {
+  return message.length > maxLength
+    ? message.slice(0, maxLength) + "..."
+    : message;
+}
+
+
 export const seo = ({
   title,
   description,
