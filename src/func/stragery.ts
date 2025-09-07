@@ -3,7 +3,7 @@ import type { ChatTypeStrategyType, LoaderPropsStrategy, UploadStrategyProps, Ve
 import { avatarStore } from "@/store/avatar-store";
 import { bankQueries, donateQueries, profileQueries } from "@/lib/queries";
 import { addAtPrefix } from "@/lib/utils";
-import { VerifiedChat } from "@/components/pages/obs-overlay/ChatType";
+import { NormalChat, VerifiedChat } from "@/components/pages/obs-overlay/ChatType";
 import AvatarVertifed from "@/components/pages/obs-overlay/AvatarVertifed";
 
 export const UploadStrategy: UploadStrategyProps = {
@@ -70,7 +70,7 @@ export const loaderStrategy: LoaderPropsStrategy = {
 
 export const ChatTypeStrategy: ChatTypeStrategyType = {
   "Kiểm Duyệt": VerifiedChat,
-  "Bình Thường": null,
+  "Bình Thường": NormalChat,
   "Superchat": null,
   "Thành Viên": null,
   "Đã Xác Minh": VerifiedChat,
