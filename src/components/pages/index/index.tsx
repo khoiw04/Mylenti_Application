@@ -1,13 +1,10 @@
-import ContextMenuContentMain from "./ContextMenu";
 import Overlay from "./Overlay";
-import Preset from "./Preset";
+import ContextMenuContentMain from "./ContextMenu";
+import Footer from "./Footer";
 import { BentoGrid, BentoItem } from "@/components/ui/bento";
-import {
-  ContextMenu,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu"
+import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 
-export default function Main() {
+export default function Index() {
     return (
       <BentoGrid cols={4} className='py-10 w-full flex justify-center'>
         <ContextMenu>
@@ -15,7 +12,7 @@ export default function Main() {
             <BentoItem colSpan={4} className='relative size-full flex justify-center items-center md:px-80'>
               <Overlay />
               <footer className="absolute bottom-5">
-                <Preset />
+                <Footer />
               </footer>
             </BentoItem>
           </ContextMenuTrigger>

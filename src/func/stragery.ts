@@ -1,10 +1,12 @@
 import { toast } from "sonner";
-import type { ChatTypeStrategyType, LoaderPropsStrategy, UploadStrategyProps, VerifiedIconStrategyType } from "@/types/func/stragery";
+import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType } from "@/types/func/stragery";
 import { avatarStore } from "@/store/avatar-store";
 import { bankQueries, donateQueries, profileQueries } from "@/lib/queries";
 import { addAtPrefix } from "@/lib/utils";
-import { NormalChat, VerifiedChat } from "@/components/pages/obs-overlay/ChatType";
-import AvatarVertifed from "@/components/pages/obs-overlay/AvatarVertifed";
+import { MemberChat, ModeratorChat, NormalChat, SuperchatChat, VerifiedChat } from "@/components/pages/obs-overlay/ChatType";
+import { DefaultAvatarVertifed } from "@/components/presenters/ui-chattype/AvatarVertifed";
+import { DefaultAvatarModerator } from "@/components/presenters/ui-chattype/AvatarModerator";
+import { DefaultAvatarMemeber } from "@/components/presenters/ui-chattype/AvatarMember";
 
 export const UploadStrategy: UploadStrategyProps = {
   get: (from: string, files: Array<File>) => {
@@ -69,14 +71,33 @@ export const loaderStrategy: LoaderPropsStrategy = {
 };
 
 export const ChatTypeStrategy: ChatTypeStrategyType = {
-  "Kiểm Duyệt": VerifiedChat,
-  "Bình Thường": NormalChat,
-  "Superchat": null,
-  "Thành Viên": null,
-  "Đã Xác Minh": VerifiedChat,
-  "Ủng Hộ": null
+  "Moderator": ModeratorChat,
+  "Normal": NormalChat,
+  "Superchat": SuperchatChat,
+  "Member": MemberChat,
+  "Verified": VerifiedChat
 }
 
 export const VerifiedIconStrategy: VerifiedIconStrategyType = {
-  default: AvatarVertifed
+  default: ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
+  "Mori Seikai": ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
+  "Siini": ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
+}
+
+export const ModeratorIconStrategy: ModeratorIconStrategyType = {
+  default: ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),
+  "Mori Seikai": ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),
+  "Siini": ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),
+}
+
+export const MemberIconStrategy: MemberIconStrategyType = {
+  default: ({ srcAvatar, srcTypeMember }) => DefaultAvatarMemeber({ srcAvatar, srcTypeMember }),
+  "Mori Seikai": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMemeber({ srcAvatar, srcTypeMember }),
+  "Siini": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMemeber({ srcAvatar, srcTypeMember }),
+}
+
+export const SuperchatIconStrategy: SuperchatIconStrategyType = {
+  Member: MemberIconStrategy,
+  Moderator: ModeratorIconStrategy,
+  Verified: VerifiedIconStrategy
 }

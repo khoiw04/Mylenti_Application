@@ -1,20 +1,12 @@
-export type OBSOverlayStateType = {
-    openPreset: boolean
-    valuePreset: string
-}
-
-export type OBSOverlayStateStrageryType = {
-    openPresetStragery: (boolean: boolean) => void
-    valuePresetStragery: (value: string) => void
-}
+import type { presetUserVariantsValueType } from "../data/obs-overlay"
 
 export type OBSOverlayChatLabelPropsType = OBSOverlayChatTypePropsType['label']
 export type OBSOverlayChatKeyPropsType = OBSOverlayChatTypePropsType['key']
 export type OBSOverlayConfigChatTypeField = 'commenter_avatar' | 'commenter_name';
 
 export type OBSOverlayChatTypePropsType = {
-    key: 'Fan Funding' | 'Superchat' | 'Moderator' | 'Member' | 'Verified' | 'Normal'
-    label: 'Ủng Hộ' | 'Superchat' | 'Kiểm Duyệt' | 'Thành Viên' | 'Đã Xác Minh' | 'Bình Thường'
+    key: 'Superchat' | 'Moderator' | 'Member' | 'Verified' | 'Normal'
+    label: 'Superchat' | 'Kiểm Duyệt' | 'Thành Viên' | 'Đã Xác Minh' | 'Bình Thường'
     config: {
         commenter_color: string
         commenter_avatar: boolean
@@ -24,14 +16,18 @@ export type OBSOverlayChatTypePropsType = {
 }
 
 export type OBSOverlaySettingsPropsType = {
-  showComment: boolean;
-  currentState: OBSOverlayChatLabelPropsType,
-  ChatType: Array<OBSOverlayChatTypePropsType>;
+    openStatePreset: boolean
+    showComment: boolean;
+    currentPreset: presetUserVariantsValueType
+    currentKeyChatType: OBSOverlayChatKeyPropsType,
+    ChatType: Array<OBSOverlayChatTypePropsType>;
 }
 
 
 export type OBSOverlaySettingStrageryType = {
-    currentStateStragery: (string: OBSOverlayChatLabelPropsType) => void
+    openStatePresetStragery: (boolean: boolean) => void
+    currentPresetStragery: (value: presetUserVariantsValueType) => void
+    currentKeyChatTypeStragery: (string: OBSOverlayChatKeyPropsType) => void
     showCommentStragery: (boolean: boolean) => void
     getCorrectChatTypeDataStragery: (string: OBSOverlayChatKeyPropsType) => OBSOverlayChatTypePropsType | null
     showAvatarStragery: <T extends OBSOverlayConfigChatTypeField>(

@@ -1,36 +1,34 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react';
-import { caller } from '@/server/tprc.router';
-import { useTRPCClient } from '@/hooks/useTprcContext';
-import Navbar from '@/components/presenters/header/index'
+import { Toaster } from 'sonner'
+import Header from '@/components/presenters/header'
+import Main from '@/components/pages/index'
+import useIndex from '@/components/containers/useIndex'
+import { getGoogleOBSAccessToken, getGoogleOBSRefreshToken, refreshGoogleOBSToken } from '@/func/auth.googleOBS'
 
 export const Route = createFileRoute('/')({
   component: App,
+  loader: async () => {
+    const access = await getGoogleOBSAccessToken()
+
+    if (access) { return access }
+
+    const refresh = await getGoogleOBSRefreshToken()
+    if (!refresh) { return false }
+
+    const data = await refreshGoogleOBSToken({ data: { refresh_token: refresh } })
+
+    return data
+  },
 })
 
-async function QueryExample() {
-    const data = await caller.ping();
-    return <div>Ping query: {data}</div>;
-}
-
-function SubscribeExample() {
-    const [number, setNumber] = useState<number>();
-    const trpc = useTRPCClient()
-
-    trpc.subscribe.subscribe(undefined, {
-        onData(data) {
-            setNumber(data);
-        }
-    });
-
-    return <div>Subscribe: {number}</div>;
-}
-
 function App() {
+  useIndex()
+
   return (
     <>
-    <Navbar />
-    {SubscribeExample()}
+      <Header />
+      <Main />
+      <Toaster expand richColors theme='light' />
     </>
   )
 }

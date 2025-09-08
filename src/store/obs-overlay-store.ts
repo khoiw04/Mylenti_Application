@@ -1,29 +1,11 @@
 import { Store } from "@tanstack/store"
-import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType, OBSOverlayStateStrageryType, OBSOverlayStateType } from "@/types/store/obs-overlay"
-
-export const OBSOverlayState = new Store<OBSOverlayStateType>({
-    openPreset: false,
-    valuePreset: ''
-})
-
-export const OBSOverlayStateStragery = new Store<OBSOverlayStateStrageryType>({
-    openPresetStragery: (boolean) => 
-        OBSOverlayState.setState(
-            prev => ({ 
-                ...prev, 
-                openPreset: boolean 
-        })),
-    valuePresetStragery: (value) => 
-        OBSOverlayState.setState(
-            prev => ({ 
-                ...prev, 
-                valuePreset: value
-        })),
-})
+import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType } from "@/types/store/obs-overlay"
 
 export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
   showComment: false,
-  currentState: 'Đã Xác Minh',
+  openStatePreset: false,
+  currentPreset: 'default',
+  currentKeyChatType: 'Verified',
   ChatType: [
     {
       key: 'Verified',
@@ -42,16 +24,6 @@ export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
         commenter_avatar: true,
         commenter_color: '#22c55e',
         commenter_effect: () => console.log('Member effect triggered'),
-        commenter_name: true,
-      },
-    },
-    {
-      key: 'Fan Funding',
-      label: 'Ủng Hộ',
-      config: {
-        commenter_avatar: true,
-        commenter_color: '',
-        commenter_effect: () => undefined,
         commenter_name: true,
       },
     },
@@ -89,10 +61,10 @@ export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
 })
 
 export const OBSOverlaySettingStragery = new Store<OBSOverlaySettingStrageryType>({
-    currentStateStragery: (string) => OBSOverlaySettingsProps.setState(
+    currentKeyChatTypeStragery: (string) => OBSOverlaySettingsProps.setState(
       prev => ({
         ...prev,
-        currentState: string
+        currentKeyChatType: string
       })
     ),
     showCommentStragery: (boolean) => OBSOverlaySettingsProps.setState(
@@ -117,7 +89,21 @@ export const OBSOverlaySettingStragery = new Store<OBSOverlaySettingStrageryType
         )
       }))
     },
-    getCorrectChatTypeDataStragery: (value) => (
-      OBSOverlaySettingsProps.state.ChatType.find(item => item.key === value) || null
-    )
+    getCorrectChatTypeDataStragery: (value) =>
+      OBSOverlaySettingsProps.state.ChatType.find(
+        item => item.key === value
+      )!
+    ,
+    openStatePresetStragery: (boolean) => 
+        OBSOverlaySettingsProps.setState(
+            prev => ({
+                ...prev, 
+                openStatePreset: boolean 
+        })),
+    currentPresetStragery: (value) => 
+        OBSOverlaySettingsProps.setState(
+            prev => ({ 
+                ...prev, 
+                currentPreset: value
+        })),
 })

@@ -1,18 +1,13 @@
 import * as React from "react"
 import { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "./cva"
-import type { chatTypeVariatntsProps } from "@/types/func/returntype"
-import type { VertifedIconType } from "@/types/func/stragery"
-import type { chatTypeProps } from "@/types/ui/chattype"
+import type { chatTypeVariatntsProps } from "@/types/func/returnType"
+import type { chatTypeProps } from "@/types/ui/obs-overlay-setting"
 import { cn, truncateMessage } from "@/lib/utils"
 import { VerifiedIconStrategy } from "@/func/stragery"
 import { commentParagraphTest } from "@/data/obs-overlay"
 
-function VerifiedType({
-  tone,
-  emphasis,
+export default function VerifiedType({
   className,
-  userContainer,
-  styleContainer,
   showAvatar = true,
   showComment = false,
   showCommenter = true,
@@ -20,23 +15,23 @@ function VerifiedType({
   classNameUserContainer,
   classNameCommenter,
   classNameComment,
-  verifiedIconStyle = 'default',
+  currentPreset,
+  srcAvatarCommenter = "./avatar-80-07.jpg",
   ...props
 }: React.ComponentProps<"div"> &
   chatTypeVariatntsProps & 
-  chatTypeProps & {
-    verifiedIconStyle: VertifedIconType
-  }) {    
-    const containerVarient = containerMainVariants({ styleContainer });
-    const userContainerVarient = infoUserContainerVariants({ userContainer });
-    const commenterNameVariant = commenterNameVariants({ emphasis });
-    const commentVariant = commentVariants({ tone });
-    const IconComponent = VerifiedIconStrategy[verifiedIconStyle];
+  chatTypeProps
+) {
+    const containerVarient = containerMainVariants({ currentPreset });
+    const infoUserContainerVarient = infoUserContainerVariants({ currentPreset });
+    const commenterNameVariant = commenterNameVariants({ currentPreset });
+    const commentVariant = commentVariants({ currentPreset });
+    const IconComponent = VerifiedIconStrategy[currentPreset!];
 
     return (
         <div {...props} className={cn(containerVarient, classNameMainContainer)}>
-              <span className={cn(userContainerVarient, classNameUserContainer)}>
-                {showAvatar && <IconComponent />}
+              <span className={cn(infoUserContainerVarient, classNameUserContainer)}>
+                {showAvatar && IconComponent ? <IconComponent srcAvatar={srcAvatarCommenter} /> : null}
                 {showCommenter &&
                 <h2 className={cn(commenterNameVariant, classNameCommenter)}>
                     TEST

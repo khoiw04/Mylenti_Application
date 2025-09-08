@@ -4,11 +4,11 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 
-export default function AvatarVertifed() {
+export function DefaultAvatarVertifed({ srcAvatar = './avatar-80-07.jpg' }) {
   return (
     <div className="relative">
       <Avatar>
-        <AvatarImage src="./avatar-80-07.jpg" alt="Kelly King" />
+        <AvatarImage src={srcAvatar} />
         <AvatarFallback>KK</AvatarFallback>
       </Avatar>
       <span className="absolute -end-1.5 -top-1.5">

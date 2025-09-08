@@ -1,5 +1,5 @@
 import type { VariantProps } from "class-variance-authority";
-import type { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "@/components/pages/obs-overlay/ui-chattype/cva";
+import type { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "@/components/presenters/ui-chattype/cva";
 
 export type containerTypeVariantsProps = VariantProps<typeof containerMainVariants>;
 export type commenterNameTypeVariantsProps = VariantProps<typeof commenterNameVariants>;

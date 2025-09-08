@@ -1,4 +1,6 @@
-import type { OBSOverlayChatLabelPropsType } from "../store/obs-overlay";
+import type { OBSSuperchatChatKey } from "../ui/obs-overlay-setting";
+import type { presetUserVariantsValueType } from "../data/obs-overlay";
+import type { OBSOverlayChatKeyPropsType } from "../store/obs-overlay";
 import type { BankDataType, DonateDataType, ProfileDataType } from "@/types/hooks/returnType";
 import type { Provider } from "@supabase/supabase-js";
 import type { LoaderFnContext } from "@tanstack/react-router";
@@ -24,9 +26,26 @@ export type loginWthOauthPropsStrategy = {
 
 
 export type ChatTypeStrategyType = Record<
-  OBSOverlayChatLabelPropsType, 
+  OBSOverlayChatKeyPropsType, 
   (() => JSX.Element) | null
 >
 
-export type VertifedIconType = 'default'
-export type VerifiedIconStrategyType = Record<VertifedIconType, () => JSX.Element>
+export type VerifiedIconStrategyType = Record<
+  presetUserVariantsValueType, 
+  (({ srcAvatar }: {  srcAvatar: string }) => JSX.Element) | null
+>
+
+export type ModeratorIconStrategyType = Record<
+  presetUserVariantsValueType, 
+  (({ srcAvatar }: {  srcAvatar: string }) => JSX.Element) | null
+>
+
+export type MemberIconStrategyType = Record<
+  presetUserVariantsValueType, 
+  (({ srcAvatar, srcTypeMember }: { srcAvatar: string, srcTypeMember?: string }) => JSX.Element) | null
+>
+
+export type SuperchatIconStrategyType = Record<
+  Exclude<OBSSuperchatChatKey, 'Normal'>,
+  MemberIconStrategyType | ModeratorIconStrategyType | VerifiedIconStrategyType
+>

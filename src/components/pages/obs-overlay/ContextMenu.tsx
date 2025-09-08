@@ -5,8 +5,8 @@ import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store/obs-
 import { overlayFieldConfigs } from "@/data/obs-overlay";
 
 export default function ContextMenuContentMain() {
-  const { ChatType, currentState, showComment } = useStore(OBSOverlaySettingsProps)
-  const { currentStateStragery, showCommentStragery, showAvatarStragery } = useStore(OBSOverlaySettingStragery)
+  const { ChatType, currentKeyChatType, showComment } = useStore(OBSOverlaySettingsProps)
+  const { currentKeyChatTypeStragery, showCommentStragery, showAvatarStragery } = useStore(OBSOverlaySettingStragery)
 
     return (
       <ContextMenuContent className="w-52">
@@ -17,8 +17,8 @@ export default function ContextMenuContentMain() {
               return (
                 <ContextMenuCheckboxItem
                   key={chattype.key}
-                  checked={currentState === chattype.label}
-                  onClick={() => currentStateStragery(chattype.label)}
+                  checked={currentKeyChatType === chattype.key}
+                  onClick={() => currentKeyChatTypeStragery(chattype.key)}
                 >
                   {chattype.label}
                 </ContextMenuCheckboxItem>

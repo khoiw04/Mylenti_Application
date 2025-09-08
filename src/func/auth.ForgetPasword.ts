@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { ForgetEmailSchemaType, ResetPassSchemaType } from '@/types/schema';
 import { getSupabaseServerClient } from '@/lib/supabase';
+import { redirectSupbaseForgetURL } from '@/data/oauth';
 
 export const fillInEmailFn = createServerFn({ method: 'POST' })
   .validator(
@@ -9,7 +10,7 @@ export const fillInEmailFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient()
     const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-      redirectTo: 'http://localhost:3000/nho-mat-khau'
+      redirectTo: redirectSupbaseForgetURL
     })
 
     if (error) {

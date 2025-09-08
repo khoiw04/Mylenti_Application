@@ -1,6 +1,9 @@
-export const presets = ['Origin UI', 'Cruip', ''] as const
+export const defaultVariants = { currentPreset: "default" }
+export const presetUserVariants = ['Mori Seikai', 'Siini', 'default'] as const
 export const overlayFieldConfigs = [
   { key: 'commenter_avatar', label: 'Avatar' },
   { key: 'commenter_name', label: 'Tên' }
 ] as const;
-export const commentParagraphTest = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam aut saepe ad facere deserunt consequuntur deleniti doloremque est delectus quasi quos laudantium labore nihil quas dignissimos, distinctio consectetur. Explicabo, aperiam earum? Voluptas accusamus ut tempore mollitia vitae deserunt laboriosam totam in sapiente architecto veniam reprehenderit, assumenda fugit aut provident consequuntur ea deleniti amet rem atque, officia pariatur corrupti dignissimos. Earum doloremque dolorem officia voluptates, ex ut commodi quaerat, cum voluptate debitis culpa reiciendis molestias quas inventore adipisci! Impedit est temporibus fugiat excepturi eligendi doloremque molestias, rem, corporis incidunt recusandae eaque sed dolorem, neque ad totam aperiam nobis! Natus porro odit totam mollitia earum aliquid commodi impedit vero voluptatum nisi et cum dignissimos in minima nobis, enim hic blanditiis optio soluta voluptas odio harum. Similique quaerat eum natus cum nisi quo cupiditate quasi et tempora rem quis culpa harum, nemo consectetur eligendi amet nesciunt, assumenda dolorum illum. Exercitationem, at atque iure, eius dolores tempora id laboriosam, suscipit possimus illum necessitatibus. Illo sapiente minus porro reiciendis vero enim minima aliquam ut facere odit pariatur sint, at temporibus, possimus asperiores accusamus a blanditiis delectus, provident saepe! Repudiandae molestias suscipit sequi repellat cumque, iure, nemo, magnam minima officiis dolor aliquid architecto veniam a beatae.'
+
+export const commentParagraphTest = 'Lorem ipsum dolor sit amet consectetur.'
+export const commentParagraphSuperchatTest = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil porro rem asperiores repellendus architecto aspernatur quas blanditiis vitae reprehenderit magni!'

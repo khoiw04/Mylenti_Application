@@ -21,6 +21,7 @@ import { Route as KeToanRouteImport } from './routes/ke-toan'
 import { Route as DangNhapRouteImport } from './routes/dang-nhap'
 import { Route as DangKyRouteImport } from './routes/dang-ky'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { ServerRoute as UploadFilesServerRouteImport } from './routes/uploadFiles'
 import { ServerRoute as ApiTrpcSplatServerRouteImport } from './routes/api.trpc.$'
@@ -77,6 +78,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthGoogleOBSRoute = AuthGoogleOBSRouteImport.update({
+  id: '/auth/googleOBS',
+  path: '/auth/googleOBS',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/obs-overlay': typeof ObsOverlayRoute
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/googleOBS': typeof AuthGoogleOBSRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/obs-overlay': typeof ObsOverlayRoute
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/googleOBS': typeof AuthGoogleOBSRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/obs-overlay': typeof ObsOverlayRoute
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/googleOBS': typeof AuthGoogleOBSRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/obs-overlay'
     | '/quen-mat-khau'
     | '/auth/callback'
+    | '/auth/googleOBS'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/obs-overlay'
     | '/quen-mat-khau'
     | '/auth/callback'
+    | '/auth/googleOBS'
   id:
     | '__root__'
     | '/'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/obs-overlay'
     | '/quen-mat-khau'
     | '/auth/callback'
+    | '/auth/googleOBS'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   ObsOverlayRoute: typeof ObsOverlayRoute
   QuenMatKhauRoute: typeof QuenMatKhauRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthGoogleOBSRoute: typeof AuthGoogleOBSRoute
 }
 export interface FileServerRoutesByFullPath {
   '/uploadFiles': typeof UploadFilesServerRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/googleOBS': {
+      id: '/auth/googleOBS'
+      path: '/auth/googleOBS'
+      fullPath: '/auth/googleOBS'
+      preLoaderRoute: typeof AuthGoogleOBSRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -326,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   ObsOverlayRoute: ObsOverlayRoute,
   QuenMatKhauRoute: QuenMatKhauRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  AuthGoogleOBSRoute: AuthGoogleOBSRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

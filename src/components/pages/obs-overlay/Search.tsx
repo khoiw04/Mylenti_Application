@@ -1,6 +1,6 @@
 import { CheckIcon, ChevronDownIcon, PlusIcon } from "lucide-react"
-
-import type { SearchProps } from "@/types/data/obs-overlay"
+import type { presetUserVariantsValueType } from "@/types/data/obs-overlay"
+import type { SearchProps } from "@/types/ui/obs-overlay-setting"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,24 +17,24 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { presets } from "@/data/obs-overlay"
+import { presetUserVariants } from "@/data/obs-overlay"
 
 export default function Select(props: SearchProps) {
-  const { array, open, onOpenChange, value, onValueChange } = props
+  const { selectArray, open, onOpenChange, value, onValueChange } = props
+  const currentValueSelect = selectArray.find((preset) => preset === value)
 
   return (
       <Popover open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
           <Button
+            type="button"
             role="combobox"
             variant="outline"
             aria-expanded={open}
             className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
           >
-            <span className={cn("truncate", !value && "text-muted-foreground")}>
-              {value
-                ? array.find((preset) => preset === value)
-                : "Chọn Preset"}
+            <span className={cn("truncate", value==='default' && "text-muted-foreground")}>
+              {currentValueSelect === 'default' ? "Mặc Định" : currentValueSelect}
             </span>
             <ChevronDownIcon
               size={16}
@@ -52,16 +52,18 @@ export default function Select(props: SearchProps) {
             <CommandList>
               <CommandEmpty>Không có</CommandEmpty>
               <CommandGroup>
-                {presets.map((preset) => (
+                {presetUserVariants.map((preset) => (
                   <CommandItem
                     key={preset}
                     value={preset}
                     onSelect={(currentValue) => {
-                      onValueChange(currentValue === value ? "" : currentValue)
+                      const typedValue = currentValue as presetUserVariantsValueType;
+                      onValueChange(typedValue === value ? 'default' : typedValue)
                       onOpenChange(false)
                     }}
+                    className={cn(preset==='default' && "text-muted-foreground")}
                   >
-                    {preset === '' ? 'Mặc Định' : preset}
+                    {preset === 'default' ? 'Mặc Định' : preset}
                     {value === preset && (
                       <CheckIcon size={16} className="ml-auto" />
                     )}

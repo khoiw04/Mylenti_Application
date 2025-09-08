@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { Provider } from '@supabase/supabase-js'
 import { getSupabaseServerClient } from '@/lib/supabase';
+import { redirectSupbaseOauthURL } from '@/data/oauth';
 
 export const signInWithOauth = createServerFn({ method: 'POST' })
   .validator(
@@ -11,7 +12,7 @@ export const signInWithOauth = createServerFn({ method: 'POST' })
     const { data: userData, error } = await supabase.auth.signInWithOAuth({
         provider: data.provider,
         options: {
-          redirectTo: 'http://localhost:3000/auth/callback',
+          redirectTo: redirectSupbaseOauthURL,
           skipBrowserRedirect: true,
           queryParams: {
             access_type: 'offline',
