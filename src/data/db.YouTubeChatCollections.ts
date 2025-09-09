@@ -15,8 +15,9 @@ export const chatMessageCollection = createCollection(
     },
     getKey: (item) => item.id,
     queryClient: queryClient,
-    retry: 2,
-    startSync: false
+    startSync: false,
+    retry: 1,
+    retryDelay: 10000
   })
 )
 

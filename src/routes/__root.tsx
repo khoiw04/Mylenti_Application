@@ -59,7 +59,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     const user_name = context.authState.user.meta.user_name
 
     const isOnInfoPage = location.pathname === '/khoi-phuc';
-    const isOnLoginPage = ['/dang-nhap', '/dang-ky', '/quen-mat-khau', '/nho-mat-khau', '/auth/callback', 'browser-source'].includes(location.pathname);
+    const isOnLoginPage = ['/dang-nhap', '/dang-ky', '/quen-mat-khau', '/nho-mat-khau', '/auth/callback'].includes(location.pathname);
 
     if (isAuthenticated && !user_name && !isOnInfoPage) {
       throw redirect({ to: '/khoi-phuc' });
@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-simplebar data-simplebar-auto-hide>
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
