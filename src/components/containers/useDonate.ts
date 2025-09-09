@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useVirtualizer } from "@tanstack/react-virtual";
-import useAuthInfo from "../../hooks/useAuthInfo";
+import { useStore } from "@tanstack/react-store";
 import type { DonateDataType } from "@/types/hooks/returnType";
 import type { VirtualizerConfig } from "@/types/func/setting";
 import { donatePropsStore } from "@/store/donate-store";
 import { Route } from "@/routes/ke-toan";
+import { authInfoStore } from "@/store/auth-info-store";
+import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 export function useRankDonates(donateList: Array<DonateDataType>, currentUser: string) {
   return useMemo(() => {
       const grouped = Object.values(
         donateList.reduce((acc, curr) => {
           const key = curr.user_name
+           
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (!acc[key]) {
             acc[key] = { ...curr }
@@ -39,8 +42,9 @@ function createVirtualizer({ count, estimateSize, scrollElement }: VirtualizerCo
 }
 
 export const useDonate = () => {
-  const authInfo = useAuthInfo()
+  const authInfo = useAuthInfoExternalStore()
   const donateList = Route.useLoaderData()
+  if (!donateList) return null
   const rankDonates = useRankDonates(donateList, authInfo.currentUser)
 
   const commentRef = useRef<HTMLDivElement | null>(null)

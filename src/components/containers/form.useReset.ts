@@ -1,26 +1,26 @@
 import { useStore } from "@tanstack/react-store";
 import { useEffect, useMemo } from "react";
 import { useAppForm } from "../../hooks/useFormHook";
-import useAuthInfo from "../../hooks/useAuthInfo";
 import { useResetMutation } from "./mutation.useReset";
 import { avatarStore } from "@/store/avatar-store";
 import { updateUserNameSchema } from "@/schema/user.schema";
 import { useResetPropsStore } from "@/store/reset-store";
 import { publishImage } from "@/lib/publishImage";
+import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 export default function useResetForm() {
-  const info = useAuthInfo()
+  const authInfo = useAuthInfoExternalStore()
   const mutation = useResetMutation()
   const croppedImage = useStore(avatarStore, state => state.croppedImage)
-  const checkImages = croppedImage ?? info.display_avatar
+  const checkImages = croppedImage ?? authInfo.display_avatar
 
   const form = useAppForm({
     defaultValues: {
-      image: croppedImage ?? info.display_avatar,
-      full_name: info.display_name,
-      user_name: info.currentUser,
+      image: croppedImage ?? authInfo.display_avatar,
+      full_name: authInfo.display_name,
+      user_name: authInfo.currentUser,
       requireUserName: true,
-      ...info.socialInfo,
+      ...authInfo.socialInfo,
     },
     validators: { onSubmit: updateUserNameSchema },
     onSubmit: ({ value }) => {
@@ -50,8 +50,8 @@ export default function useResetForm() {
   })
 
   useEffect(() => {
-    form.setFieldValue("image", croppedImage ?? info.display_avatar);
-  }, [croppedImage, info.display_avatar]);
+    form.setFieldValue("image", croppedImage ?? authInfo.display_avatar);
+  }, [croppedImage, authInfo.display_avatar]);
 
   const ResetProps = useMemo(() => ({ form, checkImages }), [])
   useResetPropsStore.setState(prev => ({ ...prev, ...ResetProps }))

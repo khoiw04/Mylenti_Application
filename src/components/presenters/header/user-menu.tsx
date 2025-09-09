@@ -3,6 +3,7 @@ import {
   BookOpenIcon,
   CircleUser,
   LogOutIcon,
+  LucideWrench,
   UserPenIcon 
 } from "lucide-react"
 
@@ -24,11 +25,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import { HeaderProps } from "@/store/header-store"
+import { HeaderStrategy } from "@/store/header-store"
+import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 
 export default function UserMenu() {
   const router = useRouter()
-  const { display_avatar, display_name, email, handleLogOut } = useStore(HeaderProps)
+  const { handleLogOut } = useStore(HeaderStrategy)
+  const { display_avatar, display_name, email } = useAuthInfoExternalStore()
 
   return (
     <DropdownMenu>
@@ -73,6 +76,10 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogOut}>
+          <LucideWrench size={16} className="opacity-60" aria-hidden="true" />
+          <span>Cài đặt</span>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogOut}>
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Đăng xuất</span>

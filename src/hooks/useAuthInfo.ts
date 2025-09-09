@@ -1,4 +1,6 @@
+import { useMemo, useSyncExternalStore } from "react";
 import { useAuthenticatedUser } from "@/lib/queries";
+import { authInfoStore } from "@/store/auth-info-store";
 
 export default function useAuthInfo() {
   const {
@@ -7,16 +9,30 @@ export default function useAuthInfo() {
       email,
       meta: { display_name, full_name, display_avatar, avatar_url: fallback_avatar, user_name: currentUser, facebook, x, youtube },
     },
-  } = useAuthenticatedUser().data;
+  } = useAuthenticatedUser().data
 
-  const socialInfo = { facebook, x, youtube }
-
-  return {
+  const data = {
     isAuthenticated,
     email,
     currentUser,
     display_name: display_name ?? full_name,
     display_avatar: display_avatar ?? fallback_avatar ?? '',
-    socialInfo
-  };
+    socialInfo: {
+      facebook: facebook ?? '',
+      x: x ?? '',
+      youtube: youtube ?? '',
+    },
+  }
+
+  const props = useMemo(() => data, [])
+  authInfoStore.setState(props)
+  return data
+}
+
+export function useAuthInfoExternalStore() {
+  return useSyncExternalStore(
+    authInfoStore.subscribe,
+    () => authInfoStore.state,
+    () => authInfoStore.state
+  )
 }

@@ -1,18 +1,18 @@
 import { useMemo } from "react";
 import { Route } from "@/routes/ngan-hang"
-import useAuthInfo from "@/hooks/useAuthInfo";
 import { createMutation } from "@/hooks/createMutations";
 import { useAppForm } from "@/hooks/useFormHook";
 import { handleBanks } from "@/func/db.Bank";
 import { bankSchema } from "@/schema/bank.schema";
 import { BankDisplayInfo } from "@/data/bank";
 import { bankPropsStore } from "@/store/bank-store";
+import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 const useBankInfo = () => Route.useLoaderData()
 
 export default function useBankForm() {
     const data = useBankInfo()
-    const authInfo = useAuthInfo()
+    const authInfo = useAuthInfoExternalStore()
 
     const mutation = createMutation(handleBanks, {
         successMessage: 'Đã nhập thông tin'

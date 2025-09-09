@@ -8,8 +8,8 @@ export default function useLogOut() {
     const router = useRouter()
     const queryClient = useQueryClient()
     const handleLogOut = async () => {
-      await logoutFn()
       await clearGoogleOBSCookies()
+      await logoutFn()
       await queryClient.invalidateQueries(authQueries.user())
       router.invalidate()
       router.navigate({ to: '/', reloadDocument: true })

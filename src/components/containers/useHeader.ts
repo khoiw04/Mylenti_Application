@@ -3,8 +3,8 @@ import { useEffect, useMemo } from "react";
 import { useStore } from "@tanstack/react-store";
 import useLogOut from "./useLogOut";
 import type { NavigationHrefType } from "@/types/data/header";
+import { HeaderStrategy } from "@/store/header-store";
 import useAuthInfo from "@/hooks/useAuthInfo";
-import { HeaderProps, HeaderStrategy } from "@/store/header-store";
 
 function useHeaderSync() {
   const router = useRouter()
@@ -17,12 +17,11 @@ function useHeaderSync() {
 }
 
 export default function useHeader() {
-  const authInfo = useAuthInfo()
+  useAuthInfo()
   const { handleLogOut } = useLogOut()
   
-  const finalProps = useMemo(() => ({ ...authInfo, handleLogOut }), [])
-  HeaderProps.setState(finalProps)
-
+  const finalProps = useMemo(() => ({ handleLogOut }), [])
+  HeaderStrategy.setState((prev) => ({...prev, finalProps}))
 
   useHeaderSync()
 }
