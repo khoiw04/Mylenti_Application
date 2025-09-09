@@ -12,11 +12,14 @@
   "app": {
     "windows": [
       {
-        "title": "Mylenti | OBS Overlay",
+        "title": "Mylenti",
         "width": 800,
         "height": 600,
+        "center": true,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "transparent": true,
+        "decorations": false
       }
     ],
     "security": {
@@ -26,6 +29,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -33,5 +37,19 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlDMzE5NEVDMjZEQzk4QgpSV1NMeVczQ1RobkRDYm1Ick0wMVhvMjdPZmtDWFlkeDB4MGpQTERzalRmbmdQcEI4aGRicjNkOAo=",
+      "endpoints": [
+        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}",
+        "https://github.com/user/repo/releases/latest/download/latest.json"
+      ]
+    },
+    "windows": {
+      "installMode": "passive"
+    }
   }
 }

@@ -9,7 +9,7 @@ import { HeaderProps, HeaderStrategy } from "@/store/header-store";
 function useHeaderSync() {
   const router = useRouter()
   const currentPath = router.state.location.pathname as NavigationHrefType
-  const setCurrentPath = useStore(HeaderStrategy, (s) => s.setCurrentPath)
+  const { setCurrentPath } = useStore(HeaderStrategy)
 
   useEffect(() => {
     setCurrentPath(currentPath)

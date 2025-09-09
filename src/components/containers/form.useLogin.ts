@@ -4,7 +4,7 @@ import { createMutation } from "../../hooks/createMutations";
 import { LogInSchema } from "@/schema/logIn.schema";
 import { loginFn } from "@/func/auth.Log";
 import { logInWithOauth } from "@/func/logInWithOauth";
-import { useDimension } from "@/func/useDimension";
+import { useDimension } from "@/hooks/useDimension";
 
 export default function useLogInForm() {
   const router = useRouter()

@@ -11,7 +11,7 @@ import { bankPropsStore } from "@/store/bank-store";
 const useBankInfo = () => Route.useLoaderData()
 
 export default function useBankForm() {
-    const ownerBankInfo = useBankInfo()
+    const data = useBankInfo()
     const authInfo = useAuthInfo()
 
     const mutation = createMutation(handleBanks, {
@@ -20,7 +20,10 @@ export default function useBankForm() {
 
     const form = useAppForm({
         defaultValues: {
-            ...ownerBankInfo,
+            api_key: data?.api_key,
+            number: data?.number,
+            full_name: data?.full_name,
+            bank: data?.bank,
             email: authInfo.email,
             user_name: authInfo.currentUser
         },

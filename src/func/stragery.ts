@@ -56,6 +56,9 @@ export const logInWithOauthStrategy = {
   popupFailed: () => {
     toast.error('Trình duyệt chặn popup')
     return
+  },
+  tauriDirect: (url: string) => {
+    window.location.href = url
   }
 }
 
@@ -63,7 +66,7 @@ export const loaderStrategy: LoaderPropsStrategy = {
   getUserData: async (profileID, ctx) =>
     await ctx.queryClient.ensureQueryData(profileQueries.user(addAtPrefix(profileID))),
 
-  getDonateList: async (profileID, ctx) =>
+  getDonateDatabaseList: async (profileID, ctx) =>
     await ctx.queryClient.ensureQueryData(donateQueries.donate(addAtPrefix(profileID))),
 
   getBanksData: async (profileID, ctx) =>

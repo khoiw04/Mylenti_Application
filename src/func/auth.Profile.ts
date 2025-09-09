@@ -12,7 +12,7 @@ export const getProfile = createServerFn()
       .eq('user_name', user_name)
       .single()
 
-    if (error) {throw new Error(error.message, { cause: error.cause ?? 500 })}
+    if (error) {return null}
 
     return {
       full_name: data.full_name,

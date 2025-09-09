@@ -9,15 +9,12 @@ export const Route = createFileRoute('/')({
   component: App,
   loader: async () => {
     const access = await getGoogleOBSAccessToken()
-
     if (access) { return access }
 
     const refresh = await getGoogleOBSRefreshToken()
     if (!refresh) { return false }
 
-    const data = await refreshGoogleOBSToken({ data: { refresh_token: refresh } })
-
-    return data
+    return await refreshGoogleOBSToken({ data: { refresh_token: refresh } })
   },
 })
 

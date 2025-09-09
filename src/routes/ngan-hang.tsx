@@ -10,7 +10,11 @@ export const Route = createFileRoute('/ngan-hang')({
   component: RouteComponent,
   loader: async ({ context }) => {
     const user_name = context.authState.user.meta.user_name
-    return await loaderStrategy.getBanksData(removeAtPrefix(user_name), context)
+    const data = await loaderStrategy.getBanksData(removeAtPrefix(user_name), context)
+
+    if (!data) return null
+
+    return data
   },
 })
 

@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getCookie, setCookie } from '@tanstack/react-start/server'
+import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server'
 import { OAUTH_YOUTUBE_ID, OAUTH_YOUTUBE_SECRET, redirectGoogleOBSURl } from '@/data'
 
 function mapOAuthError(message: string) {
@@ -88,7 +88,15 @@ export const getGoogleOBSAccessToken = createServerFn({ method: 'GET' })
 export const getGoogleOBSRefreshToken = createServerFn({ method: 'GET' })
   .handler(() => getCookie('googleOBS_RefreshToken'))
 
-export const exchangeCodeForGoogleOBS = async () => {
+export const clearGoogleOBSCookies = createServerFn({ method: 'POST' })
+  .handler(() => {
+    deleteCookie('googleOBS_AccessToken')
+    deleteCookie('googleOBS_RefreshToken')
+
+    return { status: 'success', message: 'Đã xóa cookie Google OBS' }
+  })
+
+export const exchangeCodeForGoogleOBSWebsite = async () => {
   const code = new URLSearchParams(window.location.search).get('code')
   if (!code) return
 
@@ -101,5 +109,21 @@ export const exchangeCodeForGoogleOBS = async () => {
     window.opener?.postMessage({ status: 'error', message: friendlyMessage }, window.location.origin)
   } finally {
     window.close()
+  }
+}
+
+export const exchangeCodeForGoogleOBSTauri = async (router: any) => {
+  const code = new URLSearchParams(window.location.search).get('code')
+  if (!code) return
+
+  try {
+    const res = await getTokenGoogleOBS({ data: { code } })
+    window.opener.postMessage({ status: 'success', access_token: res.access_token }, window.location.origin)
+  } catch (err: any) {
+    const rawMessage = err?.message || 'Không xác định'
+    const friendlyMessage = mapOAuthError(rawMessage)
+    window.opener?.postMessage({ status: 'error', message: friendlyMessage }, window.location.origin)
+  } finally {
+    router.navigate({ to: '/' })
   }
 }

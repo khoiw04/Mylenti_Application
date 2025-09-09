@@ -11,7 +11,11 @@ export const Route = createFileRoute('/ke-toan')({
   component: RouteComponent,
   loader: async ({ context }) => {
     const user_name = context.authState.user.meta.user_name
-    return loaderStrategy.getDonateList(removeAtPrefix(user_name), context)
+    const data = await loaderStrategy.getDonateDatabaseList(removeAtPrefix(user_name), context)
+
+    if (!data) return null
+
+    return data
   }
 })
 

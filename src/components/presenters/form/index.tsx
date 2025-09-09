@@ -12,6 +12,7 @@ import { useFieldContext, useFormContext } from "@/hooks/useFormContext";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function LogoForm({message = 'Mylenti.'}) {
   return (
@@ -133,27 +134,29 @@ export function ComboBox({
             >
               <Command>
                 <CommandInput placeholder="Tìm ngân hàng..." />
-                <CommandList>
+                <CommandList className="max-h-none">
                   <CommandEmpty>Không thấy ngân hàng nào.</CommandEmpty>
                   <CommandGroup>
-                    {checkboxData.map((item) => (
-                      <CommandItem
-                        key={item}
-                        value={item}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue)
-                          setOpen(false)
-                        }}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          {item}
-                        </div>
-                        <span className="text-muted-foreground text-xs">
-                          {item.toLocaleString()}
-                        </span>
-                      </CommandItem>
-                    ))}
+                    <ScrollArea className="flex max-h-[300px] flex-col overflow-hidden">
+                      {checkboxData.map((item) => (
+                        <CommandItem
+                          key={item}
+                          value={item}
+                          onSelect={(currentValue) => {
+                            setValue(currentValue === value ? "" : currentValue)
+                            setOpen(false)
+                          }}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-2">
+                            {item}
+                          </div>
+                          <span className="text-muted-foreground text-xs">
+                            {item.toLocaleString()}
+                          </span>
+                        </CommandItem>
+                      ))}
+                    </ScrollArea>
                   </CommandGroup>
                 </CommandList>
               </Command>

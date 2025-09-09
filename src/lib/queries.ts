@@ -1,6 +1,6 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import type { UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import { getBank, getDonate } from "@/func/auth.Info";
+import { getBankDatabase, getDonateDatabase } from "@/func/auth.Info";
 import { getProfile } from "@/func/auth.Profile";
 import { getUser } from "@/func/auth.User";
 
@@ -9,7 +9,7 @@ export const bankQueries = {
     bankQueries: (user_name: string) =>
         queryOptions({
             queryKey: [...bankQueries.all],
-            queryFn: () => getBank({ data: { user_name } })
+            queryFn: () => getBankDatabase({ data: { user_name } })
         })
 }
 
@@ -18,7 +18,7 @@ export const donateQueries = {
     donate: (user_name: string) =>
         queryOptions({
             queryKey: [...donateQueries.all],
-            queryFn: () => getDonate({ data: { user_name } })
+            queryFn: () => getDonateDatabase({ data: { user_name } })
         })
 }
 

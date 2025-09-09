@@ -1,5 +1,9 @@
 import {  clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { isTauri } from '@tauri-apps/api/core';
+import { fetch as TauriFetch } from '@tauri-apps/plugin-http';
+import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server';
+import { createServerFn } from '@tanstack/react-start';
 import type {ClassValue} from 'clsx';
 
 export function cn(...inputs: Array<ClassValue>) {
@@ -78,6 +82,40 @@ export function truncateMessage(message: string, maxLength: number = 200): strin
     ? message.slice(0, maxLength) + "..."
     : message;
 }
+
+export const nativeFetch = async (url: string, options: RequestInit) => {
+  return !isTauri() ? 
+    await fetch(url, options) :
+    await TauriFetch(url, options);
+};
+
+export const getCachedCookie = createServerFn()
+  .validator((d: { key: string }) => d)
+  .handler(({ data: { key } }) => {
+    const raw = getCookie(key)
+    try {
+      return raw ? JSON.parse(raw) : undefined
+    } catch {
+      return undefined
+    }
+})
+
+export const setCachedCookie = createServerFn()
+  .validator((d: { key: string, value: any, maxAge?: number }) => d)
+  .handler(({ data: { key, value, maxAge = 600 } }) => {
+    setCookie(key, JSON.stringify(value), {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge,
+    })}
+  )
+
+export const clearCachedCookie = createServerFn()
+  .validator((d: { key: string }) => d)
+  .handler(({ data: { key } }) => {
+    deleteCookie(key)
+})
 
 
 export const seo = ({

@@ -14,9 +14,9 @@ export type UploadStrategyProps = {
 }
 
 export type LoaderPropsStrategy = {
-  getUserData: (profileID: string, ctx: LoaderFnContext['context']) => Promise<ProfileDataType>;
-  getDonateList: (profileID: string, ctx: LoaderFnContext['context']) => Promise<Array<DonateDataType>>;
-  getBanksData: (profileID: string, ctx: LoaderFnContext['context']) => Promise<BankDataType>;
+  getUserData: (profileID: string, ctx: LoaderFnContext['context']) => Promise<ProfileDataType | null>;
+  getDonateDatabaseList: (profileID: string, ctx: LoaderFnContext['context']) => Promise<Array<DonateDataType> | null>;
+  getBanksData: (profileID: string, ctx: LoaderFnContext['context']) => Promise<BankDataType | null>;
 };
 
 export type loginWthOauthPropsStrategy = {

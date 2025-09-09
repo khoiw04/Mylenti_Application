@@ -1,17 +1,29 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { isTauri } from '@tauri-apps/api/core'
+import { LoaderCircleIcon } from "lucide-react"
 import { exchangeCodeInClient } from '@/func/auth.Oauth'
 import { Skeleton } from '@/components/ui/skeleton'
 import Turtle from '@/components/pages/auth.callback/turtle'
+import { getUser } from '@/func/auth.User'
 
 export const Route = createFileRoute('/auth/callback')({
   component: RouteComponent
 })
 
 function RouteComponent() {
+  const router = useRouter()
   useEffect(() => {
     (async () => {
       const res = await exchangeCodeInClient()
+
+      if (isTauri()) {
+        const user = await getUser()
+        if (user.isAuthenticated) {
+          router.navigate({ to: '/', reloadDocument: true })
+        }
+        return null
+      }
 
       if (res?.success) {
         await window.opener?.postMessage('oauth-success', window.location.origin)
@@ -22,12 +34,23 @@ function RouteComponent() {
       }
     })()
   }, [])
+
   return (
     <div className='relative overflow-hidden w-full h-dvh'>
-      <div className='absolute translate-x-1/2 translate-y-1/2 right-1/2 bottom-1/2'>
-        <Turtle />
-      </div>
-      <p className='text-neutral-600 z-50 absolute text-sm bottom-30 left-1/2 -translate-x-1/2 -translate-y-1/2'>by <a href="https://uiverse.io/profile/moraxh" className='underline' target="_blank" rel="noopener noreferrer">moraxh</a></p>
+      {isTauri() ?
+        <LoaderCircleIcon
+          className="-ms-1 animate-spin size-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          aria-hidden="true"
+          size='100%'
+          strokeWidth={0.2}
+        /> :
+        <>
+        <div className='absolute translate-x-1/2 translate-y-1/2 right-1/2 bottom-1/2'>
+          <Turtle />
+        </div>
+        <p className='text-neutral-600 z-50 absolute text-sm bottom-30 left-1/2 -translate-x-1/2 -translate-y-1/2'>by <a href="https://uiverse.io/profile/moraxh" className='underline' target="_blank" rel="noopener noreferrer">moraxh</a></p>
+        </>
+      }
       <Skeleton className='size-full bg-neutral-300' />
     </div>
   )

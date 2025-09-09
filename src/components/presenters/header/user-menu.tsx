@@ -33,7 +33,7 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
+        <Button variant="ghost" className="h-auto z-50 p-0 hover:bg-transparent">
           {display_avatar === '' ?
             <div className="bg_icon_header">
               <CircleUser className="icon_header" />

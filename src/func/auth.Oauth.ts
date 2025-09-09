@@ -43,9 +43,7 @@ export const exchangeCodeForSession = createServerFn({ method: 'POST' })
     const supabase = getSupabaseServerClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
-    if (error) {
-      return { error: true, message: error.message }
-    }
+    if (error) throw new Error(error.message, { cause: error.cause ?? 500 })
 
     return { success: true }
   })

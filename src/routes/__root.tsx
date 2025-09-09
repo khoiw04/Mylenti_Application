@@ -16,6 +16,7 @@ import type { QueryClient } from '@tanstack/react-query'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import type { TRPCRouter } from '@/server/tprc.router'
 import { authQueries, profileQueries } from '@/lib/queries'
+import WindowDecorations from '@/components/presenters/window'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -41,7 +42,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         rel: 'stylesheet',
         href: appCss,
-      },
+      }
     ],
   }),
 
@@ -58,7 +59,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     const user_name = context.authState.user.meta.user_name
 
     const isOnInfoPage = location.pathname === '/khoi-phuc';
-    const isOnLoginPage = ['/dang-nhap', '/dang-ky', '/quen-mat-khau', '/nho-mat-khau', '/auth/callback'].includes(location.pathname);
+    const isOnLoginPage = ['/dang-nhap', '/dang-ky', '/quen-mat-khau', '/nho-mat-khau', '/auth/callback', 'browser-source'].includes(location.pathname);
 
     if (isAuthenticated && !user_name && !isOnInfoPage) {
       throw redirect({ to: '/khoi-phuc' });
@@ -80,11 +81,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-simplebar data-simplebar-auto-hide>
       <head>
         <HeadContent />
       </head>
       <body>
+        <WindowDecorations />
         {children}
         <TanstackDevtools
           config={{

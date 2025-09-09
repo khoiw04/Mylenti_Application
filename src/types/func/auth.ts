@@ -1,6 +1,6 @@
 import type { Provider } from "@supabase/supabase-js";
 import type { SocialProps } from "@/types/ui/user";
-import type { useDimension } from "@/func/useDimension";
+import type { useDimension } from "@/hooks/useDimension";
 
 export type OauthProps = { provider: Provider; router: any; dimension: ReturnType<typeof useDimension>['dimension'] }
 

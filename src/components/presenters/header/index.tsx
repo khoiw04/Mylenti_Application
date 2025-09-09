@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 import Bottom from "./bottom"
 import Search from "./search"
 import Burger from "./burger"
@@ -15,9 +16,9 @@ export default function Main() {
         <div className="flex flex-1 items-center gap-2">
             <Burger />
           <div className="flex items-center">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <Link to='/' className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
           </div>
         </div>
         <div className="grow">

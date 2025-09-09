@@ -28,7 +28,7 @@ export default function TermOfService({header = 'Điều khoản Dịch Vụ'}) 
             <DialogDescription asChild>
               <div className="p-6">
                 <div className="[&_strong]:text-foreground space-y-4 [&_strong]:font-semibold">
-                  <div className="space-y-1">
+                  <div className="space-y-1 **:select-auto">
                     <p>
                       <strong>Giao dịch ủng hộ (Donation/Subscription)</strong>
                     </p>

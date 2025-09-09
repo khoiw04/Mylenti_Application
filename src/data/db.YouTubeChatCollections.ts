@@ -2,7 +2,7 @@ import { createCollection, createLiveQueryCollection } from '@tanstack/react-db'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import type { ChatMessageSchemaType, LivestreamSchemaType } from '@/types/schema'
 import { getContext } from '@/integrations/tanstack-query/root-provider'
-import { getYouTubeOBSLiveChatMessage, getYouTubeOBSLiveStreamActiveLiveChatID, getYouTubeOBSLiveStreamTitle, getYouTubeOBSLiveStreamVideoID } from '@/func/db.YouTubeChat'
+import { getYouTubeOBSLiveChatMessage, getYouTubeOBSLiveStreamActiveLiveChatID, getYouTubeOBSLiveStreamTitle, getYouTubeOBSLiveStreamVideoID } from '@/func/db.YouTubeChatFunc'
 
 const { queryClient } = getContext()
 
@@ -10,11 +10,13 @@ export const chatMessageCollection = createCollection(
   queryCollectionOptions<ChatMessageSchemaType>({
     queryKey: ['chatMessages'],
     queryFn: async () => {
-      const { messages } = await getYouTubeOBSLiveChatMessage()
+      const { messages } = await getYouTubeOBSLiveChatMessage({ data: { nextPageToken: null } })
       return messages
     },
     getKey: (item) => item.id,
-    queryClient: queryClient
+    queryClient: queryClient,
+    retry: 2,
+    startSync: false
   })
 )
 
@@ -44,5 +46,5 @@ export const livestreamCollection = createCollection(
 export const chatMessagesLiveQueryCollection = createLiveQueryCollection(
       (q) =>
         q.from({ liveChat: chatMessageCollection })
-            .orderBy(({ liveChat }) => liveChat.publishedAt, 'desc')
+            .orderBy(({ liveChat }) => liveChat.publishedAt, 'desc'),
 )

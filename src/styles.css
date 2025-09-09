@@ -128,11 +128,50 @@ code {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  -ms-overflow-style: none;
+}
+
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 select-none selection:bg-primary selection:text-primary-foreground;
   }
   body {
     @apply bg-background text-foreground;
   }
+  input {
+    @apply select-auto;
+  }
+}
+
+/* Utils */
+@layer utilities {
+  .absolute_center {
+    @apply absolute inset-0 left-1/2 top-1/2  -translate-x-1/2 -translate-y-1/2
+  }
+  .webkit_scroll_hidden {
+    @apply [&::-webkit-scrollbar]:hidden
+  }
+}
+
+/* Animations */
+@keyframes popUp {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup_button_animation {
+  animation: popUp 0.3s ease-out;
 }

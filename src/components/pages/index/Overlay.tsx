@@ -1,19 +1,21 @@
 import { useStore } from "@tanstack/react-store";
-import { useLiveQuery } from "@tanstack/react-db";
-import GoogleButton from "./GoogleButton";
+import GoogleLoginButton from "./GoogleLogInButton";
 import { IndexState } from "@/store/index-store";
-import { chatMessagesLiveQueryCollection } from "@/data/db.YouTubeChat";
+import useIsClient from "@/hooks/useIsClient";
+import usePollingYoutubeChat from "@/components/containers/db.usePollChat";
 
 export default function Overlay() {
+    const isClient = useIsClient()
     const { finishGoogleOBSAuth } = useStore(IndexState)
-
-    if (!finishGoogleOBSAuth) return <GoogleButton />
+    
+    if (!isClient) return null
+    if (!finishGoogleOBSAuth) return <GoogleLoginButton />
 
     return <ChatMessages />
 }
 
 function ChatMessages() {
-  const { data } = useLiveQuery(chatMessagesLiveQueryCollection)
+  const data = usePollingYoutubeChat()
 
   return (
     <ul>
