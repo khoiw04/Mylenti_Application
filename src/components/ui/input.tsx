@@ -1,6 +1,6 @@
 import { NumericFormat } from "react-number-format"
 import { cva } from "class-variance-authority"
-import type { TextFieldType } from "@/types/ui/form"
+import type { TextFieldType } from "@/types"
 import { cn } from "@/lib/utils"
 
 export const inputVariants = cva(

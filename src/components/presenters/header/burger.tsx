@@ -12,7 +12,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { navigationLinks } from "@/data/header"
-import { HeaderState } from "@/store/header-store"
+import { HeaderState } from "@/store"
 import { cn } from "@/lib/utils"
 
 export default function Burger() {

@@ -1,7 +1,6 @@
 import * as React from "react"
 import { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "./cva";
-import type { chatTypeVariatntsProps } from "@/types/func/returnType";
-import type { chatTypeProps } from "@/types/ui/obs-overlay-setting";
+import type { chatTypeProps, chatTypeVariatntsProps } from "@/types";
 import { cn, truncateMessage } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { commentParagraphTest } from "@/data/obs-overlay";

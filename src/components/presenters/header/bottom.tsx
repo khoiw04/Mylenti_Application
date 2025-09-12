@@ -3,7 +3,7 @@ import { useStore } from "@tanstack/react-store";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { navigationLinks } from '@/data/header';
 import { cn } from "@/lib/utils";
-import { HeaderState } from "@/store/header-store";
+import { HeaderState } from "@/store";
 
 export default function Bottom() {
   const currentPath = useStore(HeaderState, (s) => s.currentPath)

@@ -1,11 +1,11 @@
 import type useResetForm from "@/components/containers/form.useReset";
 import type { useResetMutation } from "@/components/containers/mutation.useReset";
 import type useAuthInfo from "@/hooks/useAuthInfo";
-import type useLogOut from "@/components/containers/useLogOut";
+import type useLogOut from "@/components/containers/db.useLogOut";
 import type { getProfile } from "@/func/auth.Profile";
 import type { getBankDatabase, getDonateDatabase } from "@/func/auth.Info";
 import type useBankForm from "@/components/containers/form.useBank";
-import type { useRankDonates } from "@/components/containers/useDonate";
+import type { useRankDonates } from "@/components/containers/page.useDonate";
 
 export type useResetMutationType = ReturnType<typeof useResetMutation>
 export type useResetFormType = ReturnType<typeof useResetForm>

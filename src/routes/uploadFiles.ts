@@ -1,5 +1,5 @@
 import { createServerFileRoute } from '@tanstack/react-start/server';
-import type { uploadFilesToBucketProps } from '@/types/server/form.publish';
+import type { uploadFilesToBucketProps } from '@/types';
 import { getSupabaseServerClient, supabaseUrl } from '@/lib/supabase';
 import { getImageDimensions } from '@/lib/getImageDimension';
 

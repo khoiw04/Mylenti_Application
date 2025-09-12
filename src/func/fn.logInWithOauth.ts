@@ -2,8 +2,8 @@ import { toast } from "sonner"
 import { isTauri } from "@tauri-apps/api/core"
 import { getUser } from "./auth.User"
 import { signInWithOauth } from "./auth.Oauth"
-import { logInWithOauthStrategy } from "./stragery"
-import type { OauthProps } from "@/types/func/auth"
+import { logInWithOauthStrategy } from "./fn.stragery"
+import type { OauthProps } from "@/types"
 
 function openPopup(url: string, dimension: OauthProps['dimension']) {
   const left = dimension.y / 2 * 0.5

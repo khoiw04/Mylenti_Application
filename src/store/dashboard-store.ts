@@ -1,6 +1,6 @@
 import { Store } from "@tanstack/store"
 import type { dayKeyType } from "@/data/settings"
-import type { DonateDataType } from "@/types/hooks/returnType"
+import type { DonateDataType } from "@/types"
 
 export const dashboardData = new Store<{
     donateList: Array<DonateDataType> | null

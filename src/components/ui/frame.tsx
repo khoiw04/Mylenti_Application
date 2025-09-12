@@ -1,4 +1,4 @@
-import type { formFrameProps } from "@/types/ui/frame";
+import type { formFrameProps } from "@/types";
 import { cn } from "@/lib/utils";
 
 export function FormFrame({ children, footer, className }: formFrameProps) {

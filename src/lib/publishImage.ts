@@ -1,8 +1,8 @@
 import { toast } from "sonner";
 import { LinksToFiles } from "./convertLinksToFiles";
 import type { MainBlobs } from "./convertLinksToFiles";
-import type { publishImageProps } from "@/types/server/form.publish";
-import { UploadStrategy } from "@/func/stragery";
+import type { publishImageProps } from "@/types";
+import { UploadStrategy } from "@/func/fn.stragery";
 
 export const publish = async (props: Omit<publishImageProps, 'onSuccess'>) => {
   const { files, from } = props

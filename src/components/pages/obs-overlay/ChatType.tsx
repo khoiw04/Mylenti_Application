@@ -1,7 +1,7 @@
 import { useStore } from "@tanstack/react-store"
 import { VerifiedType } from "@/components/presenters/ui-chattype/VerifiedChat"
 import NormalType from "@/components/presenters/ui-chattype/NormalChat"
-import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store/obs-overlay-store"
+import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store"
 import ModeratorType from "@/components/presenters/ui-chattype/ModeratorChat"
 import MemeberType from "@/components/presenters/ui-chattype/MemeberChat"
 import SuperchatType from "@/components/presenters/ui-chattype/SuperchatChat"

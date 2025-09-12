@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { SupabaseType } from '@/lib/supabase';
-import type { updateUserNameSchemaType } from '@/types/schema';
+import type { updateUserNameSchemaType } from '@/types';
 import { getSupabaseServerClient } from '@/lib/supabase'
 
 async function checkUserName(supabase: SupabaseType, user_name: string, requireUserName: boolean) {

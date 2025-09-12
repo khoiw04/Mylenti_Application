@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import useBankForm from "@/components/containers/form.useBank"
 import { AvatarProfile } from "@/components/presenters/user"
-import { bankPropsStore } from "@/store/bank-store"
+import { bankPropsStore } from "@/store"
 
 export function BankForm({
   className,
@@ -20,8 +20,8 @@ export function BankForm({
                 <CardContent>
                 <form
                     onSubmit={(e) => {
-                    e.preventDefault()
-                    form.handleSubmit()
+                        e.preventDefault()
+                        form.handleSubmit()
                     }}
                 >
                     <div className="grid gap-6">

@@ -1,7 +1,7 @@
 import {
-  BoltIcon,
   BookOpenIcon,
   CircleUser,
+  LandmarkIcon,
   LogOutIcon,
   LucideWrench,
   UserPenIcon 
@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import { HeaderStrategy } from "@/store/header-store"
+import { HeaderStrategy } from "@/store"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
@@ -65,11 +65,11 @@ export default function UserMenu() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem onClick={() => router.navigate({ to: '/ly-lich' })}>
-              <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
+              <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
               <span>Lý lịch</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.navigate({ to: '/ngan-hang' })}>
-              <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
+              <LandmarkIcon size={16} className="opacity-60" aria-hidden="true" />
               <span>Ngân hàng</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

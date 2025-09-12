@@ -2,9 +2,8 @@ import { useStore } from "@tanstack/react-store";
 import { useEffect, useMemo } from "react";
 import { useAppForm } from "../../hooks/useFormHook";
 import { useResetMutation } from "./mutation.useReset";
-import { avatarStore } from "@/store/avatar-store";
-import { updateUserNameSchema } from "@/schema/user.schema";
-import { useResetPropsStore } from "@/store/reset-store";
+import { avatarStore, useResetPropsStore } from "@/store";
+import { updateUserNameSchema } from "@/schema";
 import { publishImage } from "@/lib/publishImage";
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 

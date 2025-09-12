@@ -1,6 +1,6 @@
 import { useStore } from "@tanstack/react-store";
 import ButtonFunction from './ButtonFunction'
-import { IndexStraregy } from "@/store/index-store";
+import { IndexStraregy } from "@/store";
 
 export default function GoogleLogInButton() {
     const { onGoogleLogInClick } = useStore(IndexStraregy)

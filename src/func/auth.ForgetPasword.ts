@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import type { ForgetEmailSchemaType, ResetPassSchemaType } from '@/types/schema';
+import type { ForgetEmailSchemaType, ResetPassSchemaType } from '@/types';
 import { getSupabaseServerClient } from '@/lib/supabase';
 import { redirectSupbaseForgetURL } from '@/data/oauth';
 

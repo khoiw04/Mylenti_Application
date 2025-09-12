@@ -1,5 +1,5 @@
 import { CircleUser } from "lucide-react";
-import type { AvatarProps } from "@/types/ui/user";
+import type { AvatarProps } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 

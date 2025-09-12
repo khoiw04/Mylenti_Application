@@ -5,7 +5,7 @@ import Burger from "./burger"
 import Logo from "@/components/presenters/header/logo"
 import NotificationMenu from "@/components/presenters/header/notification-menu"
 import UserMenu from "@/components/presenters/header/user-menu"
-import useHeader from "@/components/containers/useHeader"
+import useHeader from "@/components/containers/page.useHeader"
 
 export default function Main() {
   useHeader()

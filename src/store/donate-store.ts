@@ -1,5 +1,5 @@
 import { Store } from "@tanstack/store"
-import type { donateStoreProps } from "@/types/store/donate";
+import type { donateStoreProps } from "@/types";
 
 export const donatePropsStore = new Store<donateStoreProps>({
   donateData: {

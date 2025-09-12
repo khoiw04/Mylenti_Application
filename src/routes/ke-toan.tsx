@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Toaster } from 'sonner'
 import Header from '@/components/presenters/header'
-import { loaderStrategy } from '@/func/stragery'
+import { loaderStrategy } from '@/func/fn.stragery'
 import { removeAtPrefix } from '@/lib/utils'
 import Main from '@/components/pages/ke-toan'
-import { useDashboard } from '@/components/containers/useDashboard'
-import { useDonate } from '@/components/containers/useDonate'
+import { useDashboard } from '@/components/containers/page.useDashboard'
+import { useDonate } from '@/components/containers/page.useDonate'
 
 export const Route = createFileRoute('/ke-toan')({
   component: RouteComponent,

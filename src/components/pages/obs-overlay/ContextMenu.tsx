@@ -1,7 +1,7 @@
 import { Share2 } from "lucide-react";
 import { useStore } from "@tanstack/react-store";
 import { ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger } from "@/components/ui/context-menu";
-import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store/obs-overlay-store";
+import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store";
 import { overlayFieldConfigs } from "@/data/obs-overlay";
 
 export default function ContextMenuContentMain() {

@@ -1,41 +1,47 @@
-import { useLiveQuery } from "@tanstack/react-db"
-import { useEffect, useRef } from "react"
-import { useStore } from "@tanstack/react-store"
-import type { LiveChatMessageType } from "@/types/collections"
-import { chatMessagesLiveQueryCollection } from "@/data/db.YouTubeChatCollections"
-import { getYouTubeOBSLiveChatMessage } from "@/func/db.YouTubeChatFunc"
-import { IndexState } from "@/store/index-store"
+import { useEffect, useRef } from 'react'
+import { useStore } from '@tanstack/react-store'
+import { createTransaction, useLiveQuery } from '@tanstack/react-db'
+import type { LiveChatMessageType } from '@/types'
+import { chatMessageCollection } from '@/data/db.YouTubeChatCollections'
+import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
+import { IndexState } from '@/store'
 
 export default function usePollingYoutubeChat() {
-    const { finishGoogleOBSAuth } = useStore(IndexState)
-    if (!finishGoogleOBSAuth) return []
+  const { finishGoogleOBSAuth } = useStore(IndexState)
+  const nextPageTokenRef = useRef('')
+  const pollingIntervalRef = useRef(3000)
 
-    const nextPageTokenRef = useRef('')
-    const pollingIntervalRef = useRef(3000)
-    const { data, collection: messageCollection } = useLiveQuery(chatMessagesLiveQueryCollection)
-    useEffect(() => {
-        let isCancelled = false
-        async function poll() {
-            const { messages, nextPageToken, pollingIntervalMillis }: LiveChatMessageType =
-                await getYouTubeOBSLiveChatMessage({ data: { nextPageToken: nextPageTokenRef.current } })
+  const { data: messages, collection } = useLiveQuery(chatMessageCollection)
 
-            if (isCancelled) return
+  const poll = async () => {
+    const {
+      messages: newMessages,
+      nextPageToken,
+      pollingIntervalMillis,
+    }: LiveChatMessageType = await getYouTubeOBSLiveChatMessage({
+      data: { nextPageToken: nextPageTokenRef.current },
+    })
 
-            messages.forEach((d) => {
-                messageCollection.insert(d)
-            })
+    nextPageTokenRef.current = nextPageToken
+    pollingIntervalRef.current = pollingIntervalMillis || 3000
 
-            nextPageTokenRef.current = nextPageToken
-            pollingIntervalRef.current = pollingIntervalMillis || 3000
+    const tx = createTransaction({ mutationFn: async () => {} })
 
-            setTimeout(poll, pollingIntervalRef.current)
+    tx.mutate(() => {
+      newMessages.forEach((msg) => {
+        if (!collection.has(msg.id)) {
+          collection.insert(msg)
         }
+      })
+    })
 
-        poll()
-        return () => {
-            isCancelled = true
-        }
-    }, [])
+    poll()
+  }
 
-    return data
+  useEffect(() => {
+    if (!finishGoogleOBSAuth) return
+    poll()
+  }, [finishGoogleOBSAuth])
+
+  return { messages }
 }

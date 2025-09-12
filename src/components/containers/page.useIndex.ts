@@ -2,11 +2,11 @@ import { useEffect, useMemo } from "react"
 import { toast } from "sonner";
 import { useStore } from "@tanstack/react-store";
 import { isTauri } from "@tauri-apps/api/core";
-import { IndexStraregy } from "@/store/index-store"
+import { IndexStraregy } from "@/store"
 import { useDimension } from "@/hooks/useDimension";
 import { getYoutubeScopeWithURL } from "@/data";
 import { Route } from "@/routes";
-import { logInWithOauthStrategy } from "@/func/stragery";
+import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies } from "@/func/auth.googleOBS";
 
 function getGoogleOBSOauth() {

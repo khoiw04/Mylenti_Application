@@ -9,7 +9,6 @@ export type handleResetProps = {
 
 export type handleSettingProps = {
   croppedImage: string | null | undefined
-  // mutation: useSettingMutationType
   value: updateUserSchemaType
   currentUser: string
 }

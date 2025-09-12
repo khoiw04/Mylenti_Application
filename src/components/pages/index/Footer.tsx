@@ -2,7 +2,7 @@ import { useStore } from "@tanstack/react-store"
 import GoogleLogOutButton from "./GoogleLogOutButton"
 import DonateOverlayButton from "./DonateOverlayButton"
 import FullScreenButton from "./FullScreenButton"
-import { IndexState } from "@/store/index-store"
+import { IndexState } from "@/store"
 
 export default function Footer() {
     const { finishGoogleOBSAuth } = useStore(IndexState)

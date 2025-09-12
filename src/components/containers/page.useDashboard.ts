@@ -1,12 +1,14 @@
 import { useMemo } from "react"
 import { useStore } from "@tanstack/react-store"
-import { dashboardData, dashboardState } from "@/store/dashboard-store"
+import { dashboardData, dashboardState } from "@/store"
 import { Route } from "@/routes/ke-toan"
 import { daysMap } from "@/data/settings"
 
 export function useDashboard() {
     const list = Route.useLoaderData()
     const timeRange = useStore(dashboardState, (state) => state.timeRange)
+    if (!list) return
+
     const donateAmount = useMemo(
         () => list.reduce((sum, item) => sum + item.transfer_amount, 0),
         []

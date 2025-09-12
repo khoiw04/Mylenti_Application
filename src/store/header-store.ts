@@ -1,5 +1,5 @@
 import { Store } from "@tanstack/store"
-import type { HeaderStateType, HeaderStrategyType } from "@/types/store/header"
+import type { HeaderStateType, HeaderStrategyType } from "@/types"
 
 export const HeaderState = new Store<HeaderStateType>({
   currentPath: "" as '/'

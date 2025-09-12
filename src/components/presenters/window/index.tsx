@@ -1,7 +1,7 @@
 import { useStore } from '@tanstack/react-store'
 import { isTauri } from '@tauri-apps/api/core'
 import useTauriWindow from '@/components/containers/api.useTauriWindow'
-import { AppWindowStore } from '@/store/app-window-store'
+import { AppWindowStore } from '@/store'
 
 export default function Main() {
     useTauriWindow()

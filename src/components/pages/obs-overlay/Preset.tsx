@@ -1,6 +1,6 @@
 import { useStore } from "@tanstack/react-store"
 import Select from "./Search";
-import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store/obs-overlay-store"
+import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store"
 import { presetUserVariants } from "@/data/obs-overlay";
 
 export default function Preset() {

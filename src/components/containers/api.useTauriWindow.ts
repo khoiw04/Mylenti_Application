@@ -1,7 +1,7 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useEffect } from "react";
 import { isTauri } from "@tauri-apps/api/core";
-import { AppWindowStore } from "@/store/app-window-store";
+import { AppWindowStore } from "@/store";
 
 export default function useTauriWindow() {
     useEffect(() => {

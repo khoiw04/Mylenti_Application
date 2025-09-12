@@ -4,12 +4,12 @@ import Cropper from 'react-easy-crop';
 import { useStore } from '@tanstack/react-store';
 import type { Area, Point } from 'react-easy-crop';
 import getCroppedImg from '@/lib/getCroppedImg';
-import { avatarStore, cropStore } from '@/store/avatar-store';
+import { avatarStore, cropStore } from '@/store';
 import { postCompression } from '@/data/settings';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AvatarProfile } from '@/components/presenters/user';
-import { cropedStrategy } from '@/func/stragery';
+import { cropedStrategy } from '@/func/fn.stragery';
 
 export function useCroppedAvatar(
   checkImages = '',

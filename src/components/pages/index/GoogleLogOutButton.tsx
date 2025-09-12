@@ -1,7 +1,7 @@
 import { useStore } from "@tanstack/react-store";
 import { LucideLogOut } from "lucide-react";
 import ButtonFunction from './ButtonFunction'
-import { IndexStraregy } from "@/store/index-store";
+import { IndexStraregy } from "@/store";
 import { clearYouTubeOBSLiveStream } from "@/func/db.YouTubeChatFunc";
 
 export default function GoogleLogOutButton() {

@@ -1,7 +1,7 @@
 import { createMutation } from "../../hooks/createMutations"
 import { useAppForm } from "../../hooks/useFormHook"
 import { fillInEmailFn } from "@/func/auth.ForgetPasword"
-import { ForgetEmailSchema } from "@/schema/logIn.schema"
+import { ForgetEmailSchema } from "@/schema"
 
 export function useForgetPassword() {
   const mutation = createMutation(fillInEmailFn)

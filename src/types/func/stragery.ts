@@ -1,7 +1,7 @@
 import type { OBSSuperchatChatKey } from "../ui/obs-overlay-setting";
 import type { presetUserVariantsValueType } from "../data/obs-overlay";
 import type { OBSOverlayChatKeyPropsType } from "../store/obs-overlay";
-import type { BankDataType, DonateDataType, ProfileDataType } from "@/types/hooks/returnType";
+import type { BankDataType, DonateDataType, ProfileDataType } from "@/types";
 import type { Provider } from "@supabase/supabase-js";
 import type { LoaderFnContext } from "@tanstack/react-router";
 import type { JSX } from "react";

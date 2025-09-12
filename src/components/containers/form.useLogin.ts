@@ -1,9 +1,9 @@
 import { useRouter } from "@tanstack/react-router";
-import { useAppForm } from "../../hooks/useFormHook";
-import { createMutation } from "../../hooks/createMutations";
-import { LogInSchema } from "@/schema/logIn.schema";
+import { useAppForm } from "@/hooks/useFormHook";
+import { createMutation } from "@/hooks/createMutations";
+import { LogInSchema } from "@/schema";
 import { loginFn } from "@/func/auth.Log";
-import { logInWithOauth } from "@/func/logInWithOauth";
+import { logInWithOauth } from "@/func/fn.logInWithOauth";
 import { useDimension } from "@/hooks/useDimension";
 
 export default function useLogInForm() {

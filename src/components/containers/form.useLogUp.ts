@@ -1,6 +1,6 @@
 import { useAppForm } from "../../hooks/useFormHook";
 import { createMutation } from "../../hooks/createMutations";
-import { LogUpSchema } from "@/schema/logIn.schema";
+import { LogUpSchema } from "@/schema";
 import { signupFn } from "@/func/auth.Log";
 
 export default function useLogUpForm() {

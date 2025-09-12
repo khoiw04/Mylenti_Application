@@ -1,5 +1,5 @@
 import { Store } from "@tanstack/store"
-import type { useBankFormType } from "@/types/hooks/returnType"
+import type { useBankFormType } from "@/types"
 
 
 export const bankPropsStore = new Store<{

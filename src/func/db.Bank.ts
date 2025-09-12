@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start"
-import type { bankSchemaType } from "@/types/schema"
+import type { bankSchemaType } from "@/types"
 import { getSupabaseServerClient } from "@/lib/supabase"
 
 export const handleBanks = createServerFn()

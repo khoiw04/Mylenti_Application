@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import type { LogInSchemaType, LogUpSchemaType } from '@/types/schema';
+import type { LogInSchemaType, LogUpSchemaType } from '@/types';
 import { getSupabaseServerClient } from '@/lib/supabase';
 import { redirectSupbaseSignUpUrl } from '@/data/oauth';
 

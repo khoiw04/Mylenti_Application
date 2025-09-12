@@ -3,9 +3,9 @@ import { Route } from "@/routes/ngan-hang"
 import { createMutation } from "@/hooks/createMutations";
 import { useAppForm } from "@/hooks/useFormHook";
 import { handleBanks } from "@/func/db.Bank";
-import { bankSchema } from "@/schema/bank.schema";
+import { bankSchema } from "@/schema";
 import { BankDisplayInfo } from "@/data/bank";
-import { bankPropsStore } from "@/store/bank-store";
+import { bankPropsStore } from "@/store";
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 const useBankInfo = () => Route.useLoaderData()

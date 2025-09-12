@@ -1,6 +1,6 @@
 import { toast } from "sonner";
-import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType } from "@/types/func/stragery";
-import { avatarStore } from "@/store/avatar-store";
+import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType } from "@/types";
+import { avatarStore } from "@/store";
 import { bankQueries, donateQueries, profileQueries } from "@/lib/queries";
 import { addAtPrefix } from "@/lib/utils";
 import { MemberChat, ModeratorChat, NormalChat, SuperchatChat, VerifiedChat } from "@/components/pages/obs-overlay/ChatType";

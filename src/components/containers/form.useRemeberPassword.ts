@@ -3,7 +3,7 @@ import { createMutation } from "../../hooks/createMutations"
 import { useAppForm } from "../../hooks/useFormHook"
 import { forgetPassFn } from "@/func/auth.ForgetPasword"
 import { exchangeCodeInClient } from "@/func/auth.Oauth"
-import { ResetPassSchema } from "@/schema/logIn.schema"
+import { ResetPassSchema } from "@/schema"
 
 export default function useRemeberPassword() {
   const router = useRouter()

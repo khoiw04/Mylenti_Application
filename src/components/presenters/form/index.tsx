@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import TermOfService from "./termofservice";
 import TermOfPrivacy from "./termofprivacy";
 import type {AnyFieldMeta} from "@tanstack/react-form";
-import type { ButtonFieldType, ComboBoxType, ShowBugType, TextFieldType } from "@/types/ui/form";
+import type { ButtonFieldType, ComboBoxType, ShowBugType, TextFieldType } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFieldContext, useFormContext } from "@/hooks/useFormContext";

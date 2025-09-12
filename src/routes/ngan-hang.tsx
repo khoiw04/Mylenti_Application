@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Header from '@/components/presenters/header'
 import { removeAtPrefix } from '@/lib/utils'
-import { loaderStrategy } from '@/func/stragery'
+import { loaderStrategy } from '@/func/fn.stragery'
 import { FormFrame } from '@/components/ui/frame'
 import { LogoForm } from '@/components/presenters/form'
 import { BankForm } from '@/components/pages/ngan-hang'

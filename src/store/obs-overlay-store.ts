@@ -1,5 +1,5 @@
 import { Store } from "@tanstack/store"
-import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType } from "@/types/store/obs-overlay"
+import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType } from "@/types"
 
 export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
   showComment: false,

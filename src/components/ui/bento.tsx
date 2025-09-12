@@ -1,4 +1,4 @@
-import type { BentoGridProps, BentoItemProps } from "@/types/ui/bento"
+import type { BentoGridProps, BentoItemProps } from "@/types"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 

@@ -17,7 +17,7 @@ function RouteComponent() {
     <FormFrame
       footer={
         <div className='absolute bottom-10'>
-        <Footer message='ký' />
+          <Footer message='ký' />
         </div>
       }
     >

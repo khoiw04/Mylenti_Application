@@ -1,6 +1,5 @@
 import { CheckIcon, ChevronDownIcon, PlusIcon } from "lucide-react"
-import type { presetUserVariantsValueType } from "@/types/data/obs-overlay"
-import type { SearchProps } from "@/types/ui/obs-overlay-setting"
+import type { SearchProps, presetUserVariantsValueType } from "@/types"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {

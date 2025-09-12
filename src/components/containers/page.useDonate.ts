@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useStore } from "@tanstack/react-store";
-import type { DonateDataType } from "@/types/hooks/returnType";
-import type { VirtualizerConfig } from "@/types/func/setting";
-import { donatePropsStore } from "@/store/donate-store";
+import type { DonateDataType, VirtualizerConfig } from "@/types";
+import { donatePropsStore } from "@/store";
 import { Route } from "@/routes/ke-toan";
-import { authInfoStore } from "@/store/auth-info-store";
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 export function useRankDonates(donateList: Array<DonateDataType>, currentUser: string) {

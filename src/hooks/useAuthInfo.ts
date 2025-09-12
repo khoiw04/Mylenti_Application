@@ -1,6 +1,6 @@
 import { useMemo, useSyncExternalStore } from "react";
 import { useAuthenticatedUser } from "@/lib/queries";
-import { authInfoStore } from "@/store/auth-info-store";
+import { authInfoStore } from "@/store";
 
 export default function useAuthInfo() {
   const {

@@ -2,11 +2,10 @@ import { useStore } from "@tanstack/react-store"
 import { useEffect } from "react"
 import { useAppForm } from "../../hooks/useFormHook"
 import { createMutation } from "../../hooks/createMutations"
-import { updateUserSchema } from "@/schema/user.schema"
-import { avatarStore } from "@/store/avatar-store"
+import { updateUserSchema } from "@/schema"
+import { authInfoStore, avatarStore } from "@/store"
 import { publishImage } from "@/lib/publishImage"
 import { updateUser } from "@/func/auth.UpdateInfo"
-import { authInfoStore } from "@/store/auth-info-store"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 
 export default function useProfileForm() {

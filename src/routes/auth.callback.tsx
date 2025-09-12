@@ -21,6 +21,8 @@ function RouteComponent() {
         const user = await getUser()
         if (user.isAuthenticated) {
           router.navigate({ to: '/', reloadDocument: true })
+        } else {
+          router.navigate({ to: '/dang-nhap' })
         }
         return null
       }
