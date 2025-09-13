@@ -1,6 +1,6 @@
 import { createServerFileRoute } from '@tanstack/react-start/server';
 import type { uploadFilesToBucketProps } from '@/types';
-import { getSupabaseServerClient, supabaseUrl } from '@/lib/supabase';
+import { getSupabaseServerClient, supabaseUrl } from '@/lib/supabaseServer';
 import { getImageDimensions } from '@/lib/getImageDimension';
 
 export const ServerRoute = createServerFileRoute('/uploadFiles').methods({

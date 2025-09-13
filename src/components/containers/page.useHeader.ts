@@ -5,6 +5,7 @@ import useLogOut from "./db.useLogOut";
 import type { NavigationHrefType } from "@/types";
 import { HeaderStrategy } from "@/store";
 import useAuthInfo from "@/hooks/useAuthInfo";
+import useListenSepayAlert from "@/func/db.ListenSepayAlert";
 
 function useHeaderSync() {
   const router = useRouter()
@@ -27,4 +28,5 @@ export default function useHeader() {
   useAuthInfo()
   useHeaderSync()
   useHeaderLogOut()
+  useListenSepayAlert()
 }

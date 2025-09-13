@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import type { bankSchemaType } from "@/types"
-import { getSupabaseServerClient } from "@/lib/supabase"
+import { getSupabaseServerClient } from "@/lib/supabaseServer"
 
 export const handleBanks = createServerFn()
   .validator((d: bankSchemaType) => d)

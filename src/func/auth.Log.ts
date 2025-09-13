@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { LogInSchemaType, LogUpSchemaType } from '@/types';
-import { getSupabaseServerClient } from '@/lib/supabase';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 import { redirectSupbaseSignUpUrl } from '@/data/oauth';
 
 export const loginFn = createServerFn({ method: 'POST' })

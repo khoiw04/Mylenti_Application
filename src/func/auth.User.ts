@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { AuthState } from '@/types';
-import { getSupabaseServerClient } from '@/lib/supabase';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
 export const getUser = createServerFn().handler<AuthState>(async () => {
   const supabase = getSupabaseServerClient();

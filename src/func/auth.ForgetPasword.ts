@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { ForgetEmailSchemaType, ResetPassSchemaType } from '@/types';
-import { getSupabaseServerClient } from '@/lib/supabase';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 import { redirectSupbaseForgetURL } from '@/data/oauth';
 
 export const fillInEmailFn = createServerFn({ method: 'POST' })
