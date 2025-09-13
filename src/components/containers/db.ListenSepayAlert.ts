@@ -4,7 +4,7 @@ import { useStore } from "@tanstack/react-store"
 import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import { websocketSendType } from "@/data/settings"
-import { safeSend } from "@/lib/safeParseMessage"
+import { safeSend } from "@/lib/safeJSONMessage"
 import { WebSocketStore } from "@/store"
 
 export default function useListenSepayAlert() {
@@ -18,10 +18,6 @@ export default function useListenSepayAlert() {
     const channel = supabaseSSR.channel(authInfo.currentUser)
       .on('broadcast', { event: 'new-transaction' }, ({ payload }) => {
         const formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(payload.transferAmount).replace(/\u00A0/g, '');
-
-        toast.success(`${payload.donate_name} ủng hộ ${formattedAmount}`, {
-          description: `Tin nhắn: ${payload.message}`
-        })
 
         safeSend(socket, {
           type: websocketSendType.DonateTranscation,

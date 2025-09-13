@@ -1,19 +1,16 @@
 import type WebSocket from '@tauri-apps/plugin-websocket'
-import type { Message } from '@tauri-apps/plugin-websocket'
 
-export function safeParseMessage(msg: Message): unknown | null {
-  if (typeof msg.data === 'string') {
-    try {
-      return JSON.parse(msg.data)
-    } catch (err) {
-      console.warn(' Không thể parse JSON:', err)
-      return null
-    }
+export function safeParse<T = unknown>(msg: { type: string; data: unknown }): T | null {
+  if (msg.type !== "Text") return null
+  if (typeof msg.data !== "string" || msg.data.trim() === "") return null
+
+  try {
+    return JSON.parse(msg.data) as T
+  } catch {
+    return null
   }
-
-  console.warn(' Dữ liệu không phải chuỗi:', msg.data)
-  return null
 }
+
 
 export function safeSend(socket: WebSocket | null, data: unknown) {
   if (!socket) {

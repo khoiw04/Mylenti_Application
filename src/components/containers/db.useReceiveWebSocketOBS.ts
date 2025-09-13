@@ -1,40 +1,45 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { useStore } from "@tanstack/react-store"
+import type { WebSocketMessageType } from "@/types"
 import { websocketSendType } from "@/data/settings"
 import { WebSocketStore } from "@/store"
+import { safeParse } from "@/lib/safeJSONMessage"
 
 export default function useReceiveWebSocket() {
-    const { socket } = useStore(WebSocketStore)
+  const { socket } = useStore(WebSocketStore)
+  const removeListenerRef = useRef<(() => void) | null>(null)
 
-    useEffect(() => {
-        socket?.addListener((msg) => {
-            const data = msg
+  useEffect(() => {
+    if (!socket) return
 
-            toast.success(`${data.name} đã donate ${data.amount} VND`, {
-                description: `Tin nhắn: ${data.message}`
-            })
+    const removeListener = socket.addListener((msg) => {
+        const parsed = safeParse<WebSocketMessageType>(msg)
+        if (!parsed || typeof parsed !== "object" || !("type" in parsed)) return
 
-            if (data && typeof data === 'object' && 'type' in data) {
-                switch (data.type) {
-                case websocketSendType.DonateTranscation:
-                    toast.success(`${data.name} đã donate ${data.amount} VND`, {
-                        description: `Tin nhắn: ${data.message}`
-                    })
-                    break
+        switch (parsed.type) {
+            case websocketSendType.DonateTranscation:
+                toast.success(`${parsed.data.name} đã donate ${parsed.data.amount}`, {
+                    description: `Tin nhắn: ${parsed.data.message}`
+                })
+                break
 
-                case websocketSendType.YouTubeMessage:
-                    toast.message(`📡 Server gửi: ${data.type}`)
-                    break
+            case websocketSendType.YouTubeMessage:
+                toast.message(`📡 Server gửi: ${parsed.data[0].message}`)
+                break
 
-                default:
-                    console.log('📦 Nhận dữ liệu không xác định:', data)
-                }
-            }
-        })
-
-        return () => {
-            socket?.disconnect()
+            default:
+            console.log("📦 Nhận dữ liệu không xác định:", parsed)
         }
-    }, [])
+    })
+
+    removeListenerRef.current = removeListener
+
+    return () => {
+      if (removeListenerRef.current) {
+        removeListenerRef.current()
+        removeListenerRef.current = null
+      }
+    }
+  }, [socket])
 }

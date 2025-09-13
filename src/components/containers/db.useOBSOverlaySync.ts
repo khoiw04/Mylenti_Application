@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { useStore } from '@tanstack/react-store'
 import { OBSOverlaySettingsProps, WebSocketStore } from '@/store'
 import { websocketSendType } from '@/data/settings'
-import { safeSend } from '@/lib/safeParseMessage'
+import { safeSend } from '@/lib/safeJSONMessage'
 
 export function useOBSOverlaySync() {
   const { socket } = useStore(WebSocketStore)
