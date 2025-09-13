@@ -1,14 +1,13 @@
 import { useEffect } from "react"
 import { toast } from "sonner"
-import useWebSocketOBS from "@/hooks/useWebSocketOBS"
+import { useStore } from "@tanstack/react-store"
 import { websocketSendType } from "@/data/settings"
+import { WebSocketStore } from "@/store"
 
 export default function useReceiveWebSocket() {
-    const socketRef = useWebSocketOBS()
+    const { socket } = useStore(WebSocketStore)
 
     useEffect(() => {
-        const socket = socketRef.current
-
         socket?.addListener((msg) => {
             const data = msg
 

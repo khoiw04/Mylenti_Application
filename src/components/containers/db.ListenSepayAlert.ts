@@ -1,16 +1,17 @@
 import { toast } from "sonner"
 import { useEffect } from "react"
+import { useStore } from "@tanstack/react-store"
 import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
-import useWebSocketOBS from "@/hooks/useWebSocketOBS"
 import { websocketSendType } from "@/data/settings"
 import { safeSend } from "@/lib/safeParseMessage"
+import { WebSocketStore } from "@/store"
 
 export default function useListenSepayAlert() {
   const authInfo = useAuthInfoExternalStore()
-  const socket = useWebSocketOBS()
+  const { socket } = useStore(WebSocketStore)
   useEffect(() => {
-    if (!socket.current) {
+    if (!socket) {
       toast.error('⚠️ WebSocket chưa kết nối, không thể gửi donate')
     }
 
@@ -22,7 +23,7 @@ export default function useListenSepayAlert() {
           description: `Tin nhắn: ${payload.message}`
         })
 
-        safeSend(socket.current, {
+        safeSend(socket, {
           type: websocketSendType.DonateTranscation,
           data: {
             name: payload.donate_name,
@@ -35,8 +36,8 @@ export default function useListenSepayAlert() {
 
     return () => {
       channel.unsubscribe()
-      socket.current?.disconnect()
+      socket?.disconnect()
     }
-  }, [socket.current])
+  }, [socket])
 
 }

@@ -1,4 +1,4 @@
-export * from './app-window-store'
+export * from './tauri-store'
 export * from './auth-info-store'
 export * from './avatar-store'
 export * from './bank-store'

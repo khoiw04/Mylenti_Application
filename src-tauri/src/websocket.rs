@@ -14,6 +14,7 @@ type SharedSender = Arc<Mutex<futures_util::stream::SplitSink<
 
 type ClientList = Arc<Mutex<Vec<SharedSender>>>;
 
+/// Gửi JSON tới tất cả client còn sống
 async fn broadcast_json(json: &Value, clients: &ClientList) {
     let message = Message::Text(json.to_string().into());
     let mut list = clients.lock().await;
@@ -61,21 +62,40 @@ pub async fn start_websocket_server() -> Result<()> {
                     while let Some(msg_result) = receiver.next().await {
                         match msg_result {
                             Ok(msg) => {
-                                if let Ok(text) = msg.to_text() {
-                                    if text.trim().is_empty() {
-                                        println!("⚠️ Nhận chuỗi rỗng, bỏ qua");
-                                        continue;
-                                    }
+                                match msg {
+                                    Message::Text(text) => {
+                                        let trimmed = text.trim();
+                                        if trimmed.is_empty() {
+                                            println!("⚠️ Nhận chuỗi rỗng, bỏ qua");
+                                            continue;
+                                        }
 
-                                    match serde_json::from_str::<Value>(text) {
-                                        Ok(mut json) => {
-                                            println!("📦 JSON: {:?}", json);
-                                            json["server_timestamp"] = Value::String(Utc::now().to_rfc3339());
-                                            broadcast_json(&json, &clients).await;
+                                        match serde_json::from_str::<Value>(trimmed) {
+                                            Ok(mut json) => {
+                                                json["server_timestamp"] = Value::String(Utc::now().to_rfc3339());
+                                                println!("📦 JSON hợp lệ:\n{}", serde_json::to_string_pretty(&json).unwrap());
+                                                broadcast_json(&json, &clients).await;
+                                            }
+                                            Err(e) => {
+                                                println!("❌ JSON không hợp lệ: {}", e);
+                                            }
                                         }
-                                        Err(e) => {
-                                            println!("❌ JSON không hợp lệ: {}", e);
-                                        }
+                                    }
+                                    Message::Binary(_) => {
+                                        println!("⚠️ Nhận Binary, bỏ qua");
+                                    }
+                                    Message::Close(frame) => {
+                                        println!("📴 Client gửi Close frame: {:?}", frame);
+                                        break;
+                                    }
+                                    Message::Ping(_) => {
+                                        println!("📡 Nhận Ping");
+                                    }
+                                    Message::Pong(_) => {
+                                        println!("📡 Nhận Pong");
+                                    }
+                                    Message::Frame(_) => {
+                                        println!("⚠️ Nhận Frame, bỏ qua");
                                     }
                                 }
                             }

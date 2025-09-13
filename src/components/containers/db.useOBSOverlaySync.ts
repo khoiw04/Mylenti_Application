@@ -1,16 +1,15 @@
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-import useWebSocketOBS from '@/hooks/useWebSocketOBS'
-import { OBSOverlaySettingsProps } from '@/store'
+import { useStore } from '@tanstack/react-store'
+import { OBSOverlaySettingsProps, WebSocketStore } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/safeParseMessage'
 
 export function useOBSOverlaySync() {
-  const socketRef = useWebSocketOBS()
+  const { socket } = useStore(WebSocketStore)
 
   useEffect(() => {
     const unsubscribe = OBSOverlaySettingsProps.subscribe((newState) => {
-      const socket = socketRef.current
       if (!socket) {
         toast.error('Websocket Lỗi, chưa thể gửi OBS Setting')
         return
@@ -25,5 +24,5 @@ export function useOBSOverlaySync() {
     return () => {
       unsubscribe()
     }
-  }, [socketRef])
+  }, [socket])
 }

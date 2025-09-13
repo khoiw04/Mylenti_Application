@@ -5,13 +5,12 @@ import { createOptimisticAction } from '@tanstack/db'
 import type { YouTubeChatResponse } from '@/types'
 import { chatMessageCollection, useChatMessage } from '@/data/db.YouTubeChatCollections'
 import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
-import useWebSocketOBS from '@/hooks/useWebSocketOBS'
-import { IndexState, PollingStatusStore, PollingStatusStragery } from '@/store'
+import { IndexState, PollingStatusStore, PollingStatusStragery, WebSocketStore } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/safeParseMessage'
 
 export default function usePollingYoutubeChat() {
-  const socketRef = useWebSocketOBS()
+  const { socket } = useStore(WebSocketStore)
   const { finishGoogleOBSAuth } = useStore(IndexState)
   const { data: messages } = useChatMessage()
 
@@ -34,7 +33,6 @@ export default function usePollingYoutubeChat() {
       })
     },
     mutationFn: async (msgs) => {
-      const socket = socketRef.current
       if (!socket) {
         toast.error('WebSocket chưa kết nối, không thể gửi tin nhắn')
         return
