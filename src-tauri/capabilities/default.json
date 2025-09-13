@@ -33,6 +33,9 @@
     "updater:allow-download-and-install",
     "updater:deny-download-and-install",
     "updater:allow-install",
-    "updater:deny-install"
+    "updater:deny-install",
+    "websocket:default",
+    "websocket:allow-connect",
+    "websocket:allow-send"
   ]
 }

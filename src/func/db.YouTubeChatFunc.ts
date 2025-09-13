@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getGoogleOBSAccessToken } from './auth.googleOBS'
+import type { YouTubeChatResponse } from '@/types'
 import { clearCachedCookie, getCachedCookie, nativeFetch, setCachedCookie } from '@/lib/utils'
 
 export const clearYouTubeOBSLiveStream = createServerFn()
@@ -39,7 +40,7 @@ export const getYouTubeOBSLiveStreamActiveLiveChatID = createServerFn({ method: 
         if (cached) return cached
 
         const accessToken = await getGoogleOBSAccessToken()
-        const videoId = 'v8iNZyDwkuk'
+        const videoId = 'cSC3ssH_e0w'
         const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -57,13 +58,13 @@ export const getYouTubeOBSLiveStreamActiveLiveChatID = createServerFn({ method: 
             throw new Error('Livestream không có live chat đang hoạt động')
         }
 
-        await setCachedCookie({data : {key: 'liveChatId', value: liveChatId, maxAge: 1000 * 60 * 60 * 24}})
+        await setCachedCookie({data : {key: 'liveChatId', value: liveChatId, maxAge: 1000 * 60 * 60 * 6}})
         return liveChatId
     })
 
 export const getYouTubeOBSLiveChatMessage = createServerFn({ method: 'GET' })
   .validator((d: { nextPageToken: string | null }) => d)
-  .handler(async ({ data: { nextPageToken } }) => {
+  .handler<YouTubeChatResponse>(async ({ data: { nextPageToken } }) => {
     const accessToken = await getGoogleOBSAccessToken()
     const liveChatId = await getYouTubeOBSLiveStreamActiveLiveChatID()
 

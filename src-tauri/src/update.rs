@@ -5,7 +5,13 @@ use tauri_plugin_updater::UpdaterExt;
 
 #[tauri::command]
 pub async fn run_update(app: AppHandle) -> Result<(), String> {
-    if let Some(update) = app.updater().map_err(|e| e.to_string())?.check().await.map_err(|e| e.to_string())? {
+    if let Some(update) = app
+        .updater()
+        .map_err(|e| e.to_string())?
+        .check()
+        .await
+        .map_err(|e| e.to_string())?
+    {
         let mut downloaded = 0;
 
         // Clone app để dùng trong closure
