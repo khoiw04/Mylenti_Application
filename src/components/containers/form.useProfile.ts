@@ -4,7 +4,7 @@ import { useAppForm } from "../../hooks/useFormHook"
 import { createMutation } from "../../hooks/createMutations"
 import { updateUserSchema } from "@/schema"
 import { authInfoStore, avatarStore } from "@/store"
-import { publishImage } from "@/lib/publishImage"
+import { publishImage } from "@/components/containers/db.usePublishImage"
 import { updateUser } from "@/func/auth.UpdateInfo"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 

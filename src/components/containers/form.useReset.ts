@@ -4,7 +4,7 @@ import { useAppForm } from "../../hooks/useFormHook";
 import { useResetMutation } from "./mutation.useReset";
 import { avatarStore, useResetPropsStore } from "@/store";
 import { updateUserNameSchema } from "@/schema";
-import { publishImage } from "@/lib/publishImage";
+import { publishImage } from "@/components/containers/db.usePublishImage";
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 export default function useResetForm() {

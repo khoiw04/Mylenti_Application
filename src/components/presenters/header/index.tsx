@@ -6,9 +6,11 @@ import Logo from "@/components/presenters/header/logo"
 import NotificationMenu from "@/components/presenters/header/notification-menu"
 import UserMenu from "@/components/presenters/header/user-menu"
 import useHeader from "@/components/containers/page.useHeader"
+import { useOBSOverlaySync } from "@/components/containers/db.useOBSOverlaySync"
 
 export default function Main() {
   useHeader()
+  useOBSOverlaySync()
 
   return (
     <header className="border-b px-4 md:px-6">

@@ -18,15 +18,16 @@ function getGoogleOBSOauth() {
                 logInWithOauthStrategy.tauriDirect(
                     getYoutubeScopeWithURL
                 )
-            } else {
-                const popup = window.open(
-                    getYoutubeScopeWithURL, 
-                    '_blank', 
-                    `scrollbars=yes, width=${y/2}, height=${x}, top=${x/2}, left=${y/2}`
-                )
-                if (popup) {
-                    popup.focus()
-                }
+                return
+            } 
+            
+            const popup = window.open(
+                getYoutubeScopeWithURL, 
+                '_blank', 
+                `scrollbars=yes, width=${y/2}, height=${x}, top=${x/2}, left=${y/2}`
+            )
+            if (popup) {
+                popup.focus()
             }
         },
         onGoogleLogOutClick: async () => await clearGoogleOBSCookies()
@@ -43,8 +44,12 @@ function handleOAuthMessage() {
             if (event.data.status === 'success') {
                 toast.success('Đã thắng Đăng Nhập!')
                 onFinishGoogleOBSAuth()
-            } else if (event.data.status === 'error') {
+                return
+            }
+
+            if (event.data.status === 'error') {
                 toast.error(`Đăng nhập Thất bại: ${event.data.message}`)
+                return
             }
         }
         window.addEventListener('message', message)

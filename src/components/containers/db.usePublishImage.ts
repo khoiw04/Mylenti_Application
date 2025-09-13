@@ -1,6 +1,6 @@
 import { toast } from "sonner";
-import { LinksToFiles } from "./convertLinksToFiles";
-import type { MainBlobs } from "./convertLinksToFiles";
+import { LinksToFiles } from "../../lib/convertLinksToFiles";
+import type { MainBlobs } from "../../lib/convertLinksToFiles";
 import type { publishImageProps } from "@/types";
 import { UploadStrategy } from "@/func/fn.stragery";
 
