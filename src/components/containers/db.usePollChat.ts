@@ -7,6 +7,8 @@ import { chatMessageCollection, useChatMessage } from '@/data/db.YouTubeChatColl
 import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
 import useWebSocketOBS from '@/hooks/useWebSocketOBS'
 import { IndexState, PollingStatusStore, PollingStatusStragery } from '@/store'
+import { websocketSendType } from '@/data/settings'
+import { safeSend } from '@/lib/safeParseMessage'
 
 export default function usePollingYoutubeChat() {
   const socketRef = useWebSocketOBS()
@@ -37,10 +39,11 @@ export default function usePollingYoutubeChat() {
         toast.error('WebSocket chưa kết nối, không thể gửi tin nhắn')
         return
       }
-      socket.send(JSON.stringify({
-        type: 'new-live-chat-message',
-        YOUTUBE_MESSAGE: msgs
-      }))
+
+      safeSend(socket, {
+        type: websocketSendType.YouTubeMessage,
+        data: msgs
+      })
     }
   })
 
@@ -64,7 +67,7 @@ export default function usePollingYoutubeChat() {
     setLastErrorMessage('')
     pollingStateRef.current.emptyPollCount = 0
     scheduleNextPoll(pollingStateRef.current.POLLING_INTERVAL)
-    toast.success('🔄 Đã khôi phục polling')
+    toast.success('Đã khôi phục polling')
   }
 
   const poll = async () => {

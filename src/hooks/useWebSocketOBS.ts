@@ -13,11 +13,15 @@ export default function useWebSocketOBS() {
       if (socketRef.current) return
       try {
         const socket = await WebSocket.connect(WEBSOCKET_OBSURL)
-        if (!isMounted) return
+        if (!isMounted) {
+          await socket.disconnect()
+          return
+        }
+
         socketRef.current = socket
-        toast.success('WebSocket connected')
+        toast.success('✅ WebSocket đã kết nối')
       } catch (err) {
-        toast.error(`WebSocket connection failed: ${err}`)
+        toast.error(`❌ WebSocket lỗi: ${err}`)
       }
     }
 
@@ -25,10 +29,8 @@ export default function useWebSocketOBS() {
 
     return () => {
       isMounted = false
-      if (socketRef.current) {
-        socketRef.current.disconnect()
-        socketRef.current = null
-      }
+      socketRef.current?.disconnect()
+      socketRef.current = null
     }
   }, [])
 

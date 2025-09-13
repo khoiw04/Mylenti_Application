@@ -22,3 +22,9 @@ export const daysMap = {
     '180d': 180,
     '360d': 360
 }
+
+export const websocketSendType = {
+    DonateTranscation: 'new-transaction',
+    OBSSetting: 'overlay-settings-update',
+    YouTubeMessage: 'live-chat-message'
+}

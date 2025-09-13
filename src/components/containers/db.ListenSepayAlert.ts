@@ -3,12 +3,16 @@ import { useEffect } from "react"
 import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import useWebSocketOBS from "@/hooks/useWebSocketOBS"
+import { websocketSendType } from "@/data/settings"
+import { safeSend } from "@/lib/safeParseMessage"
 
 export default function useListenSepayAlert() {
   const authInfo = useAuthInfoExternalStore()
   const socket = useWebSocketOBS()
   useEffect(() => {
-    if (!socket.current) return
+    if (!socket.current) {
+      toast.error('⚠️ WebSocket chưa kết nối, không thể gửi donate')
+    }
 
     const channel = supabaseSSR.channel(authInfo.currentUser)
       .on('broadcast', { event: 'new-transaction' }, ({ payload }) => {
@@ -18,12 +22,14 @@ export default function useListenSepayAlert() {
           description: `Tin nhắn: ${payload.message}`
         })
 
-        if (socket.current?.send) {
-          socket.current.send(JSON.stringify({
-            type: 'new-transaction',
-            data: payload
-          }))
-        }
+        safeSend(socket.current, {
+          type: websocketSendType.DonateTranscation,
+          data: {
+            name: payload.donate_name,
+            amount: formattedAmount,
+            message: payload.message
+          }
+        })
       })
       .subscribe()
 

@@ -5,59 +5,97 @@ use tokio::sync::Mutex;
 use std::sync::Arc;
 use tokio::io::Result;
 use serde_json::Value;
+use chrono::Utc;
 
-type SharedSender = Arc<Mutex<futures_util::stream::SplitSink<tokio_tungstenite::WebSocketStream<tokio::net::TcpStream>, Message>>>;
+type SharedSender = Arc<Mutex<futures_util::stream::SplitSink<
+    tokio_tungstenite::WebSocketStream<tokio::net::TcpStream>,
+    Message,
+>>>;
+
 type ClientList = Arc<Mutex<Vec<SharedSender>>>;
 
+async fn broadcast_json(json: &Value, clients: &ClientList) {
+    let message = Message::Text(json.to_string().into());
+    let mut list = clients.lock().await;
+    let mut active_clients = Vec::new();
+
+    for client in list.iter() {
+        let client = client.clone();
+        let result = {
+            let mut locked = client.lock().await;
+            locked.send(message.clone()).await
+        };
+
+        if result.is_ok() {
+            active_clients.push(client);
+        } else {
+            println!("⚠️ Client bị ngắt, loại bỏ");
+        }
+    }
+
+    *list = active_clients;
+}
+
 pub async fn start_websocket_server() -> Result<()> {
-  let listener = TcpListener::bind("127.0.0.1:4455").await?;
-  println!("🟢 WebSocket server đang chạy tại ws://127.0.0.1:4455");
+    let listener = TcpListener::bind("127.0.0.1:4455").await?;
+    println!("🟢 WebSocket server đang chạy tại ws://127.0.0.1:4455");
 
-  let clients: ClientList = Arc::new(Mutex::new(Vec::new()));
+    let clients: ClientList = Arc::new(Mutex::new(Vec::new()));
 
-  loop {
-    let (stream, _) = listener.accept().await?;
-    let clients = clients.clone();
+    loop {
+        let (stream, _) = listener.accept().await?;
+        let clients = clients.clone();
 
-    tokio::spawn(async move {
-      match accept_async(stream).await {
-        Ok(ws_stream) => {
-          let (sender, mut receiver) = ws_stream.split();
-          let sender = Arc::new(Mutex::new(sender));
+        tokio::spawn(async move {
+            match accept_async(stream).await {
+                Ok(ws_stream) => {
+                    let (sender, mut receiver) = ws_stream.split();
+                    let sender = Arc::new(Mutex::new(sender));
 
-          // Lưu client vào danh sách
-          clients.lock().await.push(sender.clone());
+                    {
+                        let mut list = clients.lock().await;
+                        list.push(sender.clone());
+                        println!("✅ Client mới kết nối. Tổng: {}", list.len());
+                    }
 
-          while let Some(Ok(msg)) = receiver.next().await {
-            if let Ok(text) = msg.to_text() {
-              println!("📨 Nhận: {}", text);
+                    while let Some(msg_result) = receiver.next().await {
+                        match msg_result {
+                            Ok(msg) => {
+                                if let Ok(text) = msg.to_text() {
+                                    if text.trim().is_empty() {
+                                        println!("⚠️ Nhận chuỗi rỗng, bỏ qua");
+                                        continue;
+                                    }
 
-              // Parse JSON (không phân loại)
-              if let Ok(json) = serde_json::from_str::<Value>(text) {
-                println!("📦 JSON: {:?}", json);
-              }
+                                    match serde_json::from_str::<Value>(text) {
+                                        Ok(mut json) => {
+                                            println!("📦 JSON: {:?}", json);
+                                            json["server_timestamp"] = Value::String(Utc::now().to_rfc3339());
+                                            broadcast_json(&json, &clients).await;
+                                        }
+                                        Err(e) => {
+                                            println!("❌ JSON không hợp lệ: {}", e);
+                                        }
+                                    }
+                                }
+                            }
+                            Err(e) => {
+                                println!("❌ Lỗi khi nhận tin nhắn: {}", e);
+                                break;
+                            }
+                        }
+                    }
 
-              // Broadcast tới tất cả client
-              let mut list = clients.lock().await;
-              let mut new_clients = Vec::new();
-
-              for client in list.iter() {
-                let mut locked = client.lock().await;
-                if locked.send(Message::Text(text.to_string().into())).await.is_ok() {
-                  new_clients.push(client.clone());
-                } else {
-                  println!("⚠️ Client bị ngắt, loại bỏ");
+                    {
+                        let mut list = clients.lock().await;
+                        list.retain(|c| !Arc::ptr_eq(c, &sender));
+                        println!("⚠️ Client đã ngắt kết nối. Còn lại: {}", list.len());
+                    }
                 }
-              }
-
-              *list = new_clients;
+                Err(e) => {
+                    eprintln!("❌ Lỗi khi thiết lập kết nối WebSocket: {}", e);
+                }
             }
-          }
-        }
-        Err(e) => {
-          eprintln!("❌ Lỗi kết nối WebSocket: {}", e);
-        }
-      }
-    });
-  }
+        });
+    }
 }

@@ -20,7 +20,6 @@ export const Route = createFileRoute('/')({
 
 function App() {
   useIndex()
-
   return (
     <>
       <Header />

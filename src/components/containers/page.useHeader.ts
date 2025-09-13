@@ -2,10 +2,12 @@ import { useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo } from "react";
 import { useStore } from "@tanstack/react-store";
 import useLogOut from "./db.useLogOut";
+import useReceiveWebSocket from "./db.useReceiveWebSocketOBS";
+import { useOBSOverlaySync } from "./db.useOBSOverlaySync";
 import type { NavigationHrefType } from "@/types";
 import { HeaderStrategy } from "@/store";
 import useAuthInfo from "@/hooks/useAuthInfo";
-import useListenSepayAlert from "@/func/db.ListenSepayAlert";
+import useListenSepayAlert from "@/components/containers/db.ListenSepayAlert";
 
 function useHeaderSync() {
   const router = useRouter()
@@ -28,5 +30,7 @@ export default function useHeader() {
   useAuthInfo()
   useHeaderSync()
   useHeaderLogOut()
+  useOBSOverlaySync()
   useListenSepayAlert()
+  useReceiveWebSocket()
 }
