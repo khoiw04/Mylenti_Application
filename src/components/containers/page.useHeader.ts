@@ -8,6 +8,7 @@ import type { NavigationHrefType } from "@/types";
 import { HeaderStrategy } from "@/store";
 import useAuthInfo from "@/hooks/useAuthInfo";
 import useListenSepayAlert from "@/components/containers/db.ListenSepayAlert";
+import useRustOBSSettingSync, { initOBSOverlaySettings } from "@/hooks/useRustOBSSettingsSync";
 
 function useHeaderSync() {
   const router = useRouter()
@@ -33,4 +34,6 @@ export default function useHeader() {
   useOBSOverlaySync()
   useListenSepayAlert()
   useReceiveWebSocket()
+  initOBSOverlaySettings()
+  useRustOBSSettingSync()
 }

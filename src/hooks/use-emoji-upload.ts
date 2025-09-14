@@ -1,12 +1,9 @@
-import {
-  BaseDirectory,
-  readFile,
-  stat,
-  writeFile,
-} from '@tauri-apps/plugin-fs';
+import { stat } from '@tauri-apps/plugin-fs';
 import { open } from '@tauri-apps/plugin-dialog';
+import { convertFileSrc } from '@tauri-apps/api/core';
 import { useCallback, useEffect, useState } from 'react';
 import { getMimeType } from '@/lib/utils';
+import { clearEmojis, loadEmojis, saveEmojis } from '@/store';
 
 export interface FileWithPreview {
   id: string;
@@ -19,7 +16,6 @@ export interface FileWithPreview {
 
 export interface FileUploadState {
   files: Array<FileWithPreview>;
-  isDragging: boolean;
   errors: Array<string>;
 }
 
@@ -32,29 +28,23 @@ export interface FileUploadOptions {
 export interface FileUploadActions {
   handleUpload: () => void;
   handleDrop: (e: React.DragEvent<HTMLElement>) => void;
-  handleDragEnter: (e: React.DragEvent<HTMLElement>) => void;
-  handleDragLeave: (e: React.DragEvent<HTMLElement>) => void;
-  handleDragOver: (e: React.DragEvent<HTMLElement>) => void;
   clearFiles: () => void;
   openFileDialog: () => void;
   getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
   handleDelete: (id: string) => void;
 }
 
-const JSON_FILE = 'image-links.json';
-const JSON_BASE = BaseDirectory.AppData;
-
 export const useFileUpload = (
   options: FileUploadOptions = {}
 ): [FileUploadState, FileUploadActions] => {
-  const { maxFiles = Infinity, accept = 'image/*', onFilesChange } = options;
+  const { maxFiles = Infinity, accept = 'image/*' } = options;
 
   const [state, setState] = useState<FileUploadState>({
     files: [],
-    isDragging: false,
     errors: [],
-  });
+  })
 
+  // Back-end
   const extractMetadata = async (paths: Array<string>): Promise<Array<FileWithPreview>> => {
     const files = await Promise.all(
       paths.map(async (path) => {
@@ -66,41 +56,31 @@ export const useFileUpload = (
           id: path,
           name,
           path,
-          preview: `file://${path}`,
+          preview: convertFileSrc(path),
           size: fileStat.size,
           type,
         };
       })
     );
     return files;
-  };
+  }
 
-  const saveToJson = useCallback(async (files: Array<FileWithPreview>) => {
-    const encoded = new TextEncoder().encode(JSON.stringify(files, null, 2));
-    await writeFile(JSON_FILE, encoded, { baseDir: JSON_BASE });
-  }, []);
-
-  const loadFromJson = useCallback(async () => {
+  const loadFromStore = useCallback(async () => {
     try {
-      const raw = await readFile(JSON_FILE, { baseDir: JSON_BASE });
-      const decoded = new TextDecoder().decode(raw);
-      const parsed = JSON.parse(decoded) as Array<FileWithPreview>;
-
-      setState(prev => ({ ...prev, files: parsed, errors: [] }));
-      onFilesChange?.(parsed);
+      const stored = await loadEmojis();
+      setState(prev => ({ ...prev, files: stored, errors: [] }));
     } catch (err) {
-      console.warn('Không thể đọc file JSON:', err);
+      console.warn('Không thể đọc từ store:', err);
     }
-  }, [onFilesChange]);
+  }, []);
 
   const updateFiles = useCallback(async (newPaths: Array<string>) => {
     const metadata = await extractMetadata(newPaths);
     const combined = [...state.files, ...metadata].slice(0, maxFiles);
 
     setState(prev => ({ ...prev, files: combined, errors: [] }));
-    await saveToJson(combined);
-    onFilesChange?.(combined);
-  }, [state.files, maxFiles, extractMetadata, saveToJson, onFilesChange]);
+    await saveEmojis(combined);
+  }, [state.files, maxFiles, extractMetadata]);
 
   const handleUpload = useCallback(async () => {
     const selected = await open({
@@ -114,10 +94,11 @@ export const useFileUpload = (
     await updateFiles(paths);
   }, [updateFiles]);
 
+
+  // Front-end
   const handleDrop = useCallback(async (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setState(prev => ({ ...prev, isDragging: false }));
 
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles.length === 0) return;
@@ -129,35 +110,16 @@ export const useFileUpload = (
     await updateFiles(paths);
   }, [updateFiles]);
 
-  const handleDragEnter = useCallback((e: React.DragEvent<HTMLElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setState(prev => ({ ...prev, isDragging: true }));
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent<HTMLElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setState(prev => ({ ...prev, isDragging: false }));
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
-
   const clearFiles = useCallback(async () => {
+    await clearEmojis();
     setState(prev => ({ ...prev, files: [], errors: [] }));
-    await saveToJson([]);
-    onFilesChange?.([]);
-  }, [saveToJson, onFilesChange]);
+  }, []);
 
   const handleDelete = useCallback(async (id: string) => {
     const filtered = state.files.filter(f => f.id !== id);
     setState(prev => ({ ...prev, files: filtered, errors: [] }));
-    await saveToJson(filtered);
-    onFilesChange?.(filtered);
-  }, [state.files, saveToJson, onFilesChange]);
+    await saveEmojis(filtered);
+  }, [state.files]);
 
   const openFileDialog = useCallback(() => {
     handleUpload();
@@ -174,7 +136,7 @@ export const useFileUpload = (
   }, [accept, openFileDialog]);
 
   useEffect(() => {
-    loadFromJson();
+    loadFromStore();
   }, []);
 
   return [
@@ -182,9 +144,6 @@ export const useFileUpload = (
     {
       handleUpload,
       handleDrop,
-      handleDragEnter,
-      handleDragLeave,
-      handleDragOver,
       clearFiles,
       openFileDialog,
       getInputProps,

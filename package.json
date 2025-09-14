@@ -51,6 +51,7 @@
     "@tauri-apps/plugin-dialog": "~2",
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-os": "^2.3.1",
+    "@tauri-apps/plugin-store": "~2",
     "@tauri-apps/plugin-websocket": "~2",
     "@trpc/client": "^11.4.3",
     "@trpc/server": "^11.4.3",
