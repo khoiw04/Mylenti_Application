@@ -1,13 +1,10 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useEffect } from "react";
-import { isTauri } from "@tauri-apps/api/core";
 import { AppWindowStore } from "@/store";
+import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 
 export default function useTauriWindow() {
-    useEffect(() => {
-        if (typeof window !== 'undefined' && isTauri()) {
-            const appWindow = getCurrentWindow();
-            AppWindowStore.setState(prev => ({ ...prev, appWindow }))
-        }
+    useTauriSafeEffect(() => {
+        const appWindow = getCurrentWindow();
+        AppWindowStore.setState(prev => ({ ...prev, appWindow }))
     }, [])
 }

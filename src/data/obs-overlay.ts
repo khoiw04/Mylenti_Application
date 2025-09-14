@@ -18,3 +18,11 @@ export const initialDonateFiles = [
     url: "/assets/images/emoji/woven_spaces.webp",
   },
 ]
+
+export const fallbackEmoji = [{
+  name: initialDonateFiles[0].name,
+  path: initialDonateFiles[0].url,
+  preview: initialDonateFiles[0].url,
+  type: initialDonateFiles[0].type,
+  size: initialDonateFiles[0].size,
+}];

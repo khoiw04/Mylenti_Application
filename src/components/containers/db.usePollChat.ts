@@ -7,7 +7,7 @@ import { chatMessageCollection, useChatMessage } from '@/data/db.YouTubeChatColl
 import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
 import { IndexState, PollingStatusStore, PollingStatusStragery, WebSocketStore } from '@/store'
 import { websocketSendType } from '@/data/settings'
-import { safeSend } from '@/lib/safeJSONMessage'
+import { safeSend } from '@/lib/socket.safeJSONMessage'
 
 export default function usePollingYoutubeChat() {
   const { socket } = useStore(WebSocketStore)

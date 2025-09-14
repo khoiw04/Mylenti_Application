@@ -1,4 +1,4 @@
-export * from './tauri-store'
+export * from './websocket-tauri-store'
 export * from './auth-info-store'
 export * from './avatar-store'
 export * from './bank-store'

@@ -4,7 +4,7 @@ import { useStore } from "@tanstack/react-store"
 import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import { websocketSendType } from "@/data/settings"
-import { safeSend } from "@/lib/safeJSONMessage"
+import { safeSend } from "@/lib/socket.safeJSONMessage"
 import { WebSocketStore } from "@/store"
 
 export default function useListenSepayAlert() {

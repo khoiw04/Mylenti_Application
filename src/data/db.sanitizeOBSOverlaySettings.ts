@@ -1,0 +1,54 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { fallbackEmoji, initialDonateFiles } from './obs-overlay';
+import type { OBSOverlaySettingsPropsType } from '@/types';
+
+export const sanitizeOBSOverlaySettings = (
+  raw: Partial<OBSOverlaySettingsPropsType>
+): OBSOverlaySettingsPropsType => {
+  const safeDonateProps =
+    typeof raw.DonateProps === 'object' && raw.DonateProps !== null
+      ? raw.DonateProps
+      : {} as Partial<OBSOverlaySettingsPropsType['DonateProps']>;
+
+  const safeEmojiArray = Array.isArray(safeDonateProps.emojiURL)
+    ? safeDonateProps.emojiURL
+    : [];
+
+  const emojiURL =
+    safeEmojiArray.length > 0
+      ? safeEmojiArray.map((emoji) => ({
+          name: emoji?.name ?? initialDonateFiles[0].name,
+          path: emoji?.path ?? initialDonateFiles[0].url,
+          preview: emoji?.preview ?? initialDonateFiles[0].url,
+          type: emoji?.type ?? initialDonateFiles[0].type,
+          size: emoji?.size ?? initialDonateFiles[0].size,
+        }))
+      : fallbackEmoji;
+
+  const safeChatTypeArray = Array.isArray(raw.ChatType)
+    ? raw.ChatType
+    : [];
+
+  return {
+    showComment: raw.showComment ?? false,
+    openStatePreset: raw.openStatePreset ?? false,
+    currentPreset: raw.currentPreset ?? 'default',
+    currentKeyChatType: raw.currentKeyChatType ?? 'Verified',
+    DonateProps: {
+      emojiURL,
+    },
+    ChatType: safeChatTypeArray.map((item) => ({
+      key: item?.key ?? 'Unknown',
+      label: item?.label ?? 'Không rõ',
+      config: {
+        commenter_avatar: item?.config?.commenter_avatar ?? true,
+        commenter_color: item?.config?.commenter_color ?? '',
+        commenter_effect:
+          typeof item?.config?.commenter_effect === 'function'
+            ? item.config.commenter_effect
+            : () => undefined,
+        commenter_name: item?.config?.commenter_name ?? true,
+      },
+    })),
+  };
+};

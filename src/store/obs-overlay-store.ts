@@ -1,11 +1,23 @@
 import { Store } from "@tanstack/store"
 import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType } from "@/types"
+import { initialDonateFiles } from "@/data/obs-overlay"
 
 export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
   showComment: false,
   openStatePreset: false,
   currentPreset: 'default',
   currentKeyChatType: 'Verified',
+  DonateProps : {
+    emojiURL: [
+      {
+        name: 'OMORI',
+        path: initialDonateFiles[0].url,
+        preview: initialDonateFiles[0].url,
+        type: 'image/jpeg',
+        size: 3434
+      }
+    ]
+  },
   ChatType: [
     {
       key: 'Verified',

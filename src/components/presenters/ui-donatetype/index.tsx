@@ -2,15 +2,16 @@
 
 import { useStore } from "@tanstack/react-store";
 import DonateComponent from "./component";
-import { commentParagraphSuperchatTest, commenter_name_test, initialDonateFiles } from "@/data/obs-overlay";
+import { commentParagraphSuperchatTest, commenter_name_test } from "@/data/obs-overlay";
 import { OBSOverlaySettingsProps } from "@/store";
 
-export default function DonateType() {
-    const { currentPreset } = useStore(OBSOverlaySettingsProps)
+export default function DonateOverlay() {
+    const { DonateProps, currentPreset } = useStore(OBSOverlaySettingsProps)
+    console.log(DonateProps.emojiURL[0])
 
     return (
         <DonateComponent
-            srcDonateEmoji={initialDonateFiles[0].url}
+            srcDonateEmoji={DonateProps.emojiURL[0].preview}
             srcDonateParagraph={commentParagraphSuperchatTest}
             srcDonateComment={commenter_name_test}
             currentPreset={currentPreset}

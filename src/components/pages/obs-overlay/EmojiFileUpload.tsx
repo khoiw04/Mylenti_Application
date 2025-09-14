@@ -5,8 +5,6 @@ import {
   UploadIcon,
   XIcon,
 } from "lucide-react"
-
-import { convertFileSrc } from "@tauri-apps/api/core";
 import { useFileUpload } from "@/hooks/use-emoji-upload"
 
 import { Button } from "@/components/ui/button"
@@ -74,7 +72,7 @@ export default function EmojiFileUpload() {
                   <div className="bg-accent flex aspect-square items-center relative justify-center overflow-hidden rounded-t-[inherit]">
                       <img
                         alt={file.name}
-                        src={convertFileSrc(file.path)}
+                        src={file.preview}
                         className="rounded-t-[inherit] absolute inset-0 object-cover"
                       />
                   </div>
@@ -106,7 +104,7 @@ export default function EmojiFileUpload() {
             >
               <ImageIcon className="size-4 opacity-60" />
             </div>
-            <p className="mb-1.5 text-sm font-medium">Hãy chọn bức ảnh hình Vuông</p>
+            <p className="mb-1.5 text-sm font-medium">Hãy chọn Ảnh / Gif hình Vuông</p>
             <p className="text-muted-foreground text-xs">
               Tối đa {maxFiles} bức ảnh
             </p>

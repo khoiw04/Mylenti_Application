@@ -2,37 +2,11 @@ import { stat } from '@tauri-apps/plugin-fs';
 import { open } from '@tauri-apps/plugin-dialog';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { useCallback, useEffect, useState } from 'react';
+
+import type { FileUploadActions, FileUploadOptions, FileUploadState, FileWithPreview } from '@/types/func/useFileUpload';
 import { getMimeType } from '@/lib/utils';
-import { clearEmojis, loadEmojis, saveEmojis } from '@/store';
-
-export interface FileWithPreview {
-  id: string;
-  name: string;
-  path: string;
-  preview: string;
-  size: number;
-  type: string;
-}
-
-export interface FileUploadState {
-  files: Array<FileWithPreview>;
-  errors: Array<string>;
-}
-
-export interface FileUploadOptions {
-  maxFiles?: number;
-  accept?: string;
-  onFilesChange?: (files: Array<FileWithPreview>) => void;
-}
-
-export interface FileUploadActions {
-  handleUpload: () => void;
-  handleDrop: (e: React.DragEvent<HTMLElement>) => void;
-  clearFiles: () => void;
-  openFileDialog: () => void;
-  getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
-  handleDelete: (id: string) => void;
-}
+import { OBSOverlaySettingsProps, clearEmojis, loadEmojis, saveEmojis } from '@/store';
+import { fallbackEmoji, initialDonateFiles } from '@/data/obs-overlay';
 
 export const useFileUpload = (
   options: FileUploadOptions = {}
@@ -53,12 +27,11 @@ export const useFileUpload = (
         const type = getMimeType(name);
 
         return {
-          id: path,
           name,
           path,
           preview: convertFileSrc(path),
           size: fileStat.size,
-          type,
+          type
         };
       })
     );
@@ -79,6 +52,14 @@ export const useFileUpload = (
     const combined = [...state.files, ...metadata].slice(0, maxFiles);
 
     setState(prev => ({ ...prev, files: combined, errors: [] }));
+    OBSOverlaySettingsProps.setState((prev) => ({
+      ...prev,
+      DonateProps: {
+        ...prev.DonateProps,
+        emojiURL: metadata,
+      },
+    }))
+
     await saveEmojis(combined);
   }, [state.files, maxFiles, extractMetadata]);
 
@@ -113,11 +94,33 @@ export const useFileUpload = (
   const clearFiles = useCallback(async () => {
     await clearEmojis();
     setState(prev => ({ ...prev, files: [], errors: [] }));
+    OBSOverlaySettingsProps.setState((prev) => ({
+      ...prev,
+      DonateProps: {
+        ...prev.DonateProps,
+        emojiURL: [{
+          name: initialDonateFiles[0].name,
+          path: initialDonateFiles[0].url,
+          preview: initialDonateFiles[0].url,
+          type: initialDonateFiles[0].type,
+          size: initialDonateFiles[0].size,
+        }],
+      },
+    }))
   }, []);
 
-  const handleDelete = useCallback(async (id: string) => {
-    const filtered = state.files.filter(f => f.id !== id);
+  const handleDelete = useCallback(async (path: string) => {
+    const filtered = state.files.filter(f => f.path !== path);
     setState(prev => ({ ...prev, files: filtered, errors: [] }));
+
+    OBSOverlaySettingsProps.setState((prev) => ({
+      ...prev,
+      DonateProps: {
+        ...prev.DonateProps,
+        emojiURL: filtered.length > 0 ? filtered : fallbackEmoji,
+      },
+    }));
+
     await saveEmojis(filtered);
   }, [state.files]);
 

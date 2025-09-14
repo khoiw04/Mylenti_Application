@@ -1,10 +1,29 @@
 import { useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { useStore } from "@tanstack/react-store"
+import { readFile } from '@tauri-apps/plugin-fs';
 import type { WebSocketMessageType } from "@/types"
 import { websocketSendType } from "@/data/settings"
 import { WebSocketStore } from "@/store"
-import { safeParse } from "@/lib/safeJSONMessage"
+import { safeParse } from "@/lib/socket.safeJSONMessage"
+
+// **
+// Cách gửi ảnh Path sang OBS OVERLAY qua Mã Nhị Phân
+//
+// const sendEmojiToOBS = async () => {
+//   const settings = OBSOverlaySettingsProps.get();
+//   const paths = settings.DonateProps.emojiPath ?? [];
+
+//   for (const path of paths) {
+//      const buffer = await readFile(path);
+//      socket.send(JSON.stringify({
+//      type: 'emoji',
+//      name: 'kirby.gif',
+//      mime: 'image/gif',
+//      data: Array.from(buffer),
+//    }));
+//   }
+// };
 
 export default function useReceiveWebSocket() {
   const { socket } = useStore(WebSocketStore)

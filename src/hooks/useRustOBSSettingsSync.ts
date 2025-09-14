@@ -1,9 +1,24 @@
-import { useEffect } from 'react';
 import { debounce } from '@tanstack/react-pacer';
+import useTauriSafeEffect from './useTauriSideEffect';
 import { OBSOverlaySettingsProps, loadOBSSetting, saveOBSSetting } from '@/store';
+import { sanitizeOBSOverlaySettings } from '@/data/db.sanitizeOBSOverlaySettings';
+
+export const useInitOBSOverlaySettings = () => {
+  useTauriSafeEffect(() => {
+    const init = async () => {
+      const saved = await loadOBSSetting();
+      if (typeof saved === 'object') {
+        const safeState = sanitizeOBSOverlaySettings(saved);
+        OBSOverlaySettingsProps.setState(safeState);
+      }
+    };
+
+    init();
+  }, []);
+};
 
 export default function useRustOBSSettingSync() {
-  useEffect(() => {
+  useTauriSafeEffect(() => {
     const debouncedSave = debounce(saveOBSSetting, {
       wait: 500,
       trailing: true,
@@ -17,17 +32,4 @@ export default function useRustOBSSettingSync() {
       unsub()
     };
   }, [])
-
-  return null
-}
-
-export const initOBSOverlaySettings = async () => {
-  // const saved = await loadOBSSetting();
-
-  // useEffect(() => {
-  //     if (typeof saved === 'object') {
-  //       OBSOverlaySettingsProps.setState(saved);
-  //     }
-  // }, [])
-  return null
 }

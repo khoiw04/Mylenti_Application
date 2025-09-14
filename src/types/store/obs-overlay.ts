@@ -1,4 +1,5 @@
 import type { presetUserVariantsValueType } from "../data/obs-overlay"
+import { FileWithPreview } from "../func/useFileUpload";
 
 export type OBSOverlayChatLabelPropsType = OBSOverlayChatTypePropsType['label']
 export type OBSOverlayChatKeyPropsType = OBSOverlayChatTypePropsType['key']
@@ -22,8 +23,12 @@ export type OBSOverlaySettingsPropsType = {
     currentPreset: presetUserVariantsValueType
     currentKeyChatType: OBSOverlayAllKeyPropsType,
     ChatType: Array<OBSOverlayChatTypePropsType>;
+    DonateProps: OBSOverlayDonatePropsType
 }
 
+export type OBSOverlayDonatePropsType = {
+    emojiURL: Array<FileWithPreview>
+}
 
 export type OBSOverlaySettingStrageryType = {
     openStatePresetStragery: (boolean: boolean) => void
