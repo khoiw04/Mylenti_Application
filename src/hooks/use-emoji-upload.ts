@@ -1,4 +1,4 @@
-import { stat } from '@tauri-apps/plugin-fs';
+import { readFile, stat } from '@tauri-apps/plugin-fs';
 import { open } from '@tauri-apps/plugin-dialog';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { useCallback, useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { FileUploadActions, FileUploadOptions, FileUploadState, FileWithPreview } from '@/types/func/useFileUpload';
 import { getMimeType } from '@/lib/utils';
 import { OBSOverlaySettingsProps, clearEmojis, loadEmojis, saveEmojis } from '@/store';
-import { fallbackEmoji, initialDonateFiles } from '@/data/obs-overlay';
+import { fallbackEmoji } from '@/data/obs-overlay';
 
 export const useFileUpload = (
   options: FileUploadOptions = {}
@@ -25,18 +25,20 @@ export const useFileUpload = (
         const name = path.split(/[/\\]/).pop()!;
         const fileStat = await stat(path);
         const type = getMimeType(name);
+        const binary = await readFile(path);
 
         return {
           name,
           path,
           preview: convertFileSrc(path),
           size: fileStat.size,
-          type
+          type,
+          binary,
         };
       })
     );
     return files;
-  }
+  };
 
   const loadFromStore = useCallback(async () => {
     try {
@@ -98,13 +100,7 @@ export const useFileUpload = (
       ...prev,
       DonateProps: {
         ...prev.DonateProps,
-        emojiURL: [{
-          name: initialDonateFiles[0].name,
-          path: initialDonateFiles[0].url,
-          preview: initialDonateFiles[0].url,
-          type: initialDonateFiles[0].type,
-          size: initialDonateFiles[0].size,
-        }],
+        emojiURL: fallbackEmoji,
       },
     }))
   }, []);

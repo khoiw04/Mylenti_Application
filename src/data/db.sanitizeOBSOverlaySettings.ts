@@ -22,6 +22,7 @@ export const sanitizeOBSOverlaySettings = (
           preview: emoji?.preview ?? initialDonateFiles[0].url,
           type: emoji?.type ?? initialDonateFiles[0].type,
           size: emoji?.size ?? initialDonateFiles[0].size,
+          binary: emoji?.binary ?? new Uint8Array(10)
         }))
       : fallbackEmoji;
 

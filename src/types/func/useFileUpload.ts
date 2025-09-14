@@ -4,6 +4,7 @@ export interface FileWithPreview {
   preview: string;
   size: number;
   type: string;
+  binary: Uint8Array<ArrayBuffer>
 }
 
 export interface FileUploadState {

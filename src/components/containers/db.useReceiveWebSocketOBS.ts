@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { useStore } from "@tanstack/react-store"
-import { readFile } from '@tauri-apps/plugin-fs';
 import type { WebSocketMessageType } from "@/types"
 import { websocketSendType } from "@/data/settings"
 import { WebSocketStore } from "@/store"

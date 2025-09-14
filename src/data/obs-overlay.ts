@@ -20,9 +20,10 @@ export const initialDonateFiles = [
 ]
 
 export const fallbackEmoji = [{
-  name: initialDonateFiles[0].name,
+  name: 'OMORI',
   path: initialDonateFiles[0].url,
   preview: initialDonateFiles[0].url,
-  type: initialDonateFiles[0].type,
-  size: initialDonateFiles[0].size,
+  type: 'image/jpeg',
+  size: 3434,
+  binary: new Uint8Array(10)
 }];
