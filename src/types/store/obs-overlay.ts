@@ -2,6 +2,7 @@ import type { presetUserVariantsValueType } from "../data/obs-overlay"
 
 export type OBSOverlayChatLabelPropsType = OBSOverlayChatTypePropsType['label']
 export type OBSOverlayChatKeyPropsType = OBSOverlayChatTypePropsType['key']
+export type OBSOverlayAllKeyPropsType = OBSOverlayChatKeyPropsType | 'Donate'
 export type OBSOverlayConfigChatTypeField = 'commenter_avatar' | 'commenter_name';
 
 export type OBSOverlayChatTypePropsType = {
@@ -19,7 +20,7 @@ export type OBSOverlaySettingsPropsType = {
     openStatePreset: boolean
     showComment: boolean;
     currentPreset: presetUserVariantsValueType
-    currentKeyChatType: OBSOverlayChatKeyPropsType,
+    currentKeyChatType: OBSOverlayAllKeyPropsType,
     ChatType: Array<OBSOverlayChatTypePropsType>;
 }
 
@@ -27,10 +28,10 @@ export type OBSOverlaySettingsPropsType = {
 export type OBSOverlaySettingStrageryType = {
     openStatePresetStragery: (boolean: boolean) => void
     currentPresetStragery: (value: presetUserVariantsValueType) => void
-    currentKeyChatTypeStragery: (string: OBSOverlayChatKeyPropsType) => void
+    currentKeyChatTypeStragery: (string: OBSOverlayAllKeyPropsType) => void
     showCommentStragery: (boolean: boolean) => void
     getCorrectChatTypeDataStragery: (string: OBSOverlayChatKeyPropsType) => OBSOverlayChatTypePropsType | null
-    showAvatarStragery: <T extends OBSOverlayConfigChatTypeField>(
+    showLabelStragery: <T extends OBSOverlayConfigChatTypeField>(
         key: string,
         field: T,
         value: boolean

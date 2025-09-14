@@ -1,16 +1,20 @@
-use tokio::net::TcpListener;
-use tokio_tungstenite::{accept_async, tungstenite::Message};
-use futures_util::{StreamExt, SinkExt};
-use tokio::sync::Mutex;
+use chrono::Utc;
+use futures_util::{SinkExt, StreamExt};
+use serde_json::Value;
 use std::sync::Arc;
 use tokio::io::Result;
-use serde_json::Value;
-use chrono::Utc;
+use tokio::net::TcpListener;
+use tokio::sync::Mutex;
+use tokio_tungstenite::{accept_async, tungstenite::Message};
 
-type SharedSender = Arc<Mutex<futures_util::stream::SplitSink<
-    tokio_tungstenite::WebSocketStream<tokio::net::TcpStream>,
-    Message,
->>>;
+type SharedSender = Arc<
+    Mutex<
+        futures_util::stream::SplitSink<
+            tokio_tungstenite::WebSocketStream<tokio::net::TcpStream>,
+            Message,
+        >,
+    >,
+>;
 
 type ClientList = Arc<Mutex<Vec<SharedSender>>>;
 
@@ -61,44 +65,46 @@ pub async fn start_websocket_server() -> Result<()> {
 
                     while let Some(msg_result) = receiver.next().await {
                         match msg_result {
-                            Ok(msg) => {
-                                match msg {
-                                    Message::Text(text) => {
-                                        let trimmed = text.trim();
-                                        if trimmed.is_empty() {
-                                            println!("⚠️ Nhận chuỗi rỗng, bỏ qua");
-                                            continue;
-                                        }
+                            Ok(msg) => match msg {
+                                Message::Text(text) => {
+                                    let trimmed = text.trim();
+                                    if trimmed.is_empty() {
+                                        println!("⚠️ Nhận chuỗi rỗng, bỏ qua");
+                                        continue;
+                                    }
 
-                                        match serde_json::from_str::<Value>(trimmed) {
-                                            Ok(mut json) => {
-                                                json["server_timestamp"] = Value::String(Utc::now().to_rfc3339());
-                                                println!("📦 JSON hợp lệ:\n{}", serde_json::to_string_pretty(&json).unwrap());
-                                                broadcast_json(&json, &clients).await;
-                                            }
-                                            Err(e) => {
-                                                println!("❌ JSON không hợp lệ: {}", e);
-                                            }
+                                    match serde_json::from_str::<Value>(trimmed) {
+                                        Ok(mut json) => {
+                                            json["server_timestamp"] =
+                                                Value::String(Utc::now().to_rfc3339());
+                                            println!(
+                                                "📦 JSON hợp lệ:\n{}",
+                                                serde_json::to_string_pretty(&json).unwrap()
+                                            );
+                                            broadcast_json(&json, &clients).await;
                                         }
-                                    }
-                                    Message::Binary(_) => {
-                                        println!("⚠️ Nhận Binary, bỏ qua");
-                                    }
-                                    Message::Close(frame) => {
-                                        println!("📴 Client gửi Close frame: {:?}", frame);
-                                        break;
-                                    }
-                                    Message::Ping(_) => {
-                                        println!("📡 Nhận Ping");
-                                    }
-                                    Message::Pong(_) => {
-                                        println!("📡 Nhận Pong");
-                                    }
-                                    Message::Frame(_) => {
-                                        println!("⚠️ Nhận Frame, bỏ qua");
+                                        Err(e) => {
+                                            println!("❌ JSON không hợp lệ: {}", e);
+                                        }
                                     }
                                 }
-                            }
+                                Message::Binary(_) => {
+                                    println!("⚠️ Nhận Binary, bỏ qua");
+                                }
+                                Message::Close(frame) => {
+                                    println!("📴 Client gửi Close frame: {:?}", frame);
+                                    break;
+                                }
+                                Message::Ping(_) => {
+                                    println!("📡 Nhận Ping");
+                                }
+                                Message::Pong(_) => {
+                                    println!("📡 Nhận Pong");
+                                }
+                                Message::Frame(_) => {
+                                    println!("⚠️ Nhận Frame, bỏ qua");
+                                }
+                            },
                             Err(e) => {
                                 println!("❌ Lỗi khi nhận tin nhắn: {}", e);
                                 break;

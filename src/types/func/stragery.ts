@@ -26,7 +26,7 @@ export type loginWthOauthPropsStrategy = {
 
 
 export type ChatTypeStrategyType = Record<
-  OBSOverlayChatKeyPropsType, 
+  OBSOverlayChatKeyPropsType | 'Donate', 
   (() => JSX.Element) | null
 >
 

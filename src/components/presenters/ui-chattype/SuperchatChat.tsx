@@ -4,7 +4,7 @@ import { containerPriceVariants, containerSuperChatVariants, infoUserSuperchatCo
 import type { OBSOverlayChatKeyPropsType, chatTypeProps, chatTypeVariatntsProps } from "@/types"
 import { cn, truncateMessage } from "@/lib/utils"
 import { SuperchatIconStrategy } from "@/func/fn.stragery"
-import { commentParagraphSuperchatTest } from "@/data/obs-overlay"
+import { commentParagraphSuperchatTest, commenter_name_test } from "@/data/obs-overlay"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function SuperchatType({
@@ -20,6 +20,9 @@ export default function SuperchatType({
   srcTypeMember,
   currentKeyChatType = 'Normal',
   srcAvatarCommenter = "./avatar-80-07.jpg",
+  srcCommentCommmenter = commentParagraphSuperchatTest,
+  srcNameCommenter = commenter_name_test,
+  donatePrice = '$100.00',
   ...props
 }: React.ComponentProps<"div"> &
   chatTypeVariatntsProps & 
@@ -57,17 +60,17 @@ export default function SuperchatType({
             {showCommenter &&
             <div className={cn(containerPriceVariant, classNameCommenter)}>
                 <span>
-                  TEST
+                  {srcNameCommenter}
                 </span>
                 <span>
-                  $100.00
+                  {donatePrice}
                 </span>
             </div>}
           </div>
           <div>
             {showComment &&
               <p className={cn(commentVariant, classNameComment)}>
-                {truncateMessage(commentParagraphSuperchatTest)}
+                {truncateMessage(srcCommentCommmenter)}
               </p>
             }
           </div>

@@ -6,6 +6,8 @@ mod websocket;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_websocket::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_deep_link::init())
@@ -16,7 +18,7 @@ pub fn run() {
         .setup(|app| {
             tauri::async_runtime::spawn(async {
                 if let Err(e) = start_websocket_server().await {
-                eprintln!("❌ WebSocket server lỗi: {}", e);
+                    eprintln!("❌ WebSocket server lỗi: {}", e);
                 }
             });
             if cfg!(debug_assertions) {

@@ -10,8 +10,22 @@ export type chatTypeProps =
     classNameUserContainer?: string;
     classNameCommenter?: string;
     classNameComment?: string;
-    srcAvatarCommenter?: string
+    srcAvatarCommenter: string
+    srcCommentCommmenter: string
+    srcNameCommenter: string
     srcTypeMember?: string
+    donatePrice?: string
+}
+
+export type donateTypeProps = 
+{
+    srcDonateEmoji: string
+    srcDonateComment: string
+    srcDonateParagraph: string
+    classNameMainContainer?: string,
+    classNameEmojiContainer?: string,
+    classNameCommenterContainer?: string,
+    donatePrice: string
 }
 
 export type SearchProps = 

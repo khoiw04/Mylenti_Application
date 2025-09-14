@@ -3,10 +3,11 @@ import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType,
 import { avatarStore } from "@/store";
 import { bankQueries, donateQueries, profileQueries } from "@/lib/queries";
 import { addAtPrefix } from "@/lib/utils";
-import { MemberChat, ModeratorChat, NormalChat, SuperchatChat, VerifiedChat } from "@/components/pages/obs-overlay/ChatType";
+import { MemberChat, ModeratorChat, NormalChat, SuperchatChat, VerifiedChat } from "@/components/presenters/ui-chattype";
 import { DefaultAvatarVertifed } from "@/components/presenters/ui-chattype/AvatarVertifed";
 import { DefaultAvatarModerator } from "@/components/presenters/ui-chattype/AvatarModerator";
-import { DefaultAvatarMemeber } from "@/components/presenters/ui-chattype/AvatarMember";
+import { DefaultAvatarMember } from "@/components/presenters/ui-chattype/AvatarMember";
+import DonateType from "@/components/presenters/ui-donatetype";
 
 export const UploadStrategy: UploadStrategyProps = {
   get: (from: string, files: Array<File>) => {
@@ -78,7 +79,8 @@ export const ChatTypeStrategy: ChatTypeStrategyType = {
   "Normal": NormalChat,
   "Superchat": SuperchatChat,
   "Member": MemberChat,
-  "Verified": VerifiedChat
+  "Verified": VerifiedChat,
+  "Donate": DonateType
 }
 
 export const VerifiedIconStrategy: VerifiedIconStrategyType = {
@@ -94,9 +96,9 @@ export const ModeratorIconStrategy: ModeratorIconStrategyType = {
 }
 
 export const MemberIconStrategy: MemberIconStrategyType = {
-  default: ({ srcAvatar, srcTypeMember }) => DefaultAvatarMemeber({ srcAvatar, srcTypeMember }),
-  "Mori Seikai": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMemeber({ srcAvatar, srcTypeMember }),
-  "Siini": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMemeber({ srcAvatar, srcTypeMember }),
+  default: ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
+  "Mori Seikai": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
+  "Siini": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
 }
 
 export const SuperchatIconStrategy: SuperchatIconStrategyType = {

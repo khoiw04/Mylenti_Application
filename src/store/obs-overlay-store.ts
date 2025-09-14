@@ -73,7 +73,7 @@ export const OBSOverlaySettingStragery = new Store<OBSOverlaySettingStrageryType
         showComment: boolean
       })
     ),
-    showAvatarStragery: (key, field, value) => {
+    showLabelStragery: (key, field, value) => {
       OBSOverlaySettingsProps.setState(prev => ({
         ...prev,
         ChatType: prev.ChatType.map(item =>

@@ -1,26 +1,10 @@
 import { cva } from "class-variance-authority";
 import { defaultVariants } from "@/data/obs-overlay";
 
-const commenterMainContainerVariants = cva("", {
+const donaterMainContainerVariants = cva("flex flex-col items-center text-center", {
   variants: {
     currentPreset: {
-      default: "inline-flex items-center gap-4",
-      "Mori Seikai": "",
-      "Siini": "",
-    },
-    memberPreset: {
-      default: 'bg-neutral-300 rounded-2xl p-2',
-      "Mori Seikai": "",
-      "Siini": "",
-    }
-  },
-  ...defaultVariants
-})
-
-const infoCommenterContainerVariants = cva("", {
-  variants: {
-    currentPreset: {
-      default: "inline-flex items-center gap-4",
+      default: "max-w-lg",
       "Mori Seikai": "",
       "Siini": "",
     },
@@ -28,10 +12,10 @@ const infoCommenterContainerVariants = cva("", {
   ...defaultVariants
 })
 
-const commenterNameVariants = cva("", {
+const donateEmojiContainerVarients = cva("overflow-hidden relative", {
   variants: {
     currentPreset: {
-      default: "font-bold",
+      default: "size-40 rounded-4xl",
       "Mori Seikai": "",
       "Siini": "",
     },
@@ -39,7 +23,18 @@ const commenterNameVariants = cva("", {
   ...defaultVariants
 })
 
-const commentVariants = cva("", {
+const donaterNameVariants = cva("my-4", {
+  variants: {
+    currentPreset: {
+      default: "font-medium text-lg",
+      "Mori Seikai": "",
+      "Siini": "",
+    },
+  },
+  ...defaultVariants
+})
+
+const donaterCommentVariants = cva("", {
   variants: {
     currentPreset: {
       default: "",
@@ -51,4 +46,4 @@ const commentVariants = cva("", {
 });
 
 
-export { commenterMainContainerVariants, infoCommenterContainerVariants, commenterNameVariants, commentVariants }
+export { donaterMainContainerVariants, donaterNameVariants, donateEmojiContainerVarients, donaterCommentVariants }

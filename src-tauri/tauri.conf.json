@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "Mylenti",
-        "width": 800,
-        "height": 600,
+        "width": 1100,
+        "height": 800,
         "center": true,
         "resizable": true,
         "fullscreen": false,
@@ -23,7 +23,17 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost",
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "C:/**/*",
+          "D:/**/*",
+          "E:/**/*",
+          "G:/**/*",
+          "F:/**/*"
+        ]
+      }
     }
   },
   "bundle": {

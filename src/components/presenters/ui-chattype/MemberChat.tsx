@@ -1,11 +1,11 @@
 import * as React from "react"
-import { commentVariants, commenterNameVariants, containerMainVariants, infoUserContainerVariants } from "./cva"
+import { commentVariants, commenterNameVariants, commenterMainContainerVariants, infoCommenterContainerVariants } from "./cva"
 import type { chatTypeProps, chatTypeVariatntsProps } from "@/types"
 import { cn, truncateMessage } from "@/lib/utils"
 import { MemberIconStrategy } from "@/func/fn.stragery"
-import { commentParagraphTest } from "@/data/obs-overlay"
+import { commentParagraphTest, commenter_name_test } from "@/data/obs-overlay"
 
-export default function MemeberType({
+export default function MemberType({
   className,
   showAvatar = true,
   showComment = false,
@@ -17,13 +17,15 @@ export default function MemeberType({
   currentPreset,
   srcTypeMember = 'https://yt3.ggpht.com/uekwnT0_9Q7maqBWXvbUa4-RpXroZyyThDwKak0rfFJW-CaMIokwDuzp5IZDsTLPS09WgF5b=s32-k-nd',
   srcAvatarCommenter = "./avatar-80-07.jpg",
+  srcCommentCommmenter = commentParagraphTest,
+  srcNameCommenter = commenter_name_test,
   ...props
 }: React.ComponentProps<"div"> &
   chatTypeVariatntsProps & 
   chatTypeProps
 ) {
-    const containerVarient = containerMainVariants({ currentPreset, memeberPreset: currentPreset });
-    const infoUserContainerVarient = infoUserContainerVariants({ currentPreset });
+    const containerVarient = commenterMainContainerVariants({ currentPreset, memberPreset: currentPreset });
+    const infoUserContainerVarient = infoCommenterContainerVariants({ currentPreset });
     const commenterNameVariant = commenterNameVariants({ currentPreset });
     const commentVariant = commentVariants({ currentPreset });
     const IconComponent = MemberIconStrategy[currentPreset!];
@@ -40,13 +42,13 @@ export default function MemeberType({
                 }
                 {showCommenter &&
                 <h2 className={cn(commenterNameVariant, classNameCommenter)}>
-                  TEST
+                  {srcNameCommenter}
                 </h2>}
               </span>
               {!showAvatar && <img src={srcTypeMember} width={22} height={22} />}
               {showComment &&
                 <p className={cn(commentVariant, classNameComment)}>
-                  {truncateMessage(commentParagraphTest)}
+                  {truncateMessage(srcCommentCommmenter)}
                 </p>
               }
         </div>

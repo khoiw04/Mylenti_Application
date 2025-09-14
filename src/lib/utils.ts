@@ -43,6 +43,39 @@ export function getReadableTimestamp(): string {
   return `${yyyy}-${mm}-${dd}_${hh}-${min}-${ss}`;
 }
 
+export function formatBytes(bytes: number, decimals = 2): string {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+
+  return `${size} ${sizes[i]}`;
+}
+
+export const getMimeType = (filename: string): string => {
+  const ext = filename.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'png':
+      return 'image/png';
+    case 'jpg':
+    case 'jpeg':
+      return 'image/jpeg';
+    case 'gif':
+      return 'image/gif';
+    case 'webp':
+      return 'image/webp';
+    case 'avif':
+      return 'image/avif';
+    default:
+      return 'application/octet-stream';
+  }
+};
+
+
 export function timeAgo(timestamp: string, locale: 'vi' | 'en' = 'vi') {
   const now = new Date()
   const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000)
