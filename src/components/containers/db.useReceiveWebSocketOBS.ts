@@ -46,6 +46,15 @@ export default function useReceiveWebSocket() {
                 toast.message(`📡 Server gửi: ${parsed.data[0].message}`)
                 break
 
+            case websocketSendType.OBSSetting: { 
+                const emojiURL = parsed.data.DonateProps.emojiURL
+                const blob = new Blob([emojiURL[0].binary], { type: emojiURL[0].type })
+                const previewURL = URL.createObjectURL(blob)
+
+                toast.message(`📡 Server gửi: ${previewURL}`)
+                break
+              }
+
             default:
             console.log("📦 Nhận dữ liệu không xác định:", parsed)
         }

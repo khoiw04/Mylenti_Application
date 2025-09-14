@@ -15,27 +15,21 @@ export default function useWebSocketOBS() {
     let isMounted = true
 
     const connectWebSocket = async () => {
-      if (socketRef.current) return
-
       try {
-        const socket = await WebSocket.connect(WEBSOCKET_OBSURL)
-        if (!isMounted) {
-          await socket.disconnect()
-          return
-        }
-
-        socketRef.current = socket
-        setSocket(socket)
+        const socket = await WebSocket.connect(WEBSOCKET_OBSURL);
+        socketRef.current = socket;
+        setSocket(socket);
 
         const removeListener = socket.addListener((msg) => {
-          console.log('📨 Nhận từ server:', msg.data)
-        })
+          console.log('📨 Nhận từ server:', msg.data);
+        });
 
-        removeListenerRef.current = removeListener
+        removeListenerRef.current = removeListener;
       } catch (err) {
-        toast.error(`❌ WebSocket lỗi: ${err}`)
+        toast.error('❌ Kết nối OBS thất bại, thử lại sau...');
+        setTimeout(connectWebSocket, 3000);
       }
-    }
+    };
 
     connectWebSocket()
 

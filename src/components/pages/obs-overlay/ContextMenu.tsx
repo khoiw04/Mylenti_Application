@@ -4,7 +4,7 @@ import EmojiFileUpload from "./EmojiFileUpload";
 import { ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger } from "@/components/ui/context-menu";
 import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store";
 import { overlayFieldConfigs } from "@/data/obs-overlay";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ContextMenuContentMain() {
   const { ChatType, currentKeyChatType, showComment } = useStore(OBSOverlaySettingsProps)
@@ -85,6 +85,9 @@ export default function ContextMenuContentMain() {
           }
         </ContextMenuContent>
         <DialogContent>
+          <DialogTitle className="sr-only">
+            Đăng ảnh
+          </DialogTitle>
           <EmojiFileUpload />
         </DialogContent>
       </Dialog>

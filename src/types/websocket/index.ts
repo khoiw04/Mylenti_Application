@@ -1,3 +1,4 @@
+import type { OBSOverlaySettingsPropsType } from "../store/obs-overlay"
 import type { YouTubeChatResponse } from "../func/youtubeOBS"
 
 export type WebSocketMessageType = {
@@ -8,4 +9,6 @@ export type WebSocketMessageType = {
     }
 } & {
     data: YouTubeChatResponse['messages']
+} & {
+    data: OBSOverlaySettingsPropsType
 }

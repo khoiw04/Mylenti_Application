@@ -1,5 +1,5 @@
+import type { FileWithPreview } from "../func/useFileUpload";
 import type { presetUserVariantsValueType } from "../data/obs-overlay"
-import { FileWithPreview } from "../func/useFileUpload";
 
 export type OBSOverlayChatLabelPropsType = OBSOverlayChatTypePropsType['label']
 export type OBSOverlayChatKeyPropsType = OBSOverlayChatTypePropsType['key']

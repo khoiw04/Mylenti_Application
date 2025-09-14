@@ -7,7 +7,6 @@ import { OBSOverlaySettingsProps } from "@/store";
 
 export default function DonateOverlay() {
     const { DonateProps, currentPreset } = useStore(OBSOverlaySettingsProps)
-    console.log(DonateProps.emojiURL[0])
 
     return (
         <DonateComponent
