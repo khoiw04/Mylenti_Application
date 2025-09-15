@@ -27,3 +27,12 @@ export const fallbackEmoji = [{
   size: 3434,
   binary: new Uint8Array(10)
 }];
+
+export const fallbackSound = [{
+  name: 'OMORI',
+  path: initialDonateFiles[0].url,
+  preview: initialDonateFiles[0].url,
+  type: 'image/jpeg',
+  size: 3434,
+  binary: new Uint8Array(10)
+}];

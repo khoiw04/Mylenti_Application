@@ -1,6 +1,6 @@
 import {
   AlertCircleIcon,
-  ImageIcon,
+  LucideAudioWaveform,
   Trash2Icon,
   UploadIcon,
   XIcon,
@@ -9,10 +9,10 @@ import { useFileUpload } from "@/hooks/use-donate-upload"
 
 import { Button } from "@/components/ui/button"
 import { formatBytes } from "@/lib/utils";
-import { OBSOverlaySettingsProps, loadEmojis, saveEmojis } from "@/store";
-import { fallbackEmoji } from "@/data/obs-overlay";
+import { OBSOverlaySettingsProps, loadSounds, saveSounds } from "@/store";
+import { fallbackSound } from "@/data/obs-overlay";
 
-export default function EmojiFileUpload() {
+export default function SoundFileUpload() {
   const maxFiles = 4
 
   const [
@@ -26,18 +26,18 @@ export default function EmojiFileUpload() {
     },
   ] = useFileUpload({
     maxFiles,
-    accept: 'image/*',
-    onFilesLoad: loadEmojis,
+    accept: 'audio/*',
+    onFilesLoad: loadSounds,
     onFilesChange: async (filesChange) => {
-      const emojiData = filesChange.length > 0 ? filesChange : fallbackEmoji
+      const soundData = filesChange.length > 0 ? filesChange : fallbackSound
       OBSOverlaySettingsProps.setState((prev) => ({
         ...prev,
         DonateProps: {
           ...prev.DonateProps,
-          emojiURL: emojiData
+          soundURL: soundData
         },
       }))
-      await saveEmojis(filesChange)
+      await saveSounds(filesChange)
     },
   })
 
@@ -51,13 +51,13 @@ export default function EmojiFileUpload() {
         <input
           {...getInputProps()}
           className="sr-only"
-          aria-label="Chỉ cho phép đăng ảnh"
+          aria-label="Chỉ cho phép đăng âm thanh"
         />
         {files.length > 0 ? (
           <div className="flex w-full flex-col gap-3">
             <div className="flex items-center justify-between gap-2">
               <h3 className="truncate text-sm font-medium">
-                Bức ảnh ({files.length})
+                Âm thanh ({files.length})
               </h3>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={openFileDialog}>
@@ -65,14 +65,14 @@ export default function EmojiFileUpload() {
                     className="-ms-0.5 size-3.5 opacity-60"
                     aria-hidden="true"
                   />
-                  Đăng ảnh
+                  Đăng âm thanh
                 </Button>
                 <Button variant="outline" size="sm" onClick={clearFiles}>
                   <Trash2Icon
                     className="-ms-0.5 size-3.5 opacity-60"
                     aria-hidden="true"
                   />
-                  Xóa ảnh
+                  Xóa âm thanh
                 </Button>
               </div>
             </div>
@@ -84,17 +84,13 @@ export default function EmojiFileUpload() {
                   className="bg-background relative flex flex-col rounded-md border"
                 >
                   <div className="bg-accent flex aspect-square items-center relative justify-center overflow-hidden rounded-t-[inherit]">
-                      <img
-                        alt={file.name}
-                        src={file.preview}
-                        className="rounded-t-[inherit] absolute inset-0 object-cover"
-                      />
+                      <LucideAudioWaveform />
                   </div>
                   <Button
                     onClick={() => handleDelete(file.path)}
                     size="icon"
                     className="border-background focus-visible:border-background absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none"
-                    aria-label="Remove image"
+                    aria-label="Remove sound"
                   >
                     <XIcon className="size-3.5" />
                   </Button>
@@ -116,15 +112,15 @@ export default function EmojiFileUpload() {
               className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
               aria-hidden="true"
             >
-              <ImageIcon className="size-4 opacity-60" />
+              <LucideAudioWaveform className="size-4 opacity-60" />
             </div>
-            <p className="mb-1.5 text-sm font-medium">Hãy chọn Ảnh / Gif hình Vuông</p>
+            <p className="mb-1.5 text-sm font-medium">Hãy chọn Âm thanh</p>
             <p className="text-muted-foreground text-xs">
-              Tối đa {maxFiles} bức ảnh
+              Tối đa {maxFiles} âm thanh
             </p>
             <Button variant="outline" className="mt-4" onClick={openFileDialog}>
               <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
-              Chọn bức ảnh
+              Chọn âm thanh
             </Button>
           </div>
         )}

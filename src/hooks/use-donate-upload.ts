@@ -5,13 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { FileUploadActions, FileUploadOptions, FileUploadState, FileWithPreview } from '@/types/func/useFileUpload';
 import { getMimeType } from '@/lib/utils';
-import { OBSOverlaySettingsProps, clearEmojis, loadEmojis, saveEmojis } from '@/store';
-import { fallbackEmoji } from '@/data/obs-overlay';
 
 export const useFileUpload = (
-  options: FileUploadOptions = {}
+  options: FileUploadOptions
 ): [FileUploadState, FileUploadActions] => {
-  const { maxFiles = Infinity, accept = 'image/*' } = options;
+  const { maxFiles = Infinity, accept = 'image/*', onFilesLoad, onFilesChange } = options;
 
   const [state, setState] = useState<FileUploadState>({
     files: [],
@@ -42,7 +40,7 @@ export const useFileUpload = (
 
   const loadFromStore = useCallback(async () => {
     try {
-      const stored = await loadEmojis();
+      const stored = await onFilesLoad()
       setState(prev => ({ ...prev, files: stored, errors: [] }));
     } catch (err) {
       console.warn('Không thể đọc từ store:', err);
@@ -54,27 +52,32 @@ export const useFileUpload = (
     const combined = [...state.files, ...metadata].slice(0, maxFiles);
 
     setState(prev => ({ ...prev, files: combined, errors: [] }));
-    OBSOverlaySettingsProps.setState((prev) => ({
-      ...prev,
-      DonateProps: {
-        ...prev.DonateProps,
-        emojiURL: metadata,
-      },
-    }))
-
-    await saveEmojis(combined);
+    
+    onFilesChange?.(combined)
   }, [state.files, maxFiles, extractMetadata]);
 
   const handleUpload = useCallback(async () => {
-    const selected = await open({
-      multiple: true,
-      filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'] }],
-    });
+      // eslint-disable-next-line no-shadow
+      const getFilters = (accept: string) => {
+        if (accept === 'audio/*') {
+          return [{ name: 'Audio Files', extensions: ['mp3', 'wav', 'ogg'] }];
+        }
+        if (accept === 'image/*') {
+          return [{ name: 'Image Files', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'] }];
+        }
+        return [];
+      };
 
-    if (!selected) return;
-
-    const paths = Array.isArray(selected) ? selected : [selected];
-    await updateFiles(paths);
+      const selected = await open({
+        multiple: true,
+        filters: getFilters(accept)
+      });
+    
+      if (!selected) return
+    
+      const paths = Array.isArray(selected) ? selected : [selected]
+      await updateFiles(paths)
+      return []
   }, [updateFiles]);
 
 
@@ -93,31 +96,17 @@ export const useFileUpload = (
     await updateFiles(paths);
   }, [updateFiles]);
 
-  const clearFiles = useCallback(async () => {
-    await clearEmojis();
+  const clearFiles = useCallback(() => {
     setState(prev => ({ ...prev, files: [], errors: [] }));
-    OBSOverlaySettingsProps.setState((prev) => ({
-      ...prev,
-      DonateProps: {
-        ...prev.DonateProps,
-        emojiURL: fallbackEmoji,
-      },
-    }))
+
+    onFilesChange?.([])
   }, []);
 
-  const handleDelete = useCallback(async (path: string) => {
+  const handleDelete = useCallback((path: string) => {
     const filtered = state.files.filter(f => f.path !== path);
     setState(prev => ({ ...prev, files: filtered, errors: [] }));
-
-    OBSOverlaySettingsProps.setState((prev) => ({
-      ...prev,
-      DonateProps: {
-        ...prev.DonateProps,
-        emojiURL: filtered.length > 0 ? filtered : fallbackEmoji,
-      },
-    }));
-
-    await saveEmojis(filtered);
+    
+    onFilesChange?.(filtered)
   }, [state.files]);
 
   const openFileDialog = useCallback(() => {

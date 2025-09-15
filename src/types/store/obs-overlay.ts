@@ -28,6 +28,7 @@ export type OBSOverlaySettingsPropsType = {
 
 export type OBSOverlayDonatePropsType = {
     emojiURL: Array<FileWithPreview>
+    soundURL: Array<FileWithPreview>
 }
 
 export type OBSOverlaySettingStrageryType = {

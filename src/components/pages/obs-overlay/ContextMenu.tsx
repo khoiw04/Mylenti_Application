@@ -1,12 +1,16 @@
 import { Share2 } from "lucide-react";
 import { useStore } from "@tanstack/react-store";
+import { useState } from "react";
 import EmojiFileUpload from "./EmojiFileUpload";
+import SoundFileUpload from "./SoundFileUpload";
 import { ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger } from "@/components/ui/context-menu";
 import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store";
 import { overlayFieldConfigs } from "@/data/obs-overlay";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ContextMenuContentMain() {
+  const [dialogType, setDialogType] = useState<'image' | 'sound' | null>(null)
+
   const { ChatType, currentKeyChatType, showComment } = useStore(OBSOverlaySettingsProps)
   const { currentKeyChatTypeStragery, showCommentStragery, showLabelStragery } = useStore(OBSOverlaySettingStragery)
 
@@ -44,12 +48,19 @@ export default function ContextMenuContentMain() {
             </ContextMenuCheckboxItem>
           </ContextMenuSub>
           <ContextMenuSeparator />
-          {currentKeyChatType === 'Donate' ? 
+          {currentKeyChatType === 'Donate' ?
+          <>
           <DialogTrigger asChild>
-            <ContextMenuCheckboxItem>
+            <ContextMenuCheckboxItem onClick={() => setDialogType('image')}>
                 Thay Ảnh
             </ContextMenuCheckboxItem>
           </DialogTrigger>
+          <DialogTrigger asChild>
+            <ContextMenuCheckboxItem onClick={() => setDialogType('sound')}>
+                Thay Âm Thanh
+            </ContextMenuCheckboxItem>
+          </DialogTrigger>
+          </>
           :
           <>
           {overlayFieldConfigs.map(field => (
@@ -86,9 +97,13 @@ export default function ContextMenuContentMain() {
         </ContextMenuContent>
         <DialogContent>
           <DialogTitle className="sr-only">
-            Đăng ảnh
+            {dialogType === 'image' ? 'Đăng ảnh' : 'Đăng Âm Thanh'}
+            <DialogDescription className="sr-only">
+              {dialogType === 'image' ? 'Đăng tối đa 4 ảnh' : 'Đăng tối đa 4 Âm Thanh'}
+            </DialogDescription>
           </DialogTitle>
-          <EmojiFileUpload />
+          {dialogType === 'image' && <EmojiFileUpload />}
+          {dialogType === 'sound' && <SoundFileUpload />}
         </DialogContent>
       </Dialog>
     )

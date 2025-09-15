@@ -14,8 +14,9 @@ export interface FileUploadState {
 
 export interface FileUploadOptions {
   maxFiles?: number;
-  accept?: string;
+  accept?: 'audio/*' | 'image/*';
   onFilesChange?: (files: Array<FileWithPreview>) => void;
+  onFilesLoad: () => Promise<Array<FileWithPreview>>
 }
 
 export interface FileUploadActions {

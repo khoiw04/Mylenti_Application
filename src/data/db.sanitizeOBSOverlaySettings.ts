@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { fallbackEmoji, initialDonateFiles } from './obs-overlay';
+import { fallbackEmoji, fallbackSound, initialDonateFiles } from './obs-overlay';
 import type { OBSOverlaySettingsPropsType } from '@/types';
 
 export const sanitizeOBSOverlaySettings = (
@@ -14,6 +14,10 @@ export const sanitizeOBSOverlaySettings = (
     ? safeDonateProps.emojiURL
     : [];
 
+  const safeSoundArray = Array.isArray(safeDonateProps.soundURL)
+    ? safeDonateProps.soundURL
+    : [];
+
   const emojiURL =
     safeEmojiArray.length > 0
       ? safeEmojiArray.map((emoji) => ({
@@ -26,6 +30,18 @@ export const sanitizeOBSOverlaySettings = (
         }))
       : fallbackEmoji;
 
+  const soundURL =
+    safeSoundArray.length > 0
+      ? safeSoundArray.map((sound) => ({
+          name: sound?.name ?? initialDonateFiles[0].name,
+          path: sound?.path ?? initialDonateFiles[0].url,
+          preview: sound?.preview ?? initialDonateFiles[0].url,
+          type: sound?.type ?? initialDonateFiles[0].type,
+          size: sound?.size ?? initialDonateFiles[0].size,
+          binary: sound?.binary ?? new Uint8Array(10)
+        }))
+      : fallbackSound;
+
   const safeChatTypeArray = Array.isArray(raw.ChatType)
     ? raw.ChatType
     : [];
@@ -37,6 +53,7 @@ export const sanitizeOBSOverlaySettings = (
     currentKeyChatType: raw.currentKeyChatType ?? 'Verified',
     DonateProps: {
       emojiURL,
+      soundURL
     },
     ChatType: safeChatTypeArray.map((item) => ({
       key: item?.key ?? 'Unknown',

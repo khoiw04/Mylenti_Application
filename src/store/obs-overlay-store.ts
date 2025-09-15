@@ -1,6 +1,6 @@
 import { Store } from "@tanstack/store"
 import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType } from "@/types"
-import { fallbackEmoji } from "@/data/obs-overlay"
+import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
 export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
   showComment: false,
@@ -8,7 +8,8 @@ export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
   currentPreset: 'default',
   currentKeyChatType: 'Verified',
   DonateProps : {
-    emojiURL: fallbackEmoji
+    emojiURL: fallbackEmoji,
+    soundURL: fallbackSound
   },
   ChatType: [
     {

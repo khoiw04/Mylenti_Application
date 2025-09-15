@@ -1,14 +1,21 @@
 import type { OBSOverlaySettingsPropsType } from "../store/obs-overlay"
 import type { YouTubeChatResponse } from "../func/youtubeOBS"
+import type { websocketSendType } from "@/data/settings"
 
-export type WebSocketMessageType = {
-    data: {
-        name: string,
-        amount: string,
+export type WebSocketMessageType =
+    {
+      type: typeof websocketSendType.DonateTranscation
+      data: {
+        name: string
+        amount: string
         message: string
+      }
     }
-} & {
-    data: YouTubeChatResponse['messages']
-} & {
-    data: OBSOverlaySettingsPropsType
-}
+  & {
+      type: typeof websocketSendType.YouTubeMessage
+      data: YouTubeChatResponse['messages']
+    }
+  & {
+      type: typeof websocketSendType.OBSSetting
+      data: OBSOverlaySettingsPropsType
+    }

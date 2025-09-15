@@ -1,16 +1,20 @@
 import { Store } from '@tauri-apps/plugin-store';
-import type { FileWithPreview } from '@/hooks/use-emoji-upload';
+import type { FileWithPreview } from '@/types/func/useFileUpload';
 
 export const EMOJI_DONATE_FILE = 'emoji-store.json';
 export const EMOJI_DONATE_KEY = 'emojis';
 
-let storeInstance: Store | null = null;
+export const SOUND_DONATE_FILE = 'sound-store.json';
+export const SOUND_DONATE_KEY = 'sound';
+
+let storeEmojiInstance: Store | null = null;
+let storeSoundInstance: Store | null = null;
 
 export const getEmojis = async (): Promise<Store> => {
-  if (!storeInstance) {
-    storeInstance = await Store.load(EMOJI_DONATE_FILE);
+  if (!storeEmojiInstance) {
+    storeEmojiInstance = await Store.load(EMOJI_DONATE_FILE);
   }
-  return storeInstance;
+  return storeEmojiInstance;
 };
 
 export const saveEmojis = async (files: Array<FileWithPreview>) => {
@@ -25,8 +29,21 @@ export const loadEmojis = async (): Promise<Array<FileWithPreview>> => {
   return data ?? [];
 };
 
-export const clearEmojis = async () => {
-  const store = await getEmojis();
-  await store.set(EMOJI_DONATE_KEY, []);
+export const getSounds = async (): Promise<Store> => {
+  if (!storeSoundInstance) {
+    storeSoundInstance = await Store.load(SOUND_DONATE_FILE);
+  }
+  return storeSoundInstance;
+};
+
+export const saveSounds = async (files: Array<FileWithPreview>) => {
+  const store = await getSounds();
+  await store.set(SOUND_DONATE_KEY, files);
   await store.save();
+};
+
+export const loadSounds = async (): Promise<Array<FileWithPreview>> => {
+  const store = await getSounds();
+  const data = await store.get<Array<FileWithPreview>>(SOUND_DONATE_KEY);
+  return data ?? [];
 };

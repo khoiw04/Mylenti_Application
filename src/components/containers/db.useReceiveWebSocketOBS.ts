@@ -2,31 +2,19 @@ import { useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { useStore } from "@tanstack/react-store"
 import type { WebSocketMessageType } from "@/types"
+import type { FileWithPreview } from "@/types/func/useFileUpload"
 import { websocketSendType } from "@/data/settings"
 import { WebSocketStore } from "@/store"
 import { safeParse } from "@/lib/socket.safeJSONMessage"
 
-// **
-// Cách gửi ảnh Path sang OBS OVERLAY qua Mã Nhị Phân
-//
-// const sendEmojiToOBS = async () => {
-//   const settings = OBSOverlaySettingsProps.get();
-//   const paths = settings.DonateProps.emojiPath ?? [];
-
-//   for (const path of paths) {
-//      const buffer = await readFile(path);
-//      socket.send(JSON.stringify({
-//      type: 'emoji',
-//      name: 'kirby.gif',
-//      mime: 'image/gif',
-//      data: Array.from(buffer),
-//    }));
-//   }
-// };
-
 export default function useReceiveWebSocket() {
   const { socket } = useStore(WebSocketStore)
   const removeListenerRef = useRef<(() => void) | null>(null)
+
+  const URLtoBLOB = (data: FileWithPreview) => {
+    const blob = new Blob([data.binary], { type: data.type })
+    return URL.createObjectURL(blob)
+  }
 
   useEffect(() => {
     if (!socket) return
@@ -36,27 +24,24 @@ export default function useReceiveWebSocket() {
         if (!parsed || typeof parsed !== "object" || !("type" in parsed)) return
 
         switch (parsed.type) {
-            case websocketSendType.DonateTranscation:
-                toast.success(`${parsed.data.name} đã donate ${parsed.data.amount}`, {
-                    description: `Tin nhắn: ${parsed.data.message}`
-                })
-                break
+          case websocketSendType.DonateTranscation:
+            toast.success(`${parsed.data.name} đã donate ${parsed.data.amount}`, {
+              description: `Tin nhắn: ${parsed.data.message}`
+            })
+            break
 
-            case websocketSendType.YouTubeMessage:
-                toast.message(`📡 Server gửi: ${parsed.data[0].message}`)
-                break
+          case websocketSendType.YouTubeMessage:
+            toast.message(`📡 Server gửi: ${parsed.data[0].message}`)
+            break
 
-            case websocketSendType.OBSSetting: { 
-                const emojiURL = parsed.data.DonateProps.emojiURL
-                const blob = new Blob([emojiURL[0].binary], { type: emojiURL[0].type })
-                const previewURL = URL.createObjectURL(blob)
+          case websocketSendType.OBSSetting: { 
+            const soundURL = parsed.data.DonateProps.soundURL[0]
+            toast.message(`📡 Server gửi: ${URLtoBLOB(soundURL)}`)
+            break
+          }
 
-                toast.message(`📡 Server gửi: ${previewURL}`)
-                break
-              }
-
-            default:
-            console.log("📦 Nhận dữ liệu không xác định:", parsed)
+          default:
+          console.log("📦 Nhận dữ liệu không xác định:", parsed)
         }
     })
 
