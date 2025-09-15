@@ -1,5 +1,8 @@
 import { toast } from "sonner";
-import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType } from "@/types";
+import WebSocketYouTubeMessage from "./websocket.YouTubeMessage";
+import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType, WebSocketMessageType } from "@/types";
+import WebSocketDonateTranscation from "@/func/websocket.DonateTranscation";
+import WebSocketOBSSetting from "@/func/websocket.OBSSetting";
 import { avatarStore } from "@/store";
 import { bankQueries, donateQueries, profileQueries } from "@/lib/queries";
 import { addAtPrefix } from "@/lib/utils";
@@ -105,4 +108,10 @@ export const SuperchatIconStrategy: SuperchatIconStrategyType = {
   Member: MemberIconStrategy,
   Moderator: ModeratorIconStrategy,
   Verified: VerifiedIconStrategy
+}
+
+export const WebSocketSendStrategy: Record<WebSocketMessageType['type'], (data: WebSocketMessageType['data']) => void> = {
+  DonateTranscation: WebSocketDonateTranscation,
+  YouTubeMessage: WebSocketYouTubeMessage,
+  OBSSetting: WebSocketOBSSetting,
 }

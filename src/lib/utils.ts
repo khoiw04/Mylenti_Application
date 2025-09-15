@@ -5,6 +5,7 @@ import { fetch as TauriFetch } from '@tauri-apps/plugin-http';
 import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server';
 import { createServerFn } from '@tanstack/react-start';
 import type {ClassValue} from 'clsx';
+import type { FileWithPreview } from '@/types/func/useFileUpload';
 
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
@@ -150,6 +151,10 @@ export const clearCachedCookie = createServerFn()
     deleteCookie(key)
 })
 
+export const BinarytoBLOB = (data: FileWithPreview) => {
+  const blob = new Blob([data.binary], { type: data.type })
+  return URL.createObjectURL(blob)
+}
 
 export const seo = ({
   title,
