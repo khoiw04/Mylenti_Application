@@ -1,12 +1,12 @@
 import { supabaseSSR } from "@/lib/supabaseBrowser"
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import { websocketSendType } from "@/data/settings"
 import { safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSTauriWebSocket } from "@/class/WebSocketTauriManager"
+import useAuthInfo from "@/hooks/useAuthInfo"
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 
 export default function useWebSocketSepayAlertSend() {
-  const authInfo = useAuthInfoExternalStore()
+  const authInfo = useAuthInfo()
 
   useTauriSafeEffect(() => {
     const channel = supabaseSSR.channel(authInfo.currentUser)
@@ -28,5 +28,4 @@ export default function useWebSocketSepayAlertSend() {
       channel.unsubscribe()
     }
   }, [])
-
 }

@@ -152,7 +152,8 @@ export const clearCachedCookie = createServerFn()
 })
 
 export const BinarytoBLOB = (data: { binary: Uint8Array<ArrayBuffer>, type: string }) => {
-  const blob = new Blob([data.binary], { type: data.type })
+  const blob = new Blob([new Uint8Array(data.binary)], { type: data.type })
+  console.log(blob, data.binary, data.type)
   return URL.createObjectURL(blob)
 }
 

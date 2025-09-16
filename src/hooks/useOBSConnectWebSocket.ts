@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import type { WebSocketMessageType } from '@/types'
 import { WEBSOCKET_OBSURL } from '@/data'
-import { WebSocketSendStrategy, messagesWebSocketLogStrategy as messageLog } from '@/func/fn.stragery'
+import { WebSocketReceiveStrategy, messagesWebSocketLogStrategy as messageLog } from '@/func/fn.stragery'
 
 export default function useOBSConnectWebSocket() {
     const hasConnected = useRef(false)
@@ -16,7 +16,7 @@ export default function useOBSConnectWebSocket() {
         if (typeof window === "undefined") return
         if (hasConnected.current) return
         hasConnected.current = true
-        localStorage.setItem("clientId", clientId);
+        localStorage.setItem("clientId", clientId)
 
         const connect = () => {
             const socket = new WebSocket(WEBSOCKET_OBSURL)
@@ -33,7 +33,7 @@ export default function useOBSConnectWebSocket() {
 
             socket.onmessage = (event) => {
                 const parsed = JSON.parse(event.data) as WebSocketMessageType
-                const handler = WebSocketSendStrategy[parsed.type];
+                const handler = WebSocketReceiveStrategy[parsed.type];
                 if (typeof handler === "function") {
                     handler(parsed.data);
                 } else {
@@ -42,14 +42,14 @@ export default function useOBSConnectWebSocket() {
             }
             
             socket.onclose = () => {
-                console.warn(messageLog.success)
-                toast.warning(messageLog.success)
+                console.warn(messageLog.warn)
+                toast.warning(messageLog.warn)
                 reconnectTimer.current = setTimeout(connect, 3000)
             }
             
             socket.onerror = () => {
-                console.error(messageLog.success)
-                toast.error(messageLog.success)
+                console.error(messageLog.error)
+                toast.error(messageLog.error)
                 socket.close()
             }
         }

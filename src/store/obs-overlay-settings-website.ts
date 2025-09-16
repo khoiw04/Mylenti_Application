@@ -1,5 +1,6 @@
 import { Store } from "@tanstack/store"
 import type { OBSOverlaySettingsWebsitePropsType } from "@/types"
+import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
 export const OBSOverlaySettingsWebsiteStore = new Store<OBSOverlaySettingsWebsitePropsType>({
   currentKeyChatType: 'Moderator',
@@ -7,8 +8,8 @@ export const OBSOverlaySettingsWebsiteStore = new Store<OBSOverlaySettingsWebsit
   showComment: false,
   currentPreset: 'default',
   DonateProps : {
-    emojiURL: [''],
-    soundURL: ['']
+    emojiURL: fallbackEmoji,
+    soundURL: fallbackSound
   },
   ChatType: [
     {

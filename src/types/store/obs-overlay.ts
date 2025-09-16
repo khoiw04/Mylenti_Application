@@ -41,8 +41,8 @@ export type OBSOverlayDonateTauriPropsType = {
 }
 
 export type OBSOverlayDonateWebsitePropsType = {
-    emojiURL: Array<string>
-    soundURL: Array<string>
+    emojiURL: Array<FileWithPreview>
+    soundURL: Array<FileWithPreview>
 }
 
 export type OBSOverlaySettingStrageryType = {

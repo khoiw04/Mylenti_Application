@@ -110,7 +110,7 @@ export const SuperchatIconStrategy: SuperchatIconStrategyType = {
   Verified: VerifiedIconStrategy
 }
 
-export const WebSocketSendStrategy: WebSocketHandlerStrategyType = {
+export const WebSocketReceiveStrategy: WebSocketHandlerStrategyType = {
   'new-transaction': WebSocketDonateTranscation,
   'live-chat-message': WebSocketYouTubeMessage,
   'overlay-settings-update': WebSocketOBSSetting,

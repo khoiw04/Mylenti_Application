@@ -1,6 +1,6 @@
 import { Store } from "@tanstack/store";
 
-export const OBSOVerlaySettingsDonateWebsiteStore = new Store({
+export const OBSOverlayDataDonateWebsiteStore = new Store({
     name: '',
     amount: '',
     message: ''

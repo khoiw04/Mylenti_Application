@@ -14,12 +14,13 @@ class WebSocketTauriManager {
     private clientId: string
 
     constructor() {
-        this.clientId = typeof window !== "undefined"
-            ? localStorage.getItem("clientId") || crypto.randomUUID()
-            : crypto.randomUUID()
+        this.clientId = typeof window !== 'undefined'
+        ? localStorage.getItem('clientId') || crypto.randomUUID()
+        : crypto.randomUUID();
 
-        if (typeof window === "undefined") return
-        localStorage.setItem("clientId", this.clientId);
+        if (typeof window !== 'undefined') {
+        localStorage.setItem('clientId', this.clientId);
+        }
     }
 
     async connect(onMessage: MessageHandler) {

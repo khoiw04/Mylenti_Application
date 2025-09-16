@@ -24,7 +24,6 @@ function useHeaderLogOut() {
 }
 
 export default function useHeader() {
-  // Auth
   useAuthInfo()
   useHeaderLogOut()
   useHeaderLinkSync()
