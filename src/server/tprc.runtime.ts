@@ -18,7 +18,7 @@ const websocket = createBunWSHandler({
 });
 
 Bun.serve({
-    port: 3001,
+    port: 4455,
     fetch(request, server) {
         if (server.upgrade(request, {data: {req: request}})) {
             return;

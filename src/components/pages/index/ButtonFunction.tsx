@@ -1,8 +1,19 @@
+import { LucideCheck } from "lucide-react";
+import { useState } from "react";
 import type { ButtonFunctionType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Main({ icon, title, description, align = 'center', src = "https://originui.com/dialog-content.png", onClick }: ButtonFunctionType) {
+    const [copied, setCopied] = useState(false)
+
+    const handleClick = () => {
+        onClick?.()
+        setCopied(true)
+
+        setTimeout(() => setCopied(false), 2000)
+    }
+
     return (
         <Tooltip>
             <TooltipTrigger asChild>
@@ -10,9 +21,10 @@ export default function Main({ icon, title, description, align = 'center', src =
                     type="button"
                     variant="outline"
                     className="popup_button_animation"
-                    onClick={onClick}
+                    onClick={handleClick}
                 >
-                    {icon}
+                    {!copied && icon}
+                    {<LucideCheck data-show={copied} className="popup_icon" />}
                 </Button>
             </TooltipTrigger>
             <TooltipContent align={align} className="py-3">

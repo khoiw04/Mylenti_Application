@@ -1,10 +1,11 @@
 import type { OBSSuperchatChatKey } from "../ui/obs-overlay-setting";
 import type { presetUserVariantsValueType } from "../data/obs-overlay";
 import type { OBSOverlayChatKeyPropsType } from "../store/obs-overlay";
-import type { BankDataType, DonateDataType, ProfileDataType } from "@/types";
+import type { BankDataType, DonateDataType, ProfileDataType, WebSocketMessageType } from "@/types";
 import type { Provider } from "@supabase/supabase-js";
 import type { LoaderFnContext } from "@tanstack/react-router";
 import type { JSX } from "react";
+import type { websocketSendType } from "@/data/settings";
 
 export type UploadStrategyProps = {
   get: (from: string, files: Array<File>) => FormData;
@@ -49,3 +50,11 @@ export type SuperchatIconStrategyType = Record<
   Exclude<OBSSuperchatChatKey, 'Normal'>,
   MemberIconStrategyType | ModeratorIconStrategyType | VerifiedIconStrategyType
 >
+
+export type DonateMessage = Extract<WebSocketMessageType, { type: typeof websocketSendType.DonateTranscation }>
+export type YouTubeMessage = Extract<WebSocketMessageType, { type: typeof websocketSendType.YouTubeMessage }>
+export type OBSSetting = Extract<WebSocketMessageType, { type: typeof websocketSendType.OBSSetting }>
+
+export type WebSocketHandlerStrategyType = {
+  [K in WebSocketMessageType['type']]: (data: Extract<WebSocketMessageType, { type: K }>['data']) => void;
+};

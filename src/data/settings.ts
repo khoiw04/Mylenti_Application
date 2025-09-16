@@ -27,4 +27,4 @@ export const websocketSendType = {
     DonateTranscation: 'new-transaction',
     OBSSetting: 'overlay-settings-update',
     YouTubeMessage: 'live-chat-message'
-}
+} as const

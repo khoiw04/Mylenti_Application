@@ -1,5 +1,5 @@
 import { Store } from '@tauri-apps/plugin-store';
-import type { OBSOverlaySettingsPropsType } from '@/types';
+import type { OBSOverlaySettingsTauriPropsType } from '@/types';
 import { initialDonateFiles } from '@/data/obs-overlay';
 
 export const OBSOVERLAY_SETTINGS_FILE = 'obs_overlay_settings-store.json';
@@ -78,7 +78,7 @@ export const getOBSSetting = async (): Promise<Store> => {
     return storeInstance;
 };
 
-export const saveOBSSetting = async (value: OBSOverlaySettingsPropsType) => {
+export const saveOBSSetting = async (value: OBSOverlaySettingsTauriPropsType) => {
     const store = await getOBSSetting();
     await store.set(OBSOVERLAY_SETTINGS_KEY, value)
     await store.save();
@@ -86,7 +86,7 @@ export const saveOBSSetting = async (value: OBSOverlaySettingsPropsType) => {
 
 export const loadOBSSetting = async () => {
     const store = await getOBSSetting();
-    const data = await store.get<OBSOverlaySettingsPropsType>(OBSOVERLAY_SETTINGS_KEY)
+    const data = await store.get<OBSOverlaySettingsTauriPropsType>(OBSOVERLAY_SETTINGS_KEY)
     return data ?? undefined
 }
 

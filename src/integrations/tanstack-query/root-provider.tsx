@@ -9,8 +9,8 @@ import { TRPCProvider } from '@/hooks/useTprcContext'
 
 function getUrl(ws = false) {
   return ws ? 
-    `ws://localhost:3001` : 
-    `http://localhost:3001/trpc`
+    `ws://localhost:4455` :
+    `http://localhost:4455/trpc`
 }
 
 export const trpcClient = createTRPCClient<TRPCRouter>({

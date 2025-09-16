@@ -5,12 +5,12 @@ import { createOptimisticAction } from '@tanstack/db'
 import type { YouTubeChatResponse } from '@/types'
 import { chatMessageCollection, useChatMessage } from '@/data/db.YouTubeChatCollections'
 import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
-import { IndexState, PollingStatusStore, PollingStatusStragery, WebSocketStore } from '@/store'
+import { IndexState, PollingStatusStore, PollingStatusStragery } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
+import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 
 export default function usePollingYoutubeChat() {
-  const { socket } = useStore(WebSocketStore)
   const { finishGoogleOBSAuth } = useStore(IndexState)
   const { data: messages } = useChatMessage()
 
@@ -33,12 +33,7 @@ export default function usePollingYoutubeChat() {
       })
     },
     mutationFn: async (msgs) => {
-      if (!socket) {
-        toast.error('WebSocket chưa kết nối, không thể gửi tin nhắn')
-        return
-      }
-
-      safeSend(socket, {
+      safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.YouTubeMessage,
         data: msgs
       })

@@ -60,12 +60,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
     const isOnInfoPage = location.pathname === '/khoi-phuc';
     const isOnLoginPage = ['/dang-nhap', '/dang-ky', '/quen-mat-khau', '/nho-mat-khau', '/auth/callback'].includes(location.pathname);
+    const isRuntimePage = ['/runtime/obsdonate', '/runtime/youtubelivechat'].includes(location.pathname)
 
     if (isAuthenticated && !user_name && !isOnInfoPage) {
       throw redirect({ to: '/khoi-phuc' });
     }
 
-    if (!isAuthenticated && !isOnLoginPage) {
+    if (!isAuthenticated && !isOnLoginPage && !isRuntimePage) {
       throw redirect({ to: '/dang-nhap' })
     }
 

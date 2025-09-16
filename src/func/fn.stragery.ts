@@ -1,8 +1,8 @@
 import { toast } from "sonner";
-import WebSocketYouTubeMessage from "./websocket.YouTubeMessage";
-import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType, WebSocketMessageType } from "@/types";
-import WebSocketDonateTranscation from "@/func/websocket.DonateTranscation";
-import WebSocketOBSSetting from "@/func/websocket.OBSSetting";
+import WebSocketYouTubeMessage from "./websocketWebsite.YouTubeMessage";
+import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType, WebSocketHandlerStrategyType } from "@/types";
+import WebSocketDonateTranscation from "@/func/websocketWebsite.DonateTranscation";
+import WebSocketOBSSetting from "@/func/websocketWebsite.OBSSetting";
 import { avatarStore } from "@/store";
 import { bankQueries, donateQueries, profileQueries } from "@/lib/queries";
 import { addAtPrefix } from "@/lib/utils";
@@ -110,8 +110,14 @@ export const SuperchatIconStrategy: SuperchatIconStrategyType = {
   Verified: VerifiedIconStrategy
 }
 
-export const WebSocketSendStrategy: Record<WebSocketMessageType['type'], (data: WebSocketMessageType['data']) => void> = {
-  DonateTranscation: WebSocketDonateTranscation,
-  YouTubeMessage: WebSocketYouTubeMessage,
-  OBSSetting: WebSocketOBSSetting,
+export const WebSocketSendStrategy: WebSocketHandlerStrategyType = {
+  'new-transaction': WebSocketDonateTranscation,
+  'live-chat-message': WebSocketYouTubeMessage,
+  'overlay-settings-update': WebSocketOBSSetting,
+}
+
+export const messagesWebSocketLogStrategy = {
+  success: 'Đã kết nối WebSocket',
+  warn: 'Lỗi kết nối WebSocket, tự động kết nối lại sau 30 giây',
+  error: 'Kết nối WebSocket đã đóng'
 }

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { fallbackEmoji, fallbackSound, initialDonateFiles } from './obs-overlay';
-import type { OBSOverlaySettingsPropsType } from '@/types';
+import type { OBSOverlaySettingsTauriPropsType } from '@/types';
 
 export const sanitizeOBSOverlaySettings = (
-  raw: Partial<OBSOverlaySettingsPropsType>
-): OBSOverlaySettingsPropsType => {
+  raw: Partial<OBSOverlaySettingsTauriPropsType>
+): OBSOverlaySettingsTauriPropsType => {
   const safeDonateProps =
     typeof raw.DonateProps === 'object' && raw.DonateProps !== null
       ? raw.DonateProps
-      : {} as Partial<OBSOverlaySettingsPropsType['DonateProps']>;
+      : {} as Partial<OBSOverlaySettingsTauriPropsType['DonateProps']>;
 
   const safeEmojiArray = Array.isArray(safeDonateProps.emojiURL)
     ? safeDonateProps.emojiURL

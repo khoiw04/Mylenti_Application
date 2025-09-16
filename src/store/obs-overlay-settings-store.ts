@@ -1,8 +1,8 @@
 import { Store } from "@tanstack/store"
-import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsPropsType } from "@/types"
+import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsTauriPropsType } from "@/types"
 import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
-export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsPropsType>({
+export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsTauriPropsType>({
   showComment: false,
   openStatePreset: false,
   currentPreset: 'default',

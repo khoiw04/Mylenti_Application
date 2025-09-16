@@ -12,22 +12,15 @@ export function safeParse<T = unknown>(msg: { type: string; data: unknown }): T 
 }
 
 
-export function safeSend(socket: WebSocket | null, data: unknown) {
+export function safeSend(socket: WebSocket | null, payload: any) {
   if (!socket) {
-    console.warn('⚠️ WebSocket chưa kết nối')
-    return
+    console.warn("❌ WebSocket chưa khởi tạo");
+    return;
   }
 
   try {
-    const json = JSON.stringify(data)
-    if (!json || json === 'null' || json === 'undefined') {
-      console.warn('⚠️ Dữ liệu không hợp lệ, không gửi:', data)
-      return
-    }
-
-    socket.send(json)
-    console.log('📤 Đã gửi:', json)
+    socket.send(JSON.stringify(payload));
   } catch (err) {
-    console.error('❌ Lỗi khi stringify:', err)
+    console.error("❌ Gửi tin thất bại:", err);
   }
 }

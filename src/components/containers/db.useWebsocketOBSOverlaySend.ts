@@ -1,22 +1,15 @@
 import { useEffect } from 'react'
-import { toast } from 'sonner'
-import { useStore } from '@tanstack/react-store'
 import { debounce } from '@tanstack/pacer'
-import { OBSOverlaySettingsProps, WebSocketStore } from '@/store'
+import { OBSOverlaySettingsProps } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
+import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 
 export default function useWebsocketOBSOverlaySync() {
-  const { socket } = useStore(WebSocketStore)
 
   useEffect(() => {
     const debouncedSend = debounce((data) => {
-      if (!socket) {
-        toast.error('Websocket Lỗi, chưa thể gửi OBS Setting')
-        return
-      }
-
-      safeSend(socket, {
+      safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.OBSSetting,
         data
       })
@@ -32,5 +25,5 @@ export default function useWebsocketOBSOverlaySync() {
     return () => {
       unsubscribe()
     }
-  }, [socket])
+  }, [])
 }

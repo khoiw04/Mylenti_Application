@@ -21,6 +21,8 @@ import { Route as KeToanRouteImport } from './routes/ke-toan'
 import { Route as DangNhapRouteImport } from './routes/dang-nhap'
 import { Route as DangKyRouteImport } from './routes/dang-ky'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RuntimeYoutubelivechatRouteImport } from './routes/runtime.youtubelivechat'
+import { Route as RuntimeObsdonateRouteImport } from './routes/runtime.obsdonate'
 import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { ServerRoute as UploadFilesServerRouteImport } from './routes/uploadFiles'
@@ -78,6 +80,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RuntimeYoutubelivechatRoute = RuntimeYoutubelivechatRouteImport.update({
+  id: '/runtime/youtubelivechat',
+  path: '/runtime/youtubelivechat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RuntimeObsdonateRoute = RuntimeObsdonateRouteImport.update({
+  id: '/runtime/obsdonate',
+  path: '/runtime/obsdonate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthGoogleOBSRoute = AuthGoogleOBSRouteImport.update({
   id: '/auth/googleOBS',
   path: '/auth/googleOBS',
@@ -112,6 +124,8 @@ export interface FileRoutesByFullPath {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/runtime/obsdonate': typeof RuntimeObsdonateRoute
+  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +140,8 @@ export interface FileRoutesByTo {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/runtime/obsdonate': typeof RuntimeObsdonateRoute
+  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -141,6 +157,8 @@ export interface FileRoutesById {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/runtime/obsdonate': typeof RuntimeObsdonateRoute
+  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,6 +175,8 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/runtime/obsdonate'
+    | '/runtime/youtubelivechat'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,6 +191,8 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/runtime/obsdonate'
+    | '/runtime/youtubelivechat'
   id:
     | '__root__'
     | '/'
@@ -185,6 +207,8 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/runtime/obsdonate'
+    | '/runtime/youtubelivechat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -200,6 +224,8 @@ export interface RootRouteChildren {
   QuenMatKhauRoute: typeof QuenMatKhauRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthGoogleOBSRoute: typeof AuthGoogleOBSRoute
+  RuntimeObsdonateRoute: typeof RuntimeObsdonateRoute
+  RuntimeYoutubelivechatRoute: typeof RuntimeYoutubelivechatRoute
 }
 export interface FileServerRoutesByFullPath {
   '/uploadFiles': typeof UploadFilesServerRoute
@@ -299,6 +325,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/runtime/youtubelivechat': {
+      id: '/runtime/youtubelivechat'
+      path: '/runtime/youtubelivechat'
+      fullPath: '/runtime/youtubelivechat'
+      preLoaderRoute: typeof RuntimeYoutubelivechatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/runtime/obsdonate': {
+      id: '/runtime/obsdonate'
+      path: '/runtime/obsdonate'
+      fullPath: '/runtime/obsdonate'
+      preLoaderRoute: typeof RuntimeObsdonateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/googleOBS': {
       id: '/auth/googleOBS'
       path: '/auth/googleOBS'
@@ -347,6 +387,8 @@ const rootRouteChildren: RootRouteChildren = {
   QuenMatKhauRoute: QuenMatKhauRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthGoogleOBSRoute: AuthGoogleOBSRoute,
+  RuntimeObsdonateRoute: RuntimeObsdonateRoute,
+  RuntimeYoutubelivechatRoute: RuntimeYoutubelivechatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,11 +1,12 @@
 use chrono::Utc;
 use futures_util::{SinkExt, StreamExt};
 use serde_json::Value;
+use std::collections::HashMap;
 use std::sync::Arc;
-use tokio::io::Result;
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
-use tokio_tungstenite::{accept_async, tungstenite::Message};
+use tokio_tungstenite::{accept_hdr_async, tungstenite::Message};
+use http::{Request, Response};
 
 type SharedSender = Arc<
     Mutex<
@@ -16,51 +17,77 @@ type SharedSender = Arc<
     >,
 >;
 
-type ClientList = Arc<Mutex<Vec<SharedSender>>>;
+type ClientMap = Arc<Mutex<HashMap<String, SharedSender>>>;
 
 /// Gửi JSON tới tất cả client còn sống
-async fn broadcast_json(json: &Value, clients: &ClientList) {
+async fn broadcast_json(json: &Value, clients: &ClientMap) {
     let message = Message::Text(json.to_string().into());
-    let mut list = clients.lock().await;
-    let mut active_clients = Vec::new();
+    let mut map = clients.lock().await;
+    let mut active_clients = HashMap::new();
 
-    for client in list.iter() {
-        let client = client.clone();
+    for (client_id, sender) in map.iter() {
+        let sender = sender.clone();
         let result = {
-            let mut locked = client.lock().await;
+            let mut locked = sender.lock().await;
             locked.send(message.clone()).await
         };
 
         if result.is_ok() {
-            active_clients.push(client);
+            active_clients.insert(client_id.clone(), sender);
         } else {
-            println!("⚠️ Client bị ngắt, loại bỏ");
+            println!("⚠️ Client {} bị ngắt, loại bỏ", client_id);
         }
     }
 
-    *list = active_clients;
+    *map = active_clients;
 }
 
-pub async fn start_websocket_server() -> Result<()> {
+pub async fn start_websocket_server() -> tokio::io::Result<()> {
     let listener = TcpListener::bind("127.0.0.1:4455").await?;
     println!("🟢 WebSocket server đang chạy tại ws://127.0.0.1:4455");
 
-    let clients: ClientList = Arc::new(Mutex::new(Vec::new()));
+    let clients: ClientMap = Arc::new(Mutex::new(HashMap::new()));
 
     loop {
         let (stream, _) = listener.accept().await?;
         let clients = clients.clone();
 
         tokio::spawn(async move {
-            match accept_async(stream).await {
+            let client_id_holder = Arc::new(Mutex::new(None::<String>));
+            let client_id_holder_clone = client_id_holder.clone();
+
+            let callback = move |req: &Request<()>, response: Response<()>| -> std::result::Result<Response<()>, Response<Option<String>>> {
+                if let Some(query) = req.uri().query() {
+                    for param in query.split('&') {
+                        if let Some((key, value)) = param.split_once('=') {
+                            if key == "clientId" {
+                                let mut id = client_id_holder_clone.blocking_lock();
+                                *id = Some(value.to_string());
+                            }
+                        }
+                    }
+                }
+                Ok(response)
+            };
+
+            match accept_hdr_async(stream, callback).await {
                 Ok(ws_stream) => {
                     let (sender, mut receiver) = ws_stream.split();
                     let sender = Arc::new(Mutex::new(sender));
 
+                    let client_id = {
+                        let id = client_id_holder.lock().await;
+                        id.clone().unwrap_or_else(|| format!("anonymous-{}", Utc::now().timestamp()))
+                    };
+
                     {
-                        let mut list = clients.lock().await;
-                        list.push(sender.clone());
-                        println!("✅ Client mới kết nối. Tổng: {}", list.len());
+                        let mut map = clients.lock().await;
+                        if !map.contains_key(&client_id) {
+                            map.insert(client_id.clone(), sender.clone());
+                            println!("✅ Client mới: {}. Tổng: {}", client_id, map.len());
+                        } else {
+                            println!("🔁 Client {} đã tồn tại, không tăng tổng", client_id);
+                        }
                     }
 
                     while let Some(msg_result) = receiver.next().await {
@@ -75,12 +102,8 @@ pub async fn start_websocket_server() -> Result<()> {
 
                                     match serde_json::from_str::<Value>(trimmed) {
                                         Ok(mut json) => {
-                                            json["server_timestamp"] =
-                                                Value::String(Utc::now().to_rfc3339());
-                                            println!(
-                                                "📦 JSON hợp lệ:\n{}",
-                                                serde_json::to_string_pretty(&json).unwrap()
-                                            );
+                                            json["server_timestamp"] = Value::String(Utc::now().to_rfc3339());
+                                            println!("📦 JSON hợp lệ:\n{}", serde_json::to_string_pretty(&json).unwrap());
                                             broadcast_json(&json, &clients).await;
                                         }
                                         Err(e) => {
@@ -88,22 +111,13 @@ pub async fn start_websocket_server() -> Result<()> {
                                         }
                                     }
                                 }
-                                Message::Binary(_) => {
-                                    println!("⚠️ Nhận Binary, bỏ qua");
-                                }
                                 Message::Close(frame) => {
-                                    println!("📴 Client gửi Close frame: {:?}", frame);
+                                    println!("📴 Client {} gửi Close frame: {:?}", client_id, frame);
                                     break;
                                 }
-                                Message::Ping(_) => {
-                                    println!("📡 Nhận Ping");
-                                }
-                                Message::Pong(_) => {
-                                    println!("📡 Nhận Pong");
-                                }
-                                Message::Frame(_) => {
-                                    println!("⚠️ Nhận Frame, bỏ qua");
-                                }
+                                Message::Ping(_) => println!("📡 Nhận Ping"),
+                                Message::Pong(_) => println!("📡 Nhận Pong"),
+                                _ => println!("⚠️ Nhận tin không xử lý được"),
                             },
                             Err(e) => {
                                 println!("❌ Lỗi khi nhận tin nhắn: {}", e);
@@ -113,9 +127,9 @@ pub async fn start_websocket_server() -> Result<()> {
                     }
 
                     {
-                        let mut list = clients.lock().await;
-                        list.retain(|c| !Arc::ptr_eq(c, &sender));
-                        println!("⚠️ Client đã ngắt kết nối. Còn lại: {}", list.len());
+                        let mut map = clients.lock().await;
+                        map.remove(&client_id);
+                        println!("⚠️ Client {} đã ngắt kết nối. Còn lại: {}", client_id, map.len());
                     }
                 }
                 Err(e) => {

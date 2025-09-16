@@ -151,9 +151,13 @@ export const clearCachedCookie = createServerFn()
     deleteCookie(key)
 })
 
-export const BinarytoBLOB = (data: FileWithPreview) => {
+export const BinarytoBLOB = (data: { binary: Uint8Array<ArrayBuffer>, type: string }) => {
   const blob = new Blob([data.binary], { type: data.type })
   return URL.createObjectURL(blob)
+}
+
+export const RandomNumberInRange = (total: number) => {
+  return Math.floor(total * Math.random())
 }
 
 export const seo = ({

@@ -1,5 +1,5 @@
-import type { OBSOverlaySettingsPropsType } from "../store/obs-overlay"
-import type { YouTubeChatResponse } from "../func/youtubeOBS"
+import type { OBSOverlaySettingsTauriPropsType } from "../store/obs-overlay"
+import type { YouTubeChatResponse } from "../func/youtubeMessage"
 import type { websocketSendType } from "@/data/settings"
 
 export type WebSocketMessageType =
@@ -11,11 +11,11 @@ export type WebSocketMessageType =
         message: string
       }
     }
-  & {
+  | {
       type: typeof websocketSendType.YouTubeMessage
       data: YouTubeChatResponse['messages']
     }
-  & {
+  | {
       type: typeof websocketSendType.OBSSetting
-      data: OBSOverlaySettingsPropsType
+      data: OBSOverlaySettingsTauriPropsType
     }

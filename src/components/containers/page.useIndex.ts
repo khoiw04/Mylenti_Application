@@ -8,7 +8,6 @@ import { getYoutubeScopeWithURL } from "@/data";
 import { Route } from "@/routes";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies } from "@/func/auth.googleOBS";
-import useWebSocketOBS from "@/hooks/useWebSocketOBS";
 
 function getGoogleOBSOauth() {
     const { x, y } = useDimension().dimension
@@ -65,7 +64,6 @@ function getAuthGoogleOBSCookie() {
 }
 
 export default function useIndex() {
-    useWebSocketOBS()
     getGoogleOBSOauth()
     handleOAuthMessage()
     getAuthGoogleOBSCookie()

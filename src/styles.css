@@ -153,10 +153,17 @@ html {
 /* Utils */
 @layer utilities {
   .absolute_center {
-    @apply absolute inset-0 left-1/2 top-1/2  -translate-x-1/2 -translate-y-1/2
+    @apply absolute inset-0 left-1/2 top-1/2;
+    @apply -translate-x-1/2 -translate-y-1/2
   }
   .webkit_scroll_hidden {
     @apply [&::-webkit-scrollbar]:hidden
+  }
+  .popup_icon {
+    @apply hidden transition-discrete transition-all;
+    @apply starting:data-[show=true]:opacity-50 starting:data-[show=true]:scale-85 starting:data-[show=true]:blur-2xl;
+    @apply data-[show=true]:block data-[show=true]:opacity-100 data-[show=true]:blur-none;
+    @apply data-[show=false]:hidden data-[show=false]:opacity-85 data-[show=false]:scale-50;
   }
 }
 

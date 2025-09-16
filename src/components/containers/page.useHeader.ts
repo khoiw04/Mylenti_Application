@@ -7,7 +7,7 @@ import useWebsocketOBSOverlaySend from "./db.useWebsocketOBSOverlaySend";
 import type { NavigationHrefType } from "@/types";
 import { HeaderStrategy } from "@/store";
 import useAuthInfo from "@/hooks/useAuthInfo";
-import useListenSepayAlert from "@/components/containers/db.ListenSepayAlert";
+import useWebSocketSepayAlertSend from "@/components/containers/db.useWebSocketSepayAlertSend";
 import useRustOBSSettingSync, { useInitOBSOverlaySettings } from "@/hooks/useRustOBSSettingsSync";
 
 function useHeaderLinkSync() {
@@ -28,12 +28,19 @@ function useHeaderLogOut() {
 }
 
 export default function useHeader() {
+  // Auth
   useAuthInfo()
   useHeaderLogOut()
   useHeaderLinkSync()
-  useListenSepayAlert()
-  useReceiveWebSocket()
+
+  // Websocket - INIT
   useRustOBSSettingSync()
   useInitOBSOverlaySettings()
+  
+  // Websocket - SEND
+  useWebSocketSepayAlertSend()
   useWebsocketOBSOverlaySend()
+
+  // Websocket - RECEIVE
+  useReceiveWebSocket()
 }

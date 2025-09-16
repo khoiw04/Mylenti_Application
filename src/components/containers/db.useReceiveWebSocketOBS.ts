@@ -1,31 +1,24 @@
-import { useEffect, useRef } from "react"
-import { useStore } from "@tanstack/react-store"
+import { useEffect } from "react"
 import type { WebSocketMessageType } from "@/types"
-import { WebSocketStore } from "@/store"
 import { safeParse } from "@/lib/socket.safeJSONMessage"
 import { WebSocketSendStrategy } from "@/func/fn.stragery"
+import { OBSTauriWebSocket } from "@/class/WebSocketTauriManager"
 
 export default function useReceiveWebSocket() {
-  const { socket } = useStore(WebSocketStore)
-  const removeListenerRef = useRef<(() => void) | null>(null)
-
   useEffect(() => {
-    if (!socket) return
-
-    const removeListener = socket.addListener((msg) => {
+    OBSTauriWebSocket.connect((msg) => {
         const parsed = safeParse<WebSocketMessageType>(msg)
         if (!parsed || typeof parsed !== "object" || !("type" in parsed)) return
 
-        WebSocketSendStrategy[parsed.type]
+        const handler = WebSocketSendStrategy[parsed.type]
+
+        if (typeof handler === "function") {
+            handler(parsed.data)
+        }
     })
 
-    removeListenerRef.current = removeListener
-
     return () => {
-      if (removeListenerRef.current) {
-        removeListenerRef.current()
-        removeListenerRef.current = null
-      }
+      OBSTauriWebSocket.disconnect()
     }
-  }, [socket])
+  }, [])
 }

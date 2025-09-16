@@ -17,18 +17,32 @@ export type OBSOverlayChatTypePropsType = {
     }
 }
 
-export type OBSOverlaySettingsPropsType = {
+export type OBSOverlaySettingsTauriPropsType = {
     openStatePreset: boolean
     showComment: boolean;
     currentPreset: presetUserVariantsValueType
     currentKeyChatType: OBSOverlayAllKeyPropsType,
     ChatType: Array<OBSOverlayChatTypePropsType>;
-    DonateProps: OBSOverlayDonatePropsType
+    DonateProps: OBSOverlayDonateTauriPropsType
 }
 
-export type OBSOverlayDonatePropsType = {
+export type OBSOverlaySettingsWebsitePropsType = {
+    openStatePreset: boolean
+    showComment: boolean;
+    currentPreset: presetUserVariantsValueType
+    currentKeyChatType: OBSOverlayAllKeyPropsType
+    ChatType: Array<OBSOverlayChatTypePropsType>
+    DonateProps: OBSOverlayDonateWebsitePropsType
+}
+
+export type OBSOverlayDonateTauriPropsType = {
     emojiURL: Array<FileWithPreview>
     soundURL: Array<FileWithPreview>
+}
+
+export type OBSOverlayDonateWebsitePropsType = {
+    emojiURL: Array<string>
+    soundURL: Array<string>
 }
 
 export type OBSOverlaySettingStrageryType = {
