@@ -1,14 +1,14 @@
-import { useEffect } from "react"
 import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import { websocketSendType } from "@/data/settings"
 import { safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSTauriWebSocket } from "@/class/WebSocketTauriManager"
+import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 
 export default function useWebSocketSepayAlertSend() {
   const authInfo = useAuthInfoExternalStore()
 
-  useEffect(() => {
+  useTauriSafeEffect(() => {
     const channel = supabaseSSR.channel(authInfo.currentUser)
       .on('broadcast', { event: 'new-transaction' }, ({ payload }) => {
         const formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(payload.transferAmount).replace(/\u00A0/g, '');

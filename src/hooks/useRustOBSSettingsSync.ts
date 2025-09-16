@@ -17,7 +17,7 @@ export const useInitOBSOverlaySettings = () => {
   }, []);
 };
 
-export default function useRustOBSSettingSync() {
+export default function useSyncOBSOverlaySettings() {
   useTauriSafeEffect(() => {
     const debouncedSave = debounce(saveOBSSetting, {
       wait: 500,

@@ -1,13 +1,12 @@
-import { useEffect } from 'react'
 import { debounce } from '@tanstack/pacer'
 import { OBSOverlaySettingsProps } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
+import useTauriSafeEffect from '@/hooks/useTauriSideEffect'
 
 export default function useWebsocketOBSOverlaySync() {
-
-  useEffect(() => {
+  useTauriSafeEffect(() => {
     const debouncedSend = debounce((data) => {
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.OBSSetting,
