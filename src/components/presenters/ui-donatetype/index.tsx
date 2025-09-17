@@ -3,10 +3,10 @@
 import { useStore } from "@tanstack/react-store";
 import DonateComponent from "./component";
 import { commentParagraphSuperchatTest, commenter_name_test } from "@/data/obs-overlay";
-import { OBSOverlaySettingsProps } from "@/store";
+import { OBSOverlayTauriSettingsProps } from "@/store";
 
 export default function DonateOverlay() {
-    const { DonateProps, currentPreset } = useStore(OBSOverlaySettingsProps)
+    const { DonateProps, currentPreset } = useStore(OBSOverlayTauriSettingsProps)
 
     return (
         <DonateComponent

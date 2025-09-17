@@ -9,7 +9,7 @@ import { useFileUpload } from "@/hooks/use-donate-upload"
 
 import { Button } from "@/components/ui/button"
 import { formatBytes } from "@/lib/utils";
-import { OBSOverlaySettingsProps, loadEmojis, saveEmojis } from "@/store";
+import { OBSOverlayTauriSettingsProps, loadEmojis, saveEmojis } from "@/store";
 import { fallbackEmoji } from "@/data/obs-overlay";
 
 export default function EmojiFileUpload() {
@@ -30,7 +30,7 @@ export default function EmojiFileUpload() {
     onFilesLoad: loadEmojis,
     onFilesChange: async (filesChange) => {
       const emojiData = filesChange.length > 0 ? filesChange : fallbackEmoji
-      OBSOverlaySettingsProps.setState((prev) => ({
+      OBSOverlayTauriSettingsProps.setState((prev) => ({
         ...prev,
         DonateProps: {
           ...prev.DonateProps,

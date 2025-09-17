@@ -15,7 +15,7 @@ def tts():
     try:
         text = request.json["text"]
         output_path = os.path.join(os.path.dirname(__file__), "output.wav")
-        synthesize(text, output_path, gender="female", area="northern", config=config)
+        synthesize(text, output_path, gender="male", area="northern", group="interview", emotion="happy", config=config)
 
         if not os.path.exists(output_path):
             return {"error": "File không được tạo"}, 500

@@ -4,15 +4,15 @@ import { useState } from "react";
 import EmojiFileUpload from "./EmojiFileUpload";
 import SoundFileUpload from "./SoundFileUpload";
 import { ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger } from "@/components/ui/context-menu";
-import { OBSOverlaySettingStragery, OBSOverlaySettingsProps } from "@/store";
+import { OBSOverlaySettingStragery, OBSOverlayTauriSettingsProps } from "@/store";
 import { overlayFieldConfigs } from "@/data/obs-overlay";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ContextMenuContentMain() {
   const [dialogType, setDialogType] = useState<'image' | 'sound' | null>(null)
 
-  const { ChatType, currentKeyChatType, showComment } = useStore(OBSOverlaySettingsProps)
-  const { currentKeyChatTypeStragery, showCommentStragery, showLabelStragery } = useStore(OBSOverlaySettingStragery)
+  const { ChatType, currentKeyChatType, showComment, DonateProps: { enableVoice } } = useStore(OBSOverlayTauriSettingsProps)
+  const { currentKeyChatTypeStragery, showCommentStragery, showLabelStragery, toogleVoiceDonatePropsStragery } = useStore(OBSOverlaySettingStragery)
 
     return (
       <Dialog>
@@ -60,6 +60,12 @@ export default function ContextMenuContentMain() {
                 Thay Âm Thanh
             </ContextMenuCheckboxItem>
           </DialogTrigger>
+          <ContextMenuCheckboxItem
+            checked={enableVoice}
+            onClick={() => toogleVoiceDonatePropsStragery(!enableVoice)}
+          >
+              Bật/Tắt Giọng Nói
+          </ContextMenuCheckboxItem>
           </>
           :
           <>

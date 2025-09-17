@@ -9,7 +9,8 @@ export const OBSOverlaySettingsWebsiteStore = new Store<OBSOverlaySettingsWebsit
   currentPreset: 'default',
   DonateProps : {
     emojiURL: fallbackEmoji,
-    soundURL: fallbackSound
+    soundURL: fallbackSound,
+    enableVoice: false,
   },
   ChatType: [
     {

@@ -3,6 +3,37 @@
 version = 3
 
 [[package]]
+name = "Mylenti"
+version = "1.0.0"
+dependencies = [
+ "axum",
+ "chrono",
+ "futures-util",
+ "http",
+ "hyper",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-autostart",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-deep-link",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-http",
+ "tauri-plugin-log",
+ "tauri-plugin-os",
+ "tauri-plugin-shell",
+ "tauri-plugin-store",
+ "tauri-plugin-updater",
+ "tauri-plugin-websocket",
+ "tokio",
+ "tokio-tungstenite",
+ "tower",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.24.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -83,37 +114,6 @@ name = "anyhow"
 version = "1.0.99"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0674a1ddeecb70197781e945de4b3b8ffb61fa939a5597bcf48503737663100"
-
-[[package]]
-name = "app"
-version = "0.1.0"
-dependencies = [
- "axum",
- "chrono",
- "futures-util",
- "http",
- "hyper",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-deep-link",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-http",
- "tauri-plugin-log",
- "tauri-plugin-os",
- "tauri-plugin-shell",
- "tauri-plugin-store",
- "tauri-plugin-updater",
- "tauri-plugin-websocket",
- "tokio",
- "tokio-tungstenite",
- "tower",
-]
 
 [[package]]
 name = "arbitrary"

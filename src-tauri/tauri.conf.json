@@ -19,7 +19,10 @@
         "resizable": true,
         "fullscreen": false,
         "transparent": true,
-        "decorations": false
+        "decorations": false,
+        "devtools": true,
+        "minWidth": 280,
+        "create": true
       }
     ],
     "security": {

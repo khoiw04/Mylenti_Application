@@ -9,7 +9,7 @@ import { useFileUpload } from "@/hooks/use-donate-upload"
 
 import { Button } from "@/components/ui/button"
 import { formatBytes } from "@/lib/utils";
-import { OBSOverlaySettingsProps, loadSounds, saveSounds } from "@/store";
+import { OBSOverlayTauriSettingsProps, loadSounds, saveSounds } from "@/store";
 import { fallbackSound } from "@/data/obs-overlay";
 
 export default function SoundFileUpload() {
@@ -30,7 +30,7 @@ export default function SoundFileUpload() {
     onFilesLoad: loadSounds,
     onFilesChange: async (filesChange) => {
       const soundData = filesChange.length > 0 ? filesChange : fallbackSound
-      OBSOverlaySettingsProps.setState((prev) => ({
+      OBSOverlayTauriSettingsProps.setState((prev) => ({
         ...prev,
         DonateProps: {
           ...prev.DonateProps,

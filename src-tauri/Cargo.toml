@@ -1,8 +1,8 @@
 [package]
-name = "app"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "Mylenti"
+version = "1.0.0"
+description = "Mylenti's OBS Overlay"
+authors = ["khoiw04"]
 license = ""
 repository = ""
 edition = "2021"

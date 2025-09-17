@@ -15,23 +15,25 @@ function RouteComponent() {
   const router = useRouter()
   useEffect(() => {
     (async () => {
-      const res = await exchangeCodeInClient()
+      try {
+        const res = await exchangeCodeInClient()
 
-      if (isTauri()) {
         const user = await getUser()
         if (user.isAuthenticated) {
           router.navigate({ to: '/', reloadDocument: true })
         } else {
           router.navigate({ to: '/dang-nhap' })
         }
-        return null
-      }
 
-      if (res?.success) {
-        await window.opener?.postMessage('oauth-success', window.location.origin)
+        if (res?.success) {
+          window.opener?.postMessage('oauth-success', window.location.origin)
+        } else {
+          window.opener?.postMessage('oauth-failed', window.location.origin)
+        }
         window.close()
-      } else {
-        await window.opener?.postMessage('oauth-failed', window.location.origin)
+      } catch (err) {
+        console.error('OAuth exchange failed:', err)
+        window.opener?.postMessage('oauth-error', window.location.origin)
         window.close()
       }
     })()

@@ -5,7 +5,6 @@ import { fetch as TauriFetch } from '@tauri-apps/plugin-http';
 import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server';
 import { createServerFn } from '@tanstack/react-start';
 import type {ClassValue} from 'clsx';
-import type { FileWithPreview } from '@/types/func/useFileUpload';
 
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))

@@ -23,10 +23,10 @@ const donateEmojiContainerVarients = cva("overflow-hidden relative", {
   ...defaultVariants
 })
 
-const donaterNameVariants = cva("my-4", {
+const donaterNameVariants = cva("mt-4 mb-2", {
   variants: {
     currentPreset: {
-      default: "font-medium text-lg",
+      default: "font-medium",
       "Mori Seikai": "",
       "Siini": "",
     },

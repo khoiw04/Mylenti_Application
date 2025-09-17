@@ -1,6 +1,6 @@
 import { debounce } from '@tanstack/react-pacer';
 import useTauriSafeEffect from './useTauriSideEffect';
-import { OBSOverlaySettingsProps, loadOBSSetting, saveOBSSetting } from '@/store';
+import { OBSOverlayTauriSettingsProps, loadOBSSetting, saveOBSSetting } from '@/store';
 import { sanitizeOBSOverlaySettings } from '@/data/db.sanitizeOBSOverlaySettings';
 
 export const useInitOBSOverlaySettings = () => {
@@ -9,7 +9,7 @@ export const useInitOBSOverlaySettings = () => {
       const saved = await loadOBSSetting();
       if (typeof saved === 'object') {
         const safeState = sanitizeOBSOverlaySettings(saved);
-        OBSOverlaySettingsProps.setState(safeState);
+        OBSOverlayTauriSettingsProps.setState(safeState);
       }
     };
 
@@ -24,7 +24,7 @@ export default function useSyncOBSOverlaySettings() {
       trailing: true,
     });
 
-    const unsub = OBSOverlaySettingsProps.subscribe(({ currentVal }) => {
+    const unsub = OBSOverlayTauriSettingsProps.subscribe(({ currentVal }) => {
       debouncedSave(currentVal);
     });
 

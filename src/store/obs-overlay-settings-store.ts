@@ -2,14 +2,15 @@ import { Store } from "@tanstack/store"
 import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsTauriPropsType } from "@/types"
 import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
-export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsTauriPropsType>({
+export const OBSOverlayTauriSettingsProps = new Store<OBSOverlaySettingsTauriPropsType>({
   showComment: false,
   openStatePreset: false,
   currentPreset: 'default',
   currentKeyChatType: 'Verified',
   DonateProps : {
     emojiURL: fallbackEmoji,
-    soundURL: fallbackSound
+    soundURL: fallbackSound,
+    enableVoice: false,
   },
   ChatType: [
     {
@@ -66,20 +67,20 @@ export const OBSOverlaySettingsProps = new Store<OBSOverlaySettingsTauriPropsTyp
 })
 
 export const OBSOverlaySettingStragery = new Store<OBSOverlaySettingStrageryType>({
-    currentKeyChatTypeStragery: (string) => OBSOverlaySettingsProps.setState(
+    currentKeyChatTypeStragery: (string) => OBSOverlayTauriSettingsProps.setState(
       prev => ({
         ...prev,
         currentKeyChatType: string
       })
     ),
-    showCommentStragery: (boolean) => OBSOverlaySettingsProps.setState(
+    showCommentStragery: (boolean) => OBSOverlayTauriSettingsProps.setState(
       prev => ({
         ...prev,
         showComment: boolean
       })
     ),
     showLabelStragery: (key, field, value) => {
-      OBSOverlaySettingsProps.setState(prev => ({
+      OBSOverlayTauriSettingsProps.setState(prev => ({
         ...prev,
         ChatType: prev.ChatType.map(item =>
           item.key === key
@@ -95,20 +96,29 @@ export const OBSOverlaySettingStragery = new Store<OBSOverlaySettingStrageryType
       }))
     },
     getCorrectChatTypeDataStragery: (value) =>
-      OBSOverlaySettingsProps.state.ChatType.find(
+      OBSOverlayTauriSettingsProps.state.ChatType.find(
         item => item.key === value
       )!
     ,
     openStatePresetStragery: (boolean) => 
-        OBSOverlaySettingsProps.setState(
+        OBSOverlayTauriSettingsProps.setState(
             prev => ({
                 ...prev, 
                 openStatePreset: boolean 
         })),
     currentPresetStragery: (value) => 
-        OBSOverlaySettingsProps.setState(
+        OBSOverlayTauriSettingsProps.setState(
             prev => ({ 
                 ...prev, 
                 currentPreset: value
+        })),
+    toogleVoiceDonatePropsStragery: (value) => 
+        OBSOverlayTauriSettingsProps.setState(
+            prev => ({ 
+                ...prev, 
+                DonateProps: {
+                  ...prev.DonateProps,
+                  enableVoice: value
+                }
         })),
 })

@@ -38,11 +38,13 @@ export type OBSOverlaySettingsWebsitePropsType = {
 export type OBSOverlayDonateTauriPropsType = {
     emojiURL: Array<FileWithPreview>
     soundURL: Array<FileWithPreview>
+    enableVoice: boolean
 }
 
 export type OBSOverlayDonateWebsitePropsType = {
     emojiURL: Array<FileWithPreview>
     soundURL: Array<FileWithPreview>
+    enableVoice: boolean
 }
 
 export type OBSOverlaySettingStrageryType = {
@@ -56,4 +58,5 @@ export type OBSOverlaySettingStrageryType = {
         field: T,
         value: boolean
     ) => void
+    toogleVoiceDonatePropsStragery: (boolean: boolean) => void
 }

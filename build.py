@@ -40,6 +40,7 @@ def build_executable():
     cmd = [
         "pyinstaller",
         "--onefile",
+        "--console",
         "--add-data", "src-tauri/python/vietvoicetts;vietvoicetts",
         "--add-data", f"{models_path};models",
         "--hidden-import", "vietvoicetts",
