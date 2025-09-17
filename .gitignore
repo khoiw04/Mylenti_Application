@@ -10,3 +10,7 @@ count.txt
 .output
 .vinxi
 todos.json
+build
+dist
+src-tauri/bin
+src-tauri/python/models

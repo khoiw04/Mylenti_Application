@@ -151,9 +151,8 @@ export const clearCachedCookie = createServerFn()
     deleteCookie(key)
 })
 
-export const BinarytoBLOB = (data: { binary: Uint8Array<ArrayBuffer>, type: string }) => {
-  const blob = new Blob([new Uint8Array(data.binary)], { type: data.type })
-  console.log(blob, data.binary, data.type)
+export const BinarytoBLOB = (data: { binary: Uint8Array<ArrayBuffer>, type: string }, config: { undefinedType: string, fallbackType: string }) => {
+  const blob = new Blob([new Uint8Array(data.binary)], { type: data.type === config.undefinedType ? config.fallbackType : data.type })
   return URL.createObjectURL(blob)
 }
 

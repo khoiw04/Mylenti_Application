@@ -1,5 +1,5 @@
 {
-  "name": "obs-software-donate!_mylenti",
+  "name": "obsmylenti",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,9 @@
     "test": "bun test",
     "lint": "bunx eslint .",
     "format": "bunx prettier --write .",
-    "check": "bunx prettier --write . && bunx eslint --fix"
+    "check": "bunx prettier --write . && bunx eslint --fix",
+    "prebuild": "python build.py",
+    "tauri:build": "tauri build"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.1",
@@ -51,6 +53,7 @@
     "@tauri-apps/plugin-clipboard-manager": "~2",
     "@tauri-apps/plugin-dialog": "~2",
     "@tauri-apps/plugin-http": "~2",
+    "@tauri-apps/plugin-log": "~2",
     "@tauri-apps/plugin-os": "^2.3.1",
     "@tauri-apps/plugin-store": "~2",
     "@tauri-apps/plugin-websocket": "~2",

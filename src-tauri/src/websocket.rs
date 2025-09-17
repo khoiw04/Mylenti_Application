@@ -1,12 +1,12 @@
 use chrono::Utc;
 use futures_util::{SinkExt, StreamExt};
+use http::{Request, Response};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 use tokio_tungstenite::{accept_hdr_async, tungstenite::Message};
-use http::{Request, Response};
 
 type SharedSender = Arc<
     Mutex<
@@ -77,16 +77,17 @@ pub async fn start_websocket_server() -> tokio::io::Result<()> {
 
                     let client_id = {
                         let id = client_id_holder.lock().await;
-                        id.clone().unwrap_or_else(|| format!("anonymous-{}", Utc::now().timestamp()))
+                        id.clone()
+                            .unwrap_or_else(|| format!("anonymous-{}", Utc::now().timestamp()))
                     };
 
                     {
                         let mut map = clients.lock().await;
                         if !map.contains_key(&client_id) {
                             map.insert(client_id.clone(), sender.clone());
-                            println!("✅ Client mới: {}. Tổng: {}", client_id, map.len());
+                            log::info!("✅ Client mới: {}. Tổng: {}", client_id, map.len());
                         } else {
-                            println!("🔁 Client {} đã tồn tại, không tăng tổng", client_id);
+                            log::info!("🔁 Client {} đã tồn tại, không tăng tổng", client_id);
                         }
                     }
 
@@ -96,31 +97,38 @@ pub async fn start_websocket_server() -> tokio::io::Result<()> {
                                 Message::Text(text) => {
                                     let trimmed = text.trim();
                                     if trimmed.is_empty() {
-                                        println!("⚠️ Nhận chuỗi rỗng, bỏ qua");
+                                        log::info!("⚠️ Nhận chuỗi rỗng, bỏ qua");
                                         continue;
                                     }
 
                                     match serde_json::from_str::<Value>(trimmed) {
                                         Ok(mut json) => {
-                                            json["server_timestamp"] = Value::String(Utc::now().to_rfc3339());
-                                            println!("📦 JSON hợp lệ:\n{}", serde_json::to_string_pretty(&json).unwrap());
+                                            json["server_timestamp"] =
+                                                Value::String(Utc::now().to_rfc3339());
+                                            log::info!(
+                                                "📦 JSON hợp lệ:\n{}",
+                                                serde_json::to_string_pretty(&json).unwrap()
+                                            );
                                             broadcast_json(&json, &clients).await;
                                         }
                                         Err(e) => {
-                                            println!("❌ JSON không hợp lệ: {}", e);
+                                            log::error!("❌ JSON không hợp lệ: {}", e);
                                         }
                                     }
                                 }
                                 Message::Close(frame) => {
-                                    println!("📴 Client {} gửi Close frame: {:?}", client_id, frame);
+                                    log::info!(
+                                        "📴 Client {} gửi Close frame: {:?}",
+                                        client_id, frame
+                                    );
                                     break;
                                 }
-                                Message::Ping(_) => println!("📡 Nhận Ping"),
-                                Message::Pong(_) => println!("📡 Nhận Pong"),
-                                _ => println!("⚠️ Nhận tin không xử lý được"),
+                                Message::Ping(_) => log::info!("📡 Nhận Ping"),
+                                Message::Pong(_) => log::info!("📡 Nhận Pong"),
+                                _ => log::error!("⚠️ Nhận tin không xử lý được"),
                             },
                             Err(e) => {
-                                println!("❌ Lỗi khi nhận tin nhắn: {}", e);
+                                log::error!("❌ Lỗi khi nhận tin nhắn: {}", e);
                                 break;
                             }
                         }
@@ -129,11 +137,15 @@ pub async fn start_websocket_server() -> tokio::io::Result<()> {
                     {
                         let mut map = clients.lock().await;
                         map.remove(&client_id);
-                        println!("⚠️ Client {} đã ngắt kết nối. Còn lại: {}", client_id, map.len());
+                        log::info!(
+                            "⚠️ Client {} đã ngắt kết nối. Còn lại: {}",
+                            client_id,
+                            map.len()
+                        );
                     }
                 }
                 Err(e) => {
-                    eprintln!("❌ Lỗi khi thiết lập kết nối WebSocket: {}", e);
+                    log::error!("❌ Lỗi khi thiết lập kết nối WebSocket: {}", e);
                 }
             }
         });

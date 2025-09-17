@@ -31,8 +31,8 @@ export default function OBSDonate() {
     const unsubscribe = OBSOverlayDataDonateWebsiteStore.subscribe(({ prevVal, currentVal }) => {
       if (currentVal.name && currentVal.name !== prevVal.name) {
 
-        const selectedEmoji = BinarytoBLOB(emojiURL[RandomNumberInRange(emojiURL.length)]);
-        const selectedSound = BinarytoBLOB(soundURL[RandomNumberInRange(soundURL.length)]);
+        const selectedEmoji = BinarytoBLOB(emojiURL[RandomNumberInRange(emojiURL.length)], { undefinedType: "application/octet-stream", fallbackType: 'audio/mpeg' });
+        const selectedSound = BinarytoBLOB(soundURL[RandomNumberInRange(soundURL.length)], { undefinedType: "application/octet-stream", fallbackType: 'audio/mpeg' });
 
         const newDonate = {
           name: currentVal.name,
@@ -43,6 +43,7 @@ export default function OBSDonate() {
         };
 
         setDonateQueue((prev) => [...prev, newDonate])
+        console.log('New', newDonate)
       }
     })
 
@@ -50,27 +51,57 @@ export default function OBSDonate() {
   }, [emojiURL, soundURL]);
 
   useEffect(() => {
+    console.log('Queue', donateQueue)
     if (!currentDonate && donateQueue.length > 0) {
-      console.log(donateQueue)
-      const next = donateQueue[0]
-      setCurrentDonate(next)
+      const next = donateQueue[0];
       setDonateQueue((prev) => prev.slice(1));
 
-      const audio = new Audio(next.sound);
-      audio.play().catch((err) => toast.warning(`Không thể phát âm thanh: ${err}`))
+      const fetchTTS = async (text: string): Promise<string> => {
+        try {
+          const res = await fetch('http://127.0.0.1:4545/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+          });
 
-      audio.onended = () => {
-        const utterance = new SpeechSynthesisUtterance(
-          `${next.name} vừa donate ${next.amount}. ${next.message}`
-        );
-
-        utterance.lang = 'vi-VN';
-        speechSynthesis.speak(utterance);
-
-        setCurrentDonate(null);
-        URL.revokeObjectURL(next.sound);
-        URL.revokeObjectURL(next.emoji);
+          const blob = await res.blob();
+          return URL.createObjectURL(blob);
+        } catch (err) {
+          toast.error(`Không thể tạo giọng nói: ${err}`);
+          return "";
+        }
       };
+
+      const prepareAndPlay = async () => {
+        const ttsText = `${next.name} vừa donate ${next.amount}. ${next.message}`;
+        const ttsURL = await fetchTTS(ttsText);
+
+        setCurrentDonate(next);
+
+        const emojiAudio = new Audio(next.sound);
+        emojiAudio.play().catch(err => {
+          setTimeout(() => { 
+            setCurrentDonate(null); 
+            URL.revokeObjectURL(next.sound); 
+            URL.revokeObjectURL(next.emoji); 
+          }, 10000);
+          toast.warning(`Không thể phát emoji: ${err}`);
+        });
+
+        emojiAudio.onended = () => {
+          const ttsAudio = new Audio(ttsURL);
+          ttsAudio.play();
+
+          ttsAudio.onended = () => {
+            setCurrentDonate(null);
+            URL.revokeObjectURL(next.sound);
+            URL.revokeObjectURL(next.emoji);
+            URL.revokeObjectURL(ttsURL);
+          };
+        };
+      };
+
+      prepareAndPlay();
     }
   }, [donateQueue, currentDonate]);
 
@@ -91,7 +122,7 @@ export default function OBSDonate() {
             srcDonateComment={currentDonate.name}
             srcDonateParagraph={currentDonate.message}
             srcDonateEmoji={currentDonate.emoji}
-            style={{ color: 'white' }}
+            style={{ color: import.meta.env.DEV ? '-moz-initial' : 'white' }}
           />
         </motion.div>
       )}
