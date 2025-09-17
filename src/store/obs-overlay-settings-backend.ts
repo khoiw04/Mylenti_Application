@@ -1,6 +1,6 @@
 import { Store } from '@tauri-apps/plugin-store';
 import type { OBSOverlaySettingsTauriPropsType } from '@/types';
-import { initialDonateFiles } from '@/data/obs-overlay';
+import { fallbackEmoji, fallbackSound } from '@/data/obs-overlay';
 
 export const OBSOVERLAY_SETTINGS_FILE = 'obs_overlay_settings-store.json';
 export const OBSOVERLAY_SETTINGS_KEY = 'obs_overlay_settings';
@@ -17,7 +17,9 @@ export const getOBSSetting = async (): Promise<Store> => {
                     currentPreset: 'default',
                     currentKeyChatType: 'Verified',
                     DonateProps : {
-                        emojiURL: [initialDonateFiles[0].url]
+                        emojiURL: fallbackEmoji,
+                        soundURL: fallbackSound,
+                        enableVoice: false,
                     },
                     ChatType: [
                         {

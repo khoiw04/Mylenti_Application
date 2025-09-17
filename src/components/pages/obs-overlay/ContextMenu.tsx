@@ -64,7 +64,8 @@ export default function ContextMenuContentMain() {
             checked={enableVoice}
             onClick={() => toogleVoiceDonatePropsStragery(!enableVoice)}
           >
-              Bật/Tắt Giọng Nói
+              {!enableVoice ? 'Bật' : 'Tắt'} {" "}
+              Giọng Nói
           </ContextMenuCheckboxItem>
           </>
           :

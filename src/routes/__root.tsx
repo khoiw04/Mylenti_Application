@@ -4,10 +4,10 @@ import {
   createRootRouteWithContext,
   redirect,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanstackDevtools } from '@tanstack/react-devtools'
+// import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+// import { TanstackDevtools } from '@tanstack/react-devtools'
 
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+// import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 
@@ -89,7 +89,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <WindowDecorations />
         {children}
-        <TanstackDevtools
+        {/* <TanstackDevtools
           config={{
             position: 'bottom-left',
           }}
@@ -100,7 +100,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
             TanStackQueryDevtools,
           ]}
-        />
+        /> */}
         <Scripts />
       </body>
     </html>

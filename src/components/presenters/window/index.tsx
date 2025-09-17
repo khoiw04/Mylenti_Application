@@ -5,6 +5,7 @@ import useTauriWindow from '@/components/containers/api.useTauriWindow'
 import { AppWindowStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
 import useWebSocketSepayAlertSend from '@/components/containers/db.useWebSocketSepayAlertSend'
+import useReceiveWebSocket from '@/components/containers/db.useReceiveWebSocketOBS'
 
 export default function Main() {
     // Websocket - INIT
@@ -14,6 +15,9 @@ export default function Main() {
     // Websocket - SEND
     useWebSocketSepayAlertSend()
     useWebsocketOBSOverlaySend()
+
+    // Websocket - RECEIVE
+    useReceiveWebSocket()
 
     useTauriWindow()
     const { appWindow } = useStore(AppWindowStore)

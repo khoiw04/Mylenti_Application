@@ -15,11 +15,11 @@ class WebSocketTauriManager {
 
     constructor() {
         this.clientId = typeof window !== 'undefined'
-        ? localStorage.getItem('clientId') || crypto.randomUUID()
-        : crypto.randomUUID();
+            ? localStorage.getItem('clientId') || crypto.randomUUID()
+            : crypto.randomUUID();
 
         if (typeof window !== 'undefined') {
-        localStorage.setItem('clientId', this.clientId);
+            localStorage.setItem('clientId', this.clientId);
         }
     }
 

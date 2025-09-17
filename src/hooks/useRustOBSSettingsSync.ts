@@ -21,7 +21,7 @@ export default function useSyncOBSOverlaySettings() {
   useTauriSafeEffect(() => {
     const debouncedSave = debounce(saveOBSSetting, {
       wait: 500,
-      trailing: true,
+      trailing: true
     });
 
     const unsub = OBSOverlayTauriSettingsProps.subscribe(({ currentVal }) => {
