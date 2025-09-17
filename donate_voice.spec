@@ -9,7 +9,7 @@ a = Analysis(
     ['src-tauri\\python\\donate_voice.py'],
     pathex=[],
     binaries=[],
-    datas=[('src-tauri/python/models', 'models')],
+    datas=[('src-tauri/python/vietvoicetts', 'vietvoicetts'), ('src-tauri/python/models', 'models')],
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
