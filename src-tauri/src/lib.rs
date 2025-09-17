@@ -3,6 +3,7 @@ use std::time::Duration;
 use tauri_plugin_http::reqwest::Client;
 use tauri_plugin_shell::ShellExt;
 use tokio::time::sleep;
+use std::env;
 mod update;
 mod websocket;
 
@@ -21,6 +22,7 @@ async fn is_flask_ready() -> bool {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_log::Builder::new()
+            .level(log::LevelFilter::Info)
             .max_file_size(50_000)
             .timezone_strategy(tauri_plugin_log::TimezoneStrategy::UseLocal)
             .format(|out, message, record| {
@@ -45,13 +47,27 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
-            let flask_exe_path = "bin/donate_voice.exe";
+            let flask_exe_path = env::current_dir()
+                .unwrap()
+                .join("bin")
+                .join("donate_voice.exe");
+
+            if !flask_exe_path.exists() {
+                log::error!("❌ File donate_voice.exe không tồn tại tại: {}", flask_exe_path.display());
+                return Ok(());
+            };
+
+            let flask_cmd = format!(
+                "{} & pause",
+                flask_exe_path.to_string_lossy().replace('!', "^!")
+            );
+
             let _child = app
                 .shell()
                 .command("cmd")
-                .args(&["/C", "start", "cmd", "/K", &format!("{} & pause", flask_exe_path)])
+                .args(&["/C", "start", "cmd", "/K", &flask_cmd])
                 .spawn()
-                .expect("❌ Không thể khởi động Flask server");
+                .expect("❌ Không thể mở CMD để chạy Flask");
 
             tauri::async_runtime::spawn(async {
                 if let Err(e) = start_websocket_server().await {
@@ -69,13 +85,13 @@ pub fn run() {
                 }
             });
 
-            if cfg!(debug_assertions) {
-                app.handle().plugin(
-                    tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
-                        .build(),
-                )?;
-            };
+            // if cfg!(debug_assertions) {
+            //     app.handle().plugin(
+            //         tauri_plugin_log::Builder::default()
+            //             .level(log::LevelFilter::Info)
+            //             .build(),
+            //     )?;
+            // };
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![update::run_update])
