@@ -14,7 +14,7 @@ export default function useLogOut() {
       await logoutFn()
       await queryClient.invalidateQueries(authQueries.user())
       router.invalidate()
-      router.navigate({ to: '/', reloadDocument: true })
+      router.navigate({ to: '/dang-nhap', reloadDocument: true })
     }
     return { handleLogOut }
 }

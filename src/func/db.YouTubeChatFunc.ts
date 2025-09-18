@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { createServerFn } from '@tanstack/react-start'
 import { getValidGoogleOBSAccessToken } from './auth.googleOBS'
 import type { YouTubeChatResponse } from '@/types'
@@ -12,7 +13,7 @@ export const clearYouTubeOBSLiveStream = createServerFn()
 
 export const getYouTubeOBSChannelID = createServerFn({ method: 'GET' })
   .handler(async () => {
-    const cached = await getCachedCookie({data: { key: 'channelId'}})
+    const cached = await getCachedCookie({data: { key: 'channelId' }})
     if (cached) return cached
 
     const accessToken = await getValidGoogleOBSAccessToken()
@@ -34,28 +35,59 @@ export const getYouTubeOBSChannelID = createServerFn({ method: 'GET' })
     return channelId
   })
 
+export const getYouTubeOBSVideoId = createServerFn({ method: 'GET' })
+  .validator((d: { useVideoIDCached: boolean }) => d)
+  .handler(async ({ data: { useVideoIDCached } }) => {
+    const cached = await getCachedCookie({data: { key: 'videoId' }})
+    if (cached && useVideoIDCached) return cached
+
+    const accessToken = await getValidGoogleOBSAccessToken()
+    const channelId = await getYouTubeOBSChannelID()
+
+    const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/search?part=id&channelId=${channelId}&type=video&eventType=live`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/json',
+      },
+    })
+
+    const data = await res.json()
+    if (!data.items || data.items.length === 0) {
+      throw new Error('Không tìm thấy videoID đang hoạt động')
+    }
+
+    const videoId = data.items[0].id.videoId
+    await setCachedCookie({data: {key: 'videoId', value: videoId, maxAge: 1000 * 60 * 60 * 3}})
+    return videoId
+  })
+
 export const getYouTubeOBSLiveStreamActiveLiveChatID = createServerFn({ method: 'GET' })
     .handler(async () => {
-        const cached = await getCachedCookie({data: { key: 'liveChatId'}})
+        const cached = await getCachedCookie({data: { key: 'liveChatId' }})
         if (cached) return cached
 
         const accessToken = await getValidGoogleOBSAccessToken()
-        const videoId = 'gxy0rPLJr-k'
-        const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}`, {
+        const videoId = await getYouTubeOBSVideoId({ data: { useVideoIDCached: true } })
+
+        async function getLiveChatIdFromVideo(videoId: string, accessToken: string) {
+          const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}`, {
             headers: {
-                Authorization: `Bearer ${accessToken}`,
-                Accept: 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+              Accept: 'application/json',
             },
-        })
+          })
 
-        const data = await res.json()
-        if (!data.items || data.items.length === 0) {
-          throw new Error(JSON.stringify(data, null, 2), { cause: 500 })
+          const data = await res.json()
+          return data.items?.[0]?.liveStreamingDetails?.activeLiveChatId ?? null
         }
-
-        const liveChatId = data.items[0]?.liveStreamingDetails?.activeLiveChatId
+        let liveChatId = await getLiveChatIdFromVideo(videoId, accessToken)
         if (!liveChatId) {
-            throw new Error('Livestream không có live chat đang hoạt động')
+            const newVideoId = await getYouTubeOBSVideoId({ data: { useVideoIDCached: false } })
+            liveChatId = await getLiveChatIdFromVideo(newVideoId, accessToken)
+
+            if (!liveChatId) {
+              throw new Error('Livestream không có live chat đang hoạt động')
+            }
         }
 
         await setCachedCookie({data : {key: 'liveChatId', value: liveChatId, maxAge: 1000 * 60 * 60 * 6}})

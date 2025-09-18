@@ -41,7 +41,7 @@ function createVirtualizer({ count, estimateSize, scrollElement }: VirtualizerCo
 export const useDonate = () => {
   const authInfo = useAuthInfoExternalStore()
   const donateList = Route.useLoaderData()
-  if (!donateList) return null
+  if (!donateList) return
   const rankDonates = useRankDonates(donateList, authInfo.currentUser)
 
   const commentRef = useRef<HTMLDivElement | null>(null)

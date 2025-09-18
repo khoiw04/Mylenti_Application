@@ -15,8 +15,8 @@ export const chatTauriMessageCollection = createCollection(
     },
     getKey: (item) => item.id,
     queryClient: queryClient,
-    startSync: true,
     retryDelay: 10000,
+    startSync: true,
     retry: 0
   }),
 )

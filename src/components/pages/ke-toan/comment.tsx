@@ -54,7 +54,7 @@ export default function Main() {
 }
 
 function TabCommentUI(props: DonateDataType & ComponentProps<'li'>) {
-  const { display_avatar: user_avatar, code, user_name: prefix_user, created_at, message, transfer_amount, ...liProps } = props
+  const { display_avatar: user_avatar, display_name, code, user_name: prefix_user, created_at, message, transfer_amount, ...liProps } = props
   return (
     <li {...liProps} className="flex justify-start gap-4">
       <Avatar>
@@ -77,7 +77,7 @@ function TabCommentUI(props: DonateDataType & ComponentProps<'li'>) {
         <div className="text-sm font-semibold flex flex-row gap-1 items-center">
           <h4 id={code}>
             <span>
-              {prefix_user}
+              {display_name}
             </span>
           </h4>
           <span>•</span>

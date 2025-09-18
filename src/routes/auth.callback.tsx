@@ -2,6 +2,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { isTauri } from '@tauri-apps/api/core'
 import { LoaderCircleIcon } from "lucide-react"
+import { Toaster, toast } from 'sonner'
 import { exchangeCodeInClient } from '@/func/auth.Oauth'
 import { Skeleton } from '@/components/ui/skeleton'
 import Turtle from '@/components/pages/auth.callback/turtle'
@@ -41,7 +42,7 @@ function RouteComponent() {
           sessionStorage.setItem('oauth-retry', 'true')
           window.location.reload()
         } else {
-          console.warn('Đã thử reload một lần, không reload lại nữa.')
+          toast.warning('Lỗi Xác Thực! Hãy Reload để vào App')
         }
       }
     })()
@@ -64,6 +65,7 @@ function RouteComponent() {
         </>
       }
       <Skeleton className='size-full bg-neutral-300' />
+      <Toaster expand richColors theme='light' />
     </div>
   )
 }

@@ -8,7 +8,7 @@ import { ChatTypeStrategy } from "@/func/fn.stragery"
 export default function ChatMessages({ config, messages, ...props }: ChatMessagesType) {
     const { currentPreset, showComment, getCorrectChatTypeDataStragery } = config
     return (
-        <ul className="flex flex-col absolute bottom-[2vmin] gap-1" {...props}>
+        <ul {...props}>
             <AnimatePresence>
             {messages.map((msg) => {
                 const activeRoleEntry = Object.entries(msg.role).find(([_, value]) => value)

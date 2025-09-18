@@ -26,13 +26,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import { HeaderStrategy } from "@/store"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import useLogOut from "@/components/containers/db.useLogOut"
 
 export default function UserMenu() {
   const router = useRouter()
-  const { handleLogOut } = useStore(HeaderStrategy)
+  const { handleLogOut } = useLogOut()
   const { display_avatar, display_name, email } = useAuthInfoExternalStore()
 
   return (
@@ -85,7 +85,7 @@ export default function UserMenu() {
                 <span>Cài đặt</span>
               </DropdownMenuItem>
             </DialogTrigger>
-          <DropdownMenuItem onClick={handleLogOut}>
+          <DropdownMenuItem onClick={async () => await handleLogOut()}>
             <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
             <span>Đăng xuất</span>
           </DropdownMenuItem>

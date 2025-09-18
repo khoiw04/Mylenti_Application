@@ -25,9 +25,14 @@ export default function useOBSConnectWebSocket() {
             socket.onopen = () => {
                 console.log(messageLog.success)
                 toast.success(messageLog.success)
+
                 socket.send(JSON.stringify({
                     type: "init",
                     clientId: clientId
+                }));
+
+                socket.send(JSON.stringify({
+                    type: "runtime"
                 }));
             }
 

@@ -5,7 +5,7 @@ import { createOptimisticAction } from '@tanstack/db'
 import type { YouTubeChatResponse } from '@/types'
 import { chatTauriMessageCollection, useTauriChatMessage } from '@/data/db.YouTubeChatCollections'
 import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
-import { IndexState, PollingStatusStore, PollingStatusStragery } from '@/store'
+import { PollingStatusStore, PollingStatusStragery } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
@@ -15,7 +15,6 @@ const PAUSE_DURATION = 30000
 const MAX_EMPTY_POLLS = 2
 
 export default function usePollingYoutubeChat() {
-  const { finishGoogleOBSAuth } = useStore(IndexState)
   const { data: messages } = useTauriChatMessage()
   const hasPolledOnceRef = useRef(false)
   const { isError, isPaused, lastErrorMessage } = useStore(PollingStatusStore)
@@ -126,11 +125,21 @@ export default function usePollingYoutubeChat() {
   }, [])
 
   useEffect(() => {
+    const socket = OBSTauriWebSocket.getSocket()
+    if (!socket) return
+
+    safeSend(socket, {
+      type: websocketSendType.YouTubeMessage,
+      data: messages
+    })
+  }, [])
+
+  useEffect(() => {
     executePoll()
     return () => {
       clearTimeoutIfExists()
     }
-  }, [finishGoogleOBSAuth])
+  }, [])
 
   return {
     messages,

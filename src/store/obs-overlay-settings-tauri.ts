@@ -3,7 +3,7 @@ import type { OBSOverlaySettingsTauriPropsType, OBSOverlayTauriSettingStrageryTy
 import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
 export const OBSOverlayTauriSettingsProps = new Store<OBSOverlaySettingsTauriPropsType>({
-  showComment: false,
+  showComment: true,
   openStatePreset: false,
   currentPreset: 'default',
   currentKeyChatType: 'Verified',

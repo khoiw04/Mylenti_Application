@@ -7,11 +7,14 @@ import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 import useTauriSafeEffect from '@/hooks/useTauriSideEffect'
+import { useAuthInfoExternalStore } from '@/hooks/useAuthInfo'
 
 export default function useWebsocketOBSOverlaySync() {
+  const { isAuthenticated } = useAuthInfoExternalStore()
   const OBSOverlayTauriSettingsInterval = useStore(OBSOverlayTauriSettingsProps)
 
   useTauriSafeEffect(() => {
+    if (!isAuthenticated) return
     const debouncedSend = debounce((data) => {
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.OBSSetting,
@@ -45,9 +48,10 @@ export default function useWebsocketOBSOverlaySync() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [isAuthenticated]);
 
   useTauriSafeEffect(() => {
+    if (!isAuthenticated) return
     const interval = setInterval(() => {
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.OBSSetting,
@@ -58,5 +62,5 @@ export default function useWebsocketOBSOverlaySync() {
     return () => {
       clearInterval(interval);
     };
-  }, [OBSOverlayTauriSettingsInterval]);
+  }, [isAuthenticated, OBSOverlayTauriSettingsInterval]);
 }

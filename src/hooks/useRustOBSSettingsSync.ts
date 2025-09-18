@@ -5,15 +5,13 @@ import { sanitizeOBSOverlaySettings } from '@/data/db.sanitizeOBSOverlaySettings
 
 export const useInitOBSOverlaySettings = () => {
   useTauriSafeEffect(() => {
-    const init = async () => {
+    (async () => {
       const saved = await loadOBSSetting();
       if (typeof saved === 'object') {
         const safeState = sanitizeOBSOverlaySettings(saved);
         OBSOverlayTauriSettingsProps.setState(safeState);
       }
-    };
-
-    init();
+    })()
   }, []);
 };
 

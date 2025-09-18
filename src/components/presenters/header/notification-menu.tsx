@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { BellIcon } from "lucide-react"
 
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import {
   Popover,
@@ -8,6 +9,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { initialNotifications } from "@/data/header"
+import { donateQueries } from "@/lib/queries"
+import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
 
 function Dot({ className }: { className?: string }) {
   return (
@@ -26,6 +29,10 @@ function Dot({ className }: { className?: string }) {
 }
 
 export default function NotificationMenu() {
+  const { currentUser } = useAuthInfoExternalStore()
+  const { data } = useSuspenseQuery(donateQueries.donate(currentUser))
+  if (!data) return
+
   const [notifications, setNotifications] = useState(initialNotifications)
   const unreadCount = notifications.filter((n) => n.unread).length
 

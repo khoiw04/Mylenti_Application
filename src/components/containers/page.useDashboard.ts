@@ -6,8 +6,8 @@ import { daysMap } from "@/data/settings"
 
 export function useDashboard() {
     const list = Route.useLoaderData()
-    const timeRange = useStore(dashboardState, (state) => state.timeRange)
     if (!list) return
+    const timeRange = useStore(dashboardState, (state) => state.timeRange)
 
     const donateAmount = useMemo(
         () => list.reduce((sum, item) => sum + item.transfer_amount, 0),
@@ -18,8 +18,7 @@ export function useDashboard() {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - daysMap[timeRange]);
 
-        return list
-        .filter(item => new Date(item.created_at) >= startDate)
+        return list.filter(item => new Date(item.created_at) >= startDate)
         .reduce((acc, curr) => {
             const day = new Date(curr.created_at).toISOString().split('T')[0];
             acc[day] ??= { date: day, donateAmount: 0 };

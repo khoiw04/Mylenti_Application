@@ -11,7 +11,7 @@ export const getDonateDatabase = createServerFn()
       .select('code, display_name, display_avatar, user_name, receiver, message, transfer_amount, created_at')
       .order('created_at', { ascending: false })
       .eq('receiver', user_name)
-      // .eq('status', 'success')
+      .eq('status', 'success')
 
     return data
 })

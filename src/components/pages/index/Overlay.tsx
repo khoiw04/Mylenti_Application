@@ -20,5 +20,6 @@ export default function Overlay() {
         currentPreset,
         showComment
       }}
+      className="flex flex-col absolute bottom-[2vmin] gap-1"
     />
 }

@@ -98,7 +98,7 @@ export const getValidGoogleOBSAccessToken = createServerFn({ method: 'GET' })
     }
 
     const refresh_token = await getGoogleOBSRefreshToken()
-    if (!refresh_token) throw new Error('Không có refresh token')
+    if (!refresh_token) return null
 
     const { access_token } = await refreshGoogleOBSToken({ data: { refresh_token } })
 

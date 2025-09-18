@@ -67,7 +67,7 @@ function TabRank(props: DonateDataType & ComponentProps<'tr'>) {
           )}
         </Avatar>
         <span>
-          {user_name}
+          {prefix_user}
         </span>
       </TableCell>
       <TableCell className="text-right">

@@ -1,10 +1,10 @@
 [package]
 name = "Mylenti"
-version = "1.0.0"
+version = "0.1.0"
 description = "Mylenti's OBS Overlay"
 authors = ["khoiw04"]
-license = ""
-repository = ""
+license = "Proprietary"
+repository = "https://github.com/khoiw04/OBS_Mylenti"
 edition = "2021"
 rust-version = "1.77.2"
 

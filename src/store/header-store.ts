@@ -7,6 +7,5 @@ export const HeaderState = new Store<HeaderStateType>({
 
 export const HeaderStrategy = new Store<HeaderStrategyType>({
   setCurrentPath: (path) =>
-    HeaderState.setState((prev) => ({ ...prev, currentPath: path })),
-  handleLogOut: async () => {},
+    HeaderState.setState((prev) => ({ ...prev, currentPath: path }))
 })

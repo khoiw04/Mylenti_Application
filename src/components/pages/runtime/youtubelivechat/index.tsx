@@ -10,5 +10,6 @@ export default function OBSYouTube() {
         currentPreset,
         getCorrectChatTypeDataStragery
       }}
+      className="flex flex-col gap-1 justify-end items-start max-w-lg h-dvh"
     />
 }

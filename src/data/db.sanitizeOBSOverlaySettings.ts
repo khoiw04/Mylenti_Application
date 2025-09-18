@@ -47,7 +47,7 @@ export const sanitizeOBSOverlaySettings = (
     : [];
 
   return {
-    showComment: raw.showComment ?? false,
+    showComment: raw.showComment ?? true,
     openStatePreset: raw.openStatePreset ?? false,
     currentPreset: raw.currentPreset ?? 'default',
     currentKeyChatType: raw.currentKeyChatType ?? 'Verified',
