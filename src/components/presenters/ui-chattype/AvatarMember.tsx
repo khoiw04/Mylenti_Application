@@ -10,7 +10,7 @@ export function DefaultAvatarMember({
 }) {
   return (
     <div className="relative">
-      <Avatar>
+      <Avatar className="size-6">
         <AvatarImage src={srcAvatar} />
         <AvatarFallback>KK</AvatarFallback>
       </Avatar>

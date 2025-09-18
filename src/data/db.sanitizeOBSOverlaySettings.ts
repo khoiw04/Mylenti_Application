@@ -53,7 +53,8 @@ export const sanitizeOBSOverlaySettings = (
     currentKeyChatType: raw.currentKeyChatType ?? 'Verified',
     DonateProps: {
       emojiURL,
-      soundURL
+      soundURL,
+      enableVoice: safeDonateProps.enableVoice ?? false
     },
     ChatType: safeChatTypeArray.map((item) => ({
       key: item?.key ?? 'Unknown',

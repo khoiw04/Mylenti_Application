@@ -21,7 +21,7 @@
         "transparent": true,
         "decorations": false,
         "devtools": true,
-        "minWidth": 280,
+        "minWidth": 320,
         "create": true
       }
     ],

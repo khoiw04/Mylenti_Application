@@ -40,7 +40,7 @@ export const getYouTubeOBSLiveStreamActiveLiveChatID = createServerFn({ method: 
         if (cached) return cached
 
         const accessToken = await getGoogleOBSAccessToken()
-        const videoId = 'cSC3ssH_e0w'
+        const videoId = 'gxy0rPLJr-k'
         const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,

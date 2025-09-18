@@ -1,6 +1,7 @@
-import type { OBSSuperchatChatKey } from "../ui/obs-overlay-setting";
-import type { presetUserVariantsValueType } from "../data/obs-overlay";
-import type { OBSOverlayChatKeyPropsType } from "../store/obs-overlay";
+import type { ChatTypeType } from "@/types/ui/chattype";
+import type { OBSSuperchatChatKey } from "@/types/ui/obs-overlay-setting";
+import type { presetUserVariantsValueType } from "@/types/data/obs-overlay";
+import type { OBSOverlayChatKeyPropsType } from "@/types/store/obs-overlay";
 import type { BankDataType, DonateDataType, ProfileDataType, WebSocketMessageType } from "@/types";
 import type { Provider } from "@supabase/supabase-js";
 import type { LoaderFnContext } from "@tanstack/react-router";
@@ -28,7 +29,7 @@ export type loginWthOauthPropsStrategy = {
 
 export type ChatTypeStrategyType = Record<
   OBSOverlayChatKeyPropsType | 'Donate', 
-  (() => JSX.Element) | null
+  ((props: ChatTypeType) => JSX.Element) | null
 >
 
 export type VerifiedIconStrategyType = Record<

@@ -1,9 +1,10 @@
 import { useStore } from "@tanstack/react-store";
-import { useEffect } from "react";
+import { AnimatePresence, motion } from 'motion/react'
 import GoogleLoginButton from "./GoogleLogInButton";
-import { IndexState } from "@/store";
+import { IndexState, OBSOverlaySettingStragery, OBSOverlayTauriSettingsProps } from "@/store";
 import useIsClient from "@/hooks/useIsClient";
 import usePollingYoutubeChat from "@/components/containers/db.usePollChat";
+import NormalType from "@/components/presenters/ui-chattype/NormalChat";
 
 export default function Overlay() {
     const isClient = useIsClient()
@@ -16,16 +17,28 @@ export default function Overlay() {
 }
 
 function ChatMessages() {
+  const { showComment, currentPreset } = useStore(OBSOverlayTauriSettingsProps)
+  const { getCorrectChatTypeDataStragery } = useStore(OBSOverlaySettingStragery)
+  const data = getCorrectChatTypeDataStragery('Normal')
   const { messages } = usePollingYoutubeChat()
-  useEffect(() => {
-    console.log(messages)
-  }, [messages])
+
   return (
     <>
-      <ul>
-        {messages.map((msg) => (
-          <li key={msg.id}>{msg.author}: {msg.message}</li>
-        ))}
+      <ul className="flex flex-col gap-1">
+        <AnimatePresence mode="wait">
+          {messages.map((msg) => (
+            <motion.li key={msg.id}>
+              <NormalType
+                currentPreset={currentPreset}
+                showAvatar={data?.config.commenter_avatar}
+                srcCommentCommmenter={msg.message}
+                srcAvatarCommenter={msg.avatar}
+                srcNameCommenter={msg.author}
+                showComment={showComment}
+              />
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
     </>
   )

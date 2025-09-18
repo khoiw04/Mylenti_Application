@@ -8,7 +8,7 @@ import {
 export function DefaultAvatarModerator({ srcAvatar = './avatar-80-07.jpg' }) {
   return (
     <div className="relative">
-      <Avatar>
+      <Avatar className="size-6">
         <AvatarImage src={srcAvatar} />
         <AvatarFallback>KK</AvatarFallback>
       </Avatar>

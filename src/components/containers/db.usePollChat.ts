@@ -29,7 +29,7 @@ export default function usePollingYoutubeChat() {
   const insertMessages = createOptimisticAction<YouTubeChatResponse['messages']>({
     onMutate: (msgs) => {
       msgs.forEach(msg => {
-        chatMessageCollection.insert(msg)
+        chatMessageCollection.utils.writeUpsert(msg)
       })
     },
     mutationFn: async (msgs) => {
@@ -70,6 +70,9 @@ export default function usePollingYoutubeChat() {
       const { messages: newMessages, nextPageToken, pollingIntervalMillis } = await getYouTubeOBSLiveChatMessage({
         data: { nextPageToken: pollingStateRef.current.nextPageToken },
       })
+
+      console.log('Unseen messages:', newMessages)
+      console.log('Chat Collection messages:', chatMessageCollection)
 
       pollingStateRef.current.nextPageToken = nextPageToken || ''
       pollingStateRef.current.POLLING_INTERVAL = pollingIntervalMillis || 3000

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { commentVariants, commenterNameVariants, commenterMainContainerVariants, infoCommenterContainerVariants } from "./cva";
+import { commentVariants, commenterMainContainerVariants, commenterNameVariants, infoCommenterContainerVariants } from "./cva";
 import type { chatTypeProps, chatTypeVariatntsProps } from "@/types";
 import { cn, truncateMessage } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -31,7 +31,7 @@ export default function  NormalType({
     <div {...props} className={cn(containerVarient, classNameMainContainer)}>
         <span className={cn(infoUserContainerVarient, classNameUserContainer)}>
           {showAvatar && (
-          <Avatar>
+          <Avatar className="size-6">
             <AvatarImage src={srcAvatarCommenter} />
             <AvatarFallback>KK</AvatarFallback>
           </Avatar>

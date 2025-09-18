@@ -56,10 +56,10 @@ export default function useWebsocketOBSOverlaySync() {
     };
 
     send();
-    const interval = setInterval(send, 15000);
+    const interval = setInterval(send, 1000 * 60 * 20);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [OBSOverlayTauriSettingsInterval]);
 }

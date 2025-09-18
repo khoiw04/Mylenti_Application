@@ -18,11 +18,14 @@ function RouteComponent() {
       try {
         const res = await exchangeCodeInClient()
 
-        const user = await getUser()
-        if (user.isAuthenticated) {
-          router.navigate({ to: '/', reloadDocument: true })
-        } else {
-          router.navigate({ to: '/dang-nhap' })
+        if (isTauri()) {
+          const user = await getUser()
+          if (user.isAuthenticated) {
+            router.navigate({ to: '/', reloadDocument: true })
+          } else {
+            router.navigate({ to: '/dang-nhap' })
+          }
+          return
         }
 
         if (res?.success) {
@@ -34,7 +37,12 @@ function RouteComponent() {
       } catch (err) {
         console.error('OAuth exchange failed:', err)
         window.opener?.postMessage('oauth-error', window.location.origin)
-        window.close()
+        if (!sessionStorage.getItem('oauth-retry')) {
+          sessionStorage.setItem('oauth-retry', 'true')
+          window.location.reload()
+        } else {
+          console.warn('Đã thử reload một lần, không reload lại nữa.')
+        }
       }
     })()
   }, [])

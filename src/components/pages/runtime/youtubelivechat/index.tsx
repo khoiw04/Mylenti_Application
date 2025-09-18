@@ -16,7 +16,7 @@ type DonatePayload = {
   id: string
 }
 
-export default function OBSDonate() {
+export default function OBSYouTube() {
   const [donateQueue, setDonateQueue] = useState<Array<DonatePayload>>([]);
   const [currentDonate, setCurrentDonate] = useState<DonatePayload | null>(null)
   const { emojiURL, soundURL, enableVoice, currentPreset } = useStore(
