@@ -11,7 +11,7 @@ export const chatTauriMessageCollection = createCollection(
     queryKey: ['TauriChatMessages'],
     queryFn: async () => {
       const { messages } = await getYouTubeOBSLiveChatMessage({ data: { nextPageToken: null } })
-      return messages
+      return messages.slice(0, 23)
     },
     getKey: (item) => item.id,
     queryClient: queryClient,

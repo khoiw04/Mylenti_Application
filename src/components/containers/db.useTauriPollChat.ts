@@ -10,13 +10,14 @@ import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 
-const DEFAULT_INTERVAL = 3000
+const DEFAULT_INTERVAL = 6000
 const PAUSE_DURATION = 30000
 const MAX_EMPTY_POLLS = 2
 
 export default function usePollingYoutubeChat() {
   const { finishGoogleOBSAuth } = useStore(IndexState)
   const { data: messages } = useTauriChatMessage()
+  const hasPolledOnceRef = useRef(false)
   const { isError, isPaused, lastErrorMessage } = useStore(PollingStatusStore)
   const { setIsError, setIsPaused, setLastErrorMessage, setManualRetry } = useStore(PollingStatusStragery)
 
@@ -32,11 +33,13 @@ export default function usePollingYoutubeChat() {
       msgs.forEach(msg => {
         chatTauriMessageCollection.utils.writeUpsert(msg)
       })
+      trimCollection(23)
     },
-    mutationFn: async () => {
+    mutationFn: async (msgs) => {
+      console.log('Đã gửi LiveChat qua Websocket')
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.YouTubeMessage,
-        data: messages
+        data: msgs
       })
     }
   })
@@ -74,7 +77,7 @@ export default function usePollingYoutubeChat() {
   }
 
   const executePoll = async () => {
-    if (!finishGoogleOBSAuth || isPaused || isError) return
+    if (isPaused || isError) return
 
     try {
       const { messages: newMessages, nextPageToken, pollingIntervalMillis } = await getYouTubeOBSLiveChatMessage({
@@ -90,9 +93,11 @@ export default function usePollingYoutubeChat() {
         insertMessages(unseenMessages)
         stateRef.current.emptyPollCount = 0
         schedulePoll(stateRef.current.pollingInterval)
-      } else {
+      } else if (hasPolledOnceRef.current) {
         handleEmptyPoll()
       }
+
+      hasPolledOnceRef.current = true
     } catch (err) {
       setIsError(true)
       setLastErrorMessage(String(err))
@@ -100,12 +105,27 @@ export default function usePollingYoutubeChat() {
     }
   }
 
+  function trimCollection(limit: number = 10) {
+    const syncedMap = chatTauriMessageCollection.syncedData
+    const all = Array.from(syncedMap.values())
+    if (all.length <= limit) return
+
+    const sorted = all.sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    )
+
+    const excess = sorted.slice(limit)
+
+    excess.forEach(msg => {
+      chatTauriMessageCollection.utils.writeDelete(msg.id)
+    })
+  }
+
   useEffect(() => {
     setManualRetry(resumePolling)
   }, [])
 
   useEffect(() => {
-    if (!finishGoogleOBSAuth) return
     executePoll()
     return () => {
       clearTimeoutIfExists()

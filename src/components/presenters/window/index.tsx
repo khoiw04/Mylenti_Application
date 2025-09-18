@@ -1,6 +1,6 @@
 import { useStore } from '@tanstack/react-store'
 import { isTauri } from '@tauri-apps/api/core'
-import useWebsocketOBSOverlaySend from "@/components/containers/db.useWebsocketOBSOverlaySend";
+import useWebsocketOBSOverlaySend from "@/components/containers/db.useWebsocketOBSSettingsSend";
 import useTauriWindow from '@/components/containers/api.useTauriWindow'
 import { AppWindowStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'

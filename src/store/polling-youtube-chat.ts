@@ -4,7 +4,7 @@ export const PollingStatusStore = new Store({
   isPaused: false,
   isError: false,
   lastErrorMessage: '',
-  resumePolling: () => {}
+  manualPolling: () => {}
 })
 
 export const PollingStatusStragery = new Store({
@@ -26,6 +26,6 @@ export const PollingStatusStragery = new Store({
   setManualRetry: (fn: () => void) => 
     PollingStatusStore.setState(prev => ({
       ...prev,
-      resumePolling: fn
+      manualPolling: fn
     })),
 })
