@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getGoogleOBSAccessToken } from './auth.googleOBS'
+import { getValidGoogleOBSAccessToken } from './auth.googleOBS'
 import type { YouTubeChatResponse } from '@/types'
 import { clearCachedCookie, getCachedCookie, nativeFetch, setCachedCookie } from '@/lib/utils'
 
@@ -15,7 +15,7 @@ export const getYouTubeOBSChannelID = createServerFn({ method: 'GET' })
     const cached = await getCachedCookie({data: { key: 'channelId'}})
     if (cached) return cached
 
-    const accessToken = await getGoogleOBSAccessToken()
+    const accessToken = await getValidGoogleOBSAccessToken()
     const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/channels?part=id&mine=true`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -39,7 +39,7 @@ export const getYouTubeOBSLiveStreamActiveLiveChatID = createServerFn({ method: 
         const cached = await getCachedCookie({data: { key: 'liveChatId'}})
         if (cached) return cached
 
-        const accessToken = await getGoogleOBSAccessToken()
+        const accessToken = await getValidGoogleOBSAccessToken()
         const videoId = 'gxy0rPLJr-k'
         const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}`, {
             headers: {
@@ -65,7 +65,7 @@ export const getYouTubeOBSLiveStreamActiveLiveChatID = createServerFn({ method: 
 export const getYouTubeOBSLiveChatMessage = createServerFn({ method: 'GET' })
   .validator((d: { nextPageToken: string | null }) => d)
   .handler<YouTubeChatResponse>(async ({ data: { nextPageToken } }) => {
-    const accessToken = await getGoogleOBSAccessToken()
+    const accessToken = await getValidGoogleOBSAccessToken()
     const liveChatId = await getYouTubeOBSLiveStreamActiveLiveChatID()
 
     const url = new URL('https://www.googleapis.com/youtube/v3/liveChat/messages')

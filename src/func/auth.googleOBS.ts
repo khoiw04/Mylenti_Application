@@ -88,6 +88,23 @@ export const getGoogleOBSAccessToken = createServerFn({ method: 'GET' })
 export const getGoogleOBSRefreshToken = createServerFn({ method: 'GET' })
   .handler(() => getCookie('googleOBS_RefreshToken'))
 
+export const getValidGoogleOBSAccessToken = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const accessToken = await getGoogleOBSAccessToken()
+    const testRes = await fetch('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + accessToken)
+
+    if (testRes.ok) {
+      return accessToken
+    }
+
+    const refresh_token = await getGoogleOBSRefreshToken()
+    if (!refresh_token) throw new Error('Không có refresh token')
+
+    const { access_token } = await refreshGoogleOBSToken({ data: { refresh_token } })
+
+    return access_token
+  })
+
 export const clearGoogleOBSCookies = createServerFn({ method: 'POST' })
   .handler(() => {
     deleteCookie('googleOBS_AccessToken')

@@ -34,13 +34,13 @@ export default function usePollingYoutubeChat() {
         chatTauriMessageCollection.utils.writeUpsert(msg)
       })
       trimCollection(23)
-    },
-    mutationFn: async (msgs) => {
-      console.log('Đã gửi LiveChat qua Websocket')
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.YouTubeMessage,
         data: msgs
       })
+    },
+    mutationFn: async (msgs) => {
+      return null
     }
   })
 

@@ -19,7 +19,7 @@ function getGoogleOBSOauth() {
                     getYoutubeScopeWithURL
                 )
                 return
-            } 
+            }
             
             const popup = window.open(
                 getYoutubeScopeWithURL, 
