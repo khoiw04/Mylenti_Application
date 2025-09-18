@@ -9,6 +9,8 @@ count.txt
 .tanstack
 .output
 .vinxi
+.env.development
+.env.production
 todos.json
 build
 dist

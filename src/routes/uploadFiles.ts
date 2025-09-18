@@ -1,7 +1,8 @@
 import { createServerFileRoute } from '@tanstack/react-start/server';
 import type { uploadFilesToBucketProps } from '@/types';
-import { getSupabaseServerClient, supabaseUrl } from '@/lib/supabaseServer';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 import { getImageDimensions } from '@/lib/getImageDimension';
+import { env } from '@/env/client';
 
 export const ServerRoute = createServerFileRoute('/uploadFiles').methods({
   POST: async ({ request }) => {
@@ -64,7 +65,7 @@ async function uploadFilesToBucket(value: uploadFilesToBucketProps) {
         };
       }
   
-      fullPaths.push(`${supabaseUrl}/storage/v1/object/public/${data.fullPath}`);
+      fullPaths.push(`${env.VITE_SUPABASE_URL}/storage/v1/object/public/${data.fullPath}`);
     } catch (err) {
       return {
         fullPaths,

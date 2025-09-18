@@ -1,7 +1,6 @@
 use crate::websocket::start_websocket_server;
 use std::time::Duration;
 use tauri_plugin_http::reqwest::Client;
-use tauri_plugin_log::Target;
 use std::process::Command;
 use tokio::time::sleep;
 use std::env;
@@ -62,6 +61,11 @@ pub fn run() {
             Command::new(flask_exe_path)
                 .spawn()
                 .expect("❌ Không thể chạy donate_voice.exe");
+
+            // Command::new("node")
+            //     .arg("../../.output/server/index.mjs")
+            //     .spawn()
+            //     .expect("Failed to start SSR server");
 
             tauri::async_runtime::spawn(async {
                 if let Err(e) = start_websocket_server().await {

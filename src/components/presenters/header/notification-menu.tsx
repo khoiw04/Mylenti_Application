@@ -1,16 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { BellIcon } from "lucide-react"
 
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useStore } from "@tanstack/react-store"
 import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { initialNotifications } from "@/data/header"
-import { donateQueries } from "@/lib/queries"
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
+import { timeAgo } from "@/lib/utils"
+import { NotificationStore } from "@/store"
 
 function Dot({ className }: { className?: string }) {
   return (
@@ -29,11 +28,16 @@ function Dot({ className }: { className?: string }) {
 }
 
 export default function NotificationMenu() {
-  const { currentUser } = useAuthInfoExternalStore()
-  const { data } = useSuspenseQuery(donateQueries.donate(currentUser))
-  if (!data) return
+  const data = useStore(NotificationStore)
+  const [notifications, setNotifications] = useState(data)
+  useEffect(() => {
+    const updated = data.map((item) => ({
+      ...item,
+      unread: true,
+    }))
+    setNotifications(updated)
+  }, [data])
 
-  const [notifications, setNotifications] = useState(initialNotifications)
   const unreadCount = notifications.filter((n) => n.unread).length
 
   const handleMarkAllAsRead = () => {
@@ -45,7 +49,7 @@ export default function NotificationMenu() {
     )
   }
 
-  const handleNotificationClick = (id: number) => {
+  const handleNotificationClick = (id: `${string}-${string}-${string}-${string}-${string}`) => {
     setNotifications(
       notifications.map((notification) =>
         notification.id === id
@@ -102,16 +106,16 @@ export default function NotificationMenu() {
                   onClick={() => handleNotificationClick(notification.id)}
                 >
                   <span className="text-foreground font-medium hover:underline">
-                    {notification.user}
+                    {notification.name}
                   </span>{" "}
-                  {notification.action}{" "}
+                  {'gửi'}{" "}
                   <span className="text-foreground font-medium hover:underline">
-                    {notification.target}
+                    {notification.amount}
                   </span>
                   .
                 </button>
                 <div className="text-muted-foreground text-xs">
-                  {notification.timestamp}
+                  {timeAgo(notification.timestamp)}
                 </div>
               </div>
               {notification.unread && (

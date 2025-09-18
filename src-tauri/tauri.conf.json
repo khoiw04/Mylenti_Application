@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "identifier": "com.khoiw04.mylenti",
   "build": {
-    "frontendDist": "../build",
+    "frontendDist": "../.output/public",
     "devUrl": "http://localhost:3000",
-    "beforeDevCommand": "bun dev",
-    "beforeBuildCommand": "bun build"
+    "beforeDevCommand": "bun run dev",
+    "beforeBuildCommand": "bun run build"
   },
   "app": {
     "windows": [
@@ -55,7 +55,7 @@
     "updater": {
       "active": true,
       "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlDMzE5NEVDMjZEQzk4QgpSV1NMeVczQ1RobkRDYm1Ick0wMVhvMjdPZmtDWFlkeDB4MGpQTERzalRmbmdQcEI4aGRicjNkOAo=",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMwRUY5NkYzQThDOTIwMUYKUldRZklNbW84NWJ2TUxxbnN3RGMzRzNROFZIbUNUYXlrOGRjSis0dGJNeS9uSTlXTFZYa2pEWFgK",
       "endpoints": [
         "https://github.com/khoiw04/OBS_Mylenti/releases/latest/download/latest.json"
       ]
