@@ -71,9 +71,6 @@ export default function usePollingYoutubeChat() {
         data: { nextPageToken: pollingStateRef.current.nextPageToken },
       })
 
-      console.log('Unseen messages:', newMessages)
-      console.log('Chat Collection messages:', chatMessageCollection)
-
       pollingStateRef.current.nextPageToken = nextPageToken || ''
       pollingStateRef.current.POLLING_INTERVAL = pollingIntervalMillis || 3000
 

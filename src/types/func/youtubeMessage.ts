@@ -25,14 +25,40 @@ export interface FormattedChatMessage {
   author: string
   avatar: string
   role: {
-    owner: boolean
-    mod: boolean
-    member: boolean
-    verified: boolean
+    Owner: boolean
+    Moderator: boolean
+    Member: boolean
+    Verified: boolean
   }
   message: string
-  superChat: any | null
-  superSticker: any | null
+  superChat: {
+    amountMicros: number,
+    currency: "USD" | "VND" | string,
+    displayString: string,
+    commentText: string,
+    supporterDetails: {
+      displayName: string,
+      profileImageUrl: string,
+      channelId: string,
+      channelUrl: string
+    },
+    createdAt: string
+  } | null
+  superSticker: {
+    stickerId: string,
+    altText: string,
+    language: 'en' | 'vi' | string,
+    amountMicros: number,
+    currency: 'USD' | 'VND' | string,
+    displayString: string,
+    supporterDetails: {
+      displayName: string,
+      profileImageUrl: string,
+      channelId: string,
+      channelUrl: string
+    },
+    createdAt: string
+  } | null
   publishedAt: string
 }
 

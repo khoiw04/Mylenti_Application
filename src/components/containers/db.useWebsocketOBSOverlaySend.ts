@@ -48,15 +48,12 @@ export default function useWebsocketOBSOverlaySync() {
   }, []);
 
   useTauriSafeEffect(() => {
-    const send = () => {
+    const interval = setInterval(() => {
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.OBSSetting,
         data: OBSOverlayTauriSettingsInterval
       });
-    };
-
-    send();
-    const interval = setInterval(send, 1000 * 60 * 20);
+    }, 1000 * 60 * 30);
 
     return () => {
       clearInterval(interval);
