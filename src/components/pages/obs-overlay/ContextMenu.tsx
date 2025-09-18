@@ -4,7 +4,7 @@ import { useState } from "react";
 import EmojiFileUpload from "./EmojiFileUpload";
 import SoundFileUpload from "./SoundFileUpload";
 import { ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger } from "@/components/ui/context-menu";
-import { OBSOverlaySettingStragery, OBSOverlayTauriSettingsProps } from "@/store";
+import { OBSOverlayTauriSettingStragery, OBSOverlayTauriSettingsProps } from "@/store";
 import { overlayFieldConfigs } from "@/data/obs-overlay";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
@@ -12,7 +12,7 @@ export default function ContextMenuContentMain() {
   const [dialogType, setDialogType] = useState<'image' | 'sound' | null>(null)
 
   const { ChatType, currentKeyChatType, showComment, DonateProps: { enableVoice } } = useStore(OBSOverlayTauriSettingsProps)
-  const { currentKeyChatTypeStragery, showCommentStragery, showLabelStragery, toogleVoiceDonatePropsStragery } = useStore(OBSOverlaySettingStragery)
+  const { currentKeyChatTypeStragery, showCommentStragery, showLabelStragery, toogleVoiceDonatePropsStragery } = useStore(OBSOverlayTauriSettingStragery)
 
     return (
       <Dialog>

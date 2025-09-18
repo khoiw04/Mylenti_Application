@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useStore } from "@tanstack/react-store";
 import DonateComponent from "@/components/presenters/ui-donatetype/component";
 import { OBSOverlayDataDonateWebsiteStore } from "@/store/obs-overlay-donate-website";
-import { OBSOverlaySettingsWebsiteStore } from "@/store";
+import { OBSOverlayWebsiteSettingsStore } from "@/store";
 import { BinarytoBLOB, RandomNumberInRange } from "@/lib/utils";
 
 type DonatePayload = {
@@ -20,7 +20,7 @@ export default function OBSDonate() {
   const [donateQueue, setDonateQueue] = useState<Array<DonatePayload>>([]);
   const [currentDonate, setCurrentDonate] = useState<DonatePayload | null>(null)
   const { emojiURL, soundURL, enableVoice, currentPreset } = useStore(
-    OBSOverlaySettingsWebsiteStore,
+    OBSOverlayWebsiteSettingsStore,
     s => ({
       emojiURL: s.DonateProps.emojiURL,
       soundURL: s.DonateProps.soundURL,

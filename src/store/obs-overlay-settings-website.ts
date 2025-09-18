@@ -1,8 +1,8 @@
 import { Store } from "@tanstack/store"
-import type { OBSOverlaySettingsWebsitePropsType } from "@/types"
+import type { OBSOverlaySettingsWebsitePropsType, OBSOverlayWebsiteSettingStrageryType } from "@/types"
 import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
-export const OBSOverlaySettingsWebsiteStore = new Store<OBSOverlaySettingsWebsitePropsType>({
+export const OBSOverlayWebsiteSettingsStore = new Store<OBSOverlaySettingsWebsitePropsType>({
   currentKeyChatType: 'Moderator',
   openStatePreset: false,
   showComment: false,
@@ -64,4 +64,12 @@ export const OBSOverlaySettingsWebsiteStore = new Store<OBSOverlaySettingsWebsit
       },
     },
   ],
+})
+
+export const OBSOverlayWebsiteSettingStragery = new Store<OBSOverlayWebsiteSettingStrageryType>({
+    getCorrectChatTypeDataStragery: (value) =>
+      OBSOverlayWebsiteSettingsStore.state.ChatType.find(
+        item => item.key === value
+      )!
+    ,
 })

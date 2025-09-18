@@ -1,5 +1,5 @@
 import { Store } from "@tanstack/store"
-import type { OBSOverlaySettingStrageryType, OBSOverlaySettingsTauriPropsType } from "@/types"
+import type { OBSOverlaySettingsTauriPropsType, OBSOverlayTauriSettingStrageryType } from "@/types"
 import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
 export const OBSOverlayTauriSettingsProps = new Store<OBSOverlaySettingsTauriPropsType>({
@@ -66,7 +66,7 @@ export const OBSOverlayTauriSettingsProps = new Store<OBSOverlaySettingsTauriPro
   ],
 })
 
-export const OBSOverlaySettingStragery = new Store<OBSOverlaySettingStrageryType>({
+export const OBSOverlayTauriSettingStragery = new Store<OBSOverlayTauriSettingStrageryType>({
     currentKeyChatTypeStragery: (string) => OBSOverlayTauriSettingsProps.setState(
       prev => ({
         ...prev,

@@ -10,19 +10,20 @@ import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 
+const DEFAULT_INTERVAL = 3000
+const PAUSE_DURATION = 30000
+const MAX_EMPTY_POLLS = 2
+
 export default function usePollingYoutubeChat() {
   const { finishGoogleOBSAuth } = useStore(IndexState)
   const { data: messages } = useChatMessage()
-
   const { isError, isPaused, lastErrorMessage } = useStore(PollingStatusStore)
-  const { setIsError, setIsPaused, setLastErrorMessage, setResumePolling } = useStore(PollingStatusStragery)
+  const { setIsError, setIsPaused, setLastErrorMessage, setManualRetry } = useStore(PollingStatusStragery)
 
-  const pollingStateRef = useRef({
+  const stateRef = useRef({
     nextPageToken: '',
     emptyPollCount: 0,
-    POLLING_INTERVAL: 3000,
-    PAUSE_DURATION: 30000,
-    MAX_EMPTY_POLLS: 2,
+    pollingInterval: 0,
     timeoutId: null as NodeJS.Timeout | null,
   })
 
@@ -40,73 +41,74 @@ export default function usePollingYoutubeChat() {
     }
   })
 
-  const clearCurrentTimeout = () => {
-    const { timeoutId } = pollingStateRef.current
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-      pollingStateRef.current.timeoutId = null
+  const clearTimeoutIfExists = () => {
+    if (stateRef.current.timeoutId) {
+      clearTimeout(stateRef.current.timeoutId)
+      stateRef.current.timeoutId = null
     }
   }
 
-  const scheduleNextPoll = (delay: number) => {
-    clearCurrentTimeout()
-    pollingStateRef.current.timeoutId = setTimeout(poll, delay)
+  const schedulePoll = (delay: number) => {
+    clearTimeoutIfExists()
+    stateRef.current.timeoutId = setTimeout(executePoll, delay)
   }
 
   const resumePolling = () => {
-    clearCurrentTimeout()
+    clearTimeoutIfExists()
     setIsPaused(false)
     setIsError(false)
     setLastErrorMessage('')
-    pollingStateRef.current.emptyPollCount = 0
-    scheduleNextPoll(pollingStateRef.current.POLLING_INTERVAL)
+    stateRef.current.emptyPollCount = 0
+    schedulePoll(DEFAULT_INTERVAL)
     toast.success('Đã khôi phục polling')
   }
 
-  const poll = async () => {
+  const handleEmptyPoll = () => {
+    if (++stateRef.current.emptyPollCount >= MAX_EMPTY_POLLS) {
+      setIsPaused(true)
+      toast.message('⏸ Không có tin nhắn mới, tạm dừng 30 giây...')
+      stateRef.current.timeoutId = setTimeout(resumePolling, PAUSE_DURATION)
+    } else {
+      schedulePoll(DEFAULT_INTERVAL)
+    }
+  }
+
+  const executePoll = async () => {
     if (!finishGoogleOBSAuth || isPaused || isError) return
 
     try {
       const { messages: newMessages, nextPageToken, pollingIntervalMillis } = await getYouTubeOBSLiveChatMessage({
-        data: { nextPageToken: pollingStateRef.current.nextPageToken },
+        data: { nextPageToken: stateRef.current.nextPageToken },
       })
 
-      pollingStateRef.current.nextPageToken = nextPageToken || ''
-      pollingStateRef.current.POLLING_INTERVAL = pollingIntervalMillis || 3000
+      stateRef.current.nextPageToken = nextPageToken || ''
+      stateRef.current.pollingInterval = pollingIntervalMillis || DEFAULT_INTERVAL
 
-      const unseenMessages = newMessages.filter((msg) => !chatMessageCollection.has(msg.id))
+      const unseenMessages = newMessages.filter(msg => !chatMessageCollection.has(msg.id))
 
       if (unseenMessages.length > 0) {
         insertMessages(unseenMessages)
-        pollingStateRef.current.emptyPollCount = 0
-        scheduleNextPoll(pollingStateRef.current.POLLING_INTERVAL)
-        return
+        stateRef.current.emptyPollCount = 0
+        schedulePoll(stateRef.current.pollingInterval)
+      } else {
+        handleEmptyPoll()
       }
-
-      if (++pollingStateRef.current.emptyPollCount >= pollingStateRef.current.MAX_EMPTY_POLLS) {
-        setIsPaused(true)
-        toast.message('⏸ Không có tin nhắn mới, tạm dừng 30 giây...')
-        pollingStateRef.current.timeoutId = setTimeout(resumePolling, pollingStateRef.current.PAUSE_DURATION)
-        return
-      }
-
-      scheduleNextPoll(pollingStateRef.current.POLLING_INTERVAL)
     } catch (err) {
       setIsError(true)
       setLastErrorMessage(String(err))
-      toast.error(`Polling error: ${err}`)
+      toast.error(`Lỗi Polling: ${err}`)
     }
   }
 
   useEffect(() => {
-    setResumePolling(resumePolling)
+    setManualRetry(resumePolling)
   }, [])
 
   useEffect(() => {
     if (!finishGoogleOBSAuth) return
-    poll()
+    executePoll()
     return () => {
-      clearCurrentTimeout()
+      clearTimeoutIfExists()
     }
   }, [finishGoogleOBSAuth])
 

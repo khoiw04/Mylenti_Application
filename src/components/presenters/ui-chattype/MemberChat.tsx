@@ -1,5 +1,5 @@
 import * as React from "react"
-import { commentVariants, commenterNameVariants, commenterMainContainerVariants, infoCommenterContainerVariants } from "./cva"
+import { commentVariants, commenterMainContainerVariants, commenterNameVariants, infoCommenterContainerVariants } from "./cva"
 import type { chatTypeProps, chatTypeVariatntsProps } from "@/types"
 import { cn, truncateMessage } from "@/lib/utils"
 import { MemberIconStrategy } from "@/func/fn.stragery"

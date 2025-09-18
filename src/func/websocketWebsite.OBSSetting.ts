@@ -1,10 +1,10 @@
 import type { OBSSetting } from "@/types";
-import { OBSOverlaySettingsWebsiteStore } from "@/store";
+import { OBSOverlayWebsiteSettingsStore } from "@/store";
 
 export default function WebSocketOBSSetting(
     data: OBSSetting['data']
 ) {
-    const current = OBSOverlaySettingsWebsiteStore.state;
+    const current = OBSOverlayWebsiteSettingsStore.state;
 
     const mergedDonateProps = {
       ...current.DonateProps,
@@ -17,10 +17,10 @@ export default function WebSocketOBSSetting(
         : current.DonateProps.emojiURL
     };
 
-    OBSOverlaySettingsWebsiteStore.setState({
+    OBSOverlayWebsiteSettingsStore.setState({
       ...data,
       DonateProps: mergedDonateProps,
     })
 
-    console.log(OBSOverlaySettingsWebsiteStore)
+    console.log(OBSOverlayWebsiteSettingsStore)
 }

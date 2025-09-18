@@ -23,7 +23,7 @@ export const PollingStatusStragery = new Store({
       ...prev,
       lastErrorMessage: msg
     })),
-  setResumePolling: (fn: () => void) => 
+  setManualRetry: (fn: () => void) => 
     PollingStatusStore.setState(prev => ({
       ...prev,
       resumePolling: fn

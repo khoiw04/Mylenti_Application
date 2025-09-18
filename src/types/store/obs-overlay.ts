@@ -47,7 +47,7 @@ export type OBSOverlayDonateWebsitePropsType = {
     enableVoice: boolean
 }
 
-export type OBSOverlaySettingStrageryType = {
+export type OBSOverlayTauriSettingStrageryType = {
     openStatePresetStragery: (boolean: boolean) => void
     currentPresetStragery: (value: presetUserVariantsValueType) => void
     currentKeyChatTypeStragery: (string: OBSOverlayAllKeyPropsType) => void
@@ -59,4 +59,8 @@ export type OBSOverlaySettingStrageryType = {
         value: boolean
     ) => void
     toogleVoiceDonatePropsStragery: (boolean: boolean) => void
+}
+
+export type OBSOverlayWebsiteSettingStrageryType = {
+    getCorrectChatTypeDataStragery: (string: OBSOverlayChatKeyPropsType) => OBSOverlayChatTypePropsType | null
 }
