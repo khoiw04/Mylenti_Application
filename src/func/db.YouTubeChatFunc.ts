@@ -38,8 +38,8 @@ export const getYouTubeOBSChannelID = createServerFn({ method: 'GET' })
 export const getYouTubeOBSVideoId = createServerFn({ method: 'GET' })
   .validator((d: { useVideoIDCached: boolean }) => d)
   .handler(async ({ data: { useVideoIDCached } }) => {
-    const cached = await getCachedCookie({data: { key: 'videoId' }})
-    if (cached && useVideoIDCached) return cached
+    // const cached = await getCachedCookie({data: { key: 'videoId' }})
+    // if (cached && useVideoIDCached) return cached
 
     const accessToken = await getValidGoogleOBSAccessToken()
     const channelId = await getYouTubeOBSChannelID()
@@ -53,11 +53,11 @@ export const getYouTubeOBSVideoId = createServerFn({ method: 'GET' })
 
     const data = await res.json()
     if (!data.items || data.items.length === 0) {
-      throw new Error('Không tìm thấy videoID đang hoạt động')
+        throw new Error(JSON.stringify(data, null, 2))
     }
 
     const videoId = data.items[0].id.videoId
-    await setCachedCookie({data: {key: 'videoId', value: videoId, maxAge: 1000 * 60 * 60 * 3}})
+    // await setCachedCookie({data: {key: 'videoId', value: videoId, maxAge: 1000 * 60 * 60 * 3}})
     return videoId
   })
 

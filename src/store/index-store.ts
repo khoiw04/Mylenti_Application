@@ -6,7 +6,10 @@ export const IndexState = new Store({
 
 export const IndexStraregy = new Store({
   onGoogleLogInClick: () => {},
-  onGoogleLogOutClick: () => {},
+  onGoogleLogOutClick: async () => await ({
+    status: "",
+    message: ""
+  }),
   onFinishGoogleOBSAuth: () => IndexState.setState(prev => ({ ...prev, finishGoogleOBSAuth: true })),
   onLogOutGoogleOBSAuth: () => IndexState.setState(prev => ({ ...prev, finishGoogleOBSAuth: false }))
 })

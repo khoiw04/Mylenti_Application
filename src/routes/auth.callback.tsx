@@ -22,9 +22,9 @@ function RouteComponent() {
         if (isTauri()) {
           const user = await getUser()
           if (user.isAuthenticated) {
-            router.navigate({ to: '/', reloadDocument: true })
+            router.navigate({ to: '/main', reloadDocument: true })
           } else {
-            router.navigate({ to: '/dang-nhap' })
+            router.navigate({ to: '/' })
           }
           return
         }

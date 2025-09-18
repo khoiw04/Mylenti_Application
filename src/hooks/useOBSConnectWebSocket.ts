@@ -32,7 +32,8 @@ export default function useOBSConnectWebSocket() {
                 }));
 
                 socket.send(JSON.stringify({
-                    type: "runtime"
+                    type: "runtime",
+                    data: clientId
                 }));
             }
 

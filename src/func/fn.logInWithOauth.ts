@@ -32,8 +32,8 @@ export const logInWithOauth = async ({ provider, router, dimension }: OauthProps
         const user = await getUser()
         if (user.isAuthenticated) {
           toast.success('Đã thắng Đăng nhập', {
-            onAutoClose() {router.navigate({ to: '/', reloadDocument: true })},
-            onDismiss() {router.navigate({ to: '/', reloadDocument: true })}
+            onAutoClose() {router.navigate({ to: '/main', reloadDocument: true })},
+            onDismiss() {router.navigate({ to: '/main', reloadDocument: true })}
           })
         } else {
           toast.error('Đăng nhập thất bại')

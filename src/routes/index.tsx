@@ -1,24 +1,28 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Toaster } from 'sonner'
-import Header from '@/components/presenters/header'
-import Main from '@/components/pages/index'
-import useIndex from '@/components/containers/page.useIndex'
-import { getValidGoogleOBSAccessToken } from '@/func/auth.googleOBS'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { LoginForm } from '@/components/pages/dang-nhap'
+import { Footer, LogoForm } from '@/components/presenters/form'
+import { FormFrame } from '@/components/ui/frame'
 
 export const Route = createFileRoute('/')({
-  component: App,
-  loader: async () => {
-    return await getValidGoogleOBSAccessToken()
-  },
+  component: RouteComponent,
+  beforeLoad: ({ context }) => {
+    if (context.authState.isAuthenticated) {
+      throw redirect({ to: '/main' })
+    }
+  }
 })
 
-function App() {
-  useIndex()
+function RouteComponent() {
   return (
-    <>
-      <Header />
-      <Main />
-      <Toaster expand richColors theme='light' />
-    </>
-  )
+    <FormFrame
+      footer={
+        <div className='absolute bottom-10'>
+          <Footer />
+        </div>
+      }
+    >
+      <LogoForm />
+      <LoginForm />
+    </FormFrame>
+    )
 }

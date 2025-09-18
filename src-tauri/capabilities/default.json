@@ -33,8 +33,6 @@
     "updater:allow-install",
     "updater:deny-install",
     "websocket:default",
-    "websocket:allow-connect",
-    "websocket:allow-send",
     "fs:default",
     "fs:allow-mkdir",
     "dialog:default",
@@ -42,6 +40,8 @@
     "store:allow-reload",
     "store:allow-load",
     "store:default",
+    "oauth:allow-start",
+    "oauth:allow-cancel",
     "clipboard-manager:allow-write-text",
     "log:default",
     {

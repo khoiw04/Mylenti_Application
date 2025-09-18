@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { open } from "@tauri-apps/plugin-shell";
 import WebSocketYouTubeMessage from "./websocketWebsite.YouTubeMessage";
 import type { ChatTypeStrategyType, LoaderPropsStrategy, MemberIconStrategyType, ModeratorIconStrategyType, SuperchatIconStrategyType, UploadStrategyProps, VerifiedIconStrategyType, WebSocketHandlerStrategyType } from "@/types";
 import WebSocketDonateTranscation from "@/func/websocketWebsite.DonateTranscation";
@@ -61,8 +62,8 @@ export const logInWithOauthStrategy = {
     toast.error('Trình duyệt chặn popup')
     return
   },
-  tauriDirect: (url: string) => {
-    window.location.href = url
+  tauriDirect: async  (url: string) => {
+    await open(url)
   }
 }
 

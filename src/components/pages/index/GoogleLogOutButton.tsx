@@ -12,7 +12,7 @@ export default function GoogleLogOutButton() {
             icon={<LucideLogOut />}
             onClick={async () => {
                 await clearYouTubeOBSLiveStream()
-                onGoogleLogOutClick()
+                await onGoogleLogOutClick()
                 onLogOutGoogleOBSAuth()
             }}
             description="Đăng xuất vì không còn dùng tới tài khoản này nữa, hoặc muốn đổi sang tài khoản khác"

@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { wrapVinxiConfigWithSentry } from '@sentry/tanstackstart-react'
 
 const config = defineConfig({
+  base: '',
   plugins: [
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
@@ -15,28 +16,11 @@ const config = defineConfig({
     tanstackStart({
       customViteReactPlugin: true,
       spa: {
-        enabled: true,
+        enabled: true
       },
     }),
     viteReact(),
-  ],
-  clearScreen: false,
-  server: {
-    port: 3000,
-    strictPort: true,
-    watch: {
-      ignored: ['**/src-tauri/**'],
-    },
-  },
-  envPrefix: ['VITE_', 'TAURI_ENV_*'],
-  build: {
-    target:
-      process.env.TAURI_ENV_PLATFORM == 'windows'
-        ? 'chrome105'
-        : 'safari13',
-    minify: !process.env.TAURI_ENV_DEBUG ? 'esbuild' : false,
-    sourcemap: !!process.env.TAURI_ENV_DEBUG,
-  },
+  ]
 })
 
 export default wrapVinxiConfigWithSentry(config, {

@@ -1,7 +1,7 @@
 use crate::websocket::start_websocket_server;
-use std::time::Duration;
 use tauri_plugin_http::reqwest::Client;
 use std::process::Command;
+use std::time::Duration;
 use tokio::time::sleep;
 use std::env;
 mod update;
@@ -35,6 +35,7 @@ pub fn run() {
             })
             .build()
         )
+        .plugin(tauri_plugin_oauth::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
@@ -62,10 +63,10 @@ pub fn run() {
                 .spawn()
                 .expect("❌ Không thể chạy donate_voice.exe");
 
-            // Command::new("node")
-            //     .arg("../../.output/server/index.mjs")
-            //     .spawn()
-            //     .expect("Failed to start SSR server");
+            Command::new("node")
+                .arg("../../../.output/server/index.mjs")
+                .spawn()
+                .expect("Failed to start Node server");
 
             tauri::async_runtime::spawn(async {
                 if let Err(e) = start_websocket_server().await {
@@ -82,18 +83,6 @@ pub fn run() {
                     }
                 }
             });
-
-            // let flask_cmd = format!(
-            //     "{} & pause",
-            //     flask_exe_path.to_string_lossy().replace('!', "^!")
-            // );
-
-            // let _child = app
-            //     .shell()
-            //     .command("cmd")
-            //     .args(&["/C", "start", "cmd", "/K", &flask_cmd])
-            //     .spawn()
-            //     .expect("❌ Không thể mở CMD để chạy Flask");
 
             // if cfg!(debug_assertions) {
             //     app.handle().plugin(

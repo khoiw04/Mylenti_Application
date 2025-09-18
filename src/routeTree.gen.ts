@@ -8,6 +8,7 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
@@ -15,19 +16,21 @@ import { Route as QuenMatKhauRouteImport } from './routes/quen-mat-khau'
 import { Route as ObsOverlayRouteImport } from './routes/obs-overlay'
 import { Route as NhoMatKhauRouteImport } from './routes/nho-mat-khau'
 import { Route as NganHangRouteImport } from './routes/ngan-hang'
+import { Route as MainRouteImport } from './routes/main'
 import { Route as LyLichRouteImport } from './routes/ly-lich'
 import { Route as KhoiPhucRouteImport } from './routes/khoi-phuc'
 import { Route as KeToanRouteImport } from './routes/ke-toan'
-import { Route as DangNhapRouteImport } from './routes/dang-nhap'
 import { Route as DangKyRouteImport } from './routes/dang-ky'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RuntimeYoutubelivechatRouteImport } from './routes/runtime.youtubelivechat'
-import { Route as RuntimeObsdonateRouteImport } from './routes/runtime.obsdonate'
 import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { ServerRoute as UploadFilesServerRouteImport } from './routes/uploadFiles'
 import { ServerRoute as ApiTrpcSplatServerRouteImport } from './routes/api.trpc.$'
 
+const RuntimeYoutubelivechatLazyRouteImport = createFileRoute(
+  '/runtime/youtubelivechat',
+)()
+const RuntimeObsdonateLazyRouteImport = createFileRoute('/runtime/obsdonate')()
 const rootServerRouteImport = createServerRootRoute()
 
 const QuenMatKhauRoute = QuenMatKhauRouteImport.update({
@@ -50,6 +53,11 @@ const NganHangRoute = NganHangRouteImport.update({
   path: '/ngan-hang',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainRoute = MainRouteImport.update({
+  id: '/main',
+  path: '/main',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LyLichRoute = LyLichRouteImport.update({
   id: '/ly-lich',
   path: '/ly-lich',
@@ -65,11 +73,6 @@ const KeToanRoute = KeToanRouteImport.update({
   path: '/ke-toan',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DangNhapRoute = DangNhapRouteImport.update({
-  id: '/dang-nhap',
-  path: '/dang-nhap',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DangKyRoute = DangKyRouteImport.update({
   id: '/dang-ky',
   path: '/dang-ky',
@@ -80,16 +83,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RuntimeYoutubelivechatRoute = RuntimeYoutubelivechatRouteImport.update({
-  id: '/runtime/youtubelivechat',
-  path: '/runtime/youtubelivechat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RuntimeObsdonateRoute = RuntimeObsdonateRouteImport.update({
+const RuntimeYoutubelivechatLazyRoute =
+  RuntimeYoutubelivechatLazyRouteImport.update({
+    id: '/runtime/youtubelivechat',
+    path: '/runtime/youtubelivechat',
+    getParentRoute: () => rootRouteImport,
+  } as any).lazy(() =>
+    import('./routes/runtime.youtubelivechat.lazy').then((d) => d.Route),
+  )
+const RuntimeObsdonateLazyRoute = RuntimeObsdonateLazyRouteImport.update({
   id: '/runtime/obsdonate',
   path: '/runtime/obsdonate',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/runtime.obsdonate.lazy').then((d) => d.Route),
+)
 const AuthGoogleOBSRoute = AuthGoogleOBSRouteImport.update({
   id: '/auth/googleOBS',
   path: '/auth/googleOBS',
@@ -114,61 +122,61 @@ const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dang-ky': typeof DangKyRoute
-  '/dang-nhap': typeof DangNhapRoute
   '/ke-toan': typeof KeToanRoute
   '/khoi-phuc': typeof KhoiPhucRoute
   '/ly-lich': typeof LyLichRoute
+  '/main': typeof MainRoute
   '/ngan-hang': typeof NganHangRoute
   '/nho-mat-khau': typeof NhoMatKhauRoute
   '/obs-overlay': typeof ObsOverlayRoute
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
-  '/runtime/obsdonate': typeof RuntimeObsdonateRoute
-  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatRoute
+  '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
+  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dang-ky': typeof DangKyRoute
-  '/dang-nhap': typeof DangNhapRoute
   '/ke-toan': typeof KeToanRoute
   '/khoi-phuc': typeof KhoiPhucRoute
   '/ly-lich': typeof LyLichRoute
+  '/main': typeof MainRoute
   '/ngan-hang': typeof NganHangRoute
   '/nho-mat-khau': typeof NhoMatKhauRoute
   '/obs-overlay': typeof ObsOverlayRoute
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
-  '/runtime/obsdonate': typeof RuntimeObsdonateRoute
-  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatRoute
+  '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
+  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dang-ky': typeof DangKyRoute
-  '/dang-nhap': typeof DangNhapRoute
   '/ke-toan': typeof KeToanRoute
   '/khoi-phuc': typeof KhoiPhucRoute
   '/ly-lich': typeof LyLichRoute
+  '/main': typeof MainRoute
   '/ngan-hang': typeof NganHangRoute
   '/nho-mat-khau': typeof NhoMatKhauRoute
   '/obs-overlay': typeof ObsOverlayRoute
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
-  '/runtime/obsdonate': typeof RuntimeObsdonateRoute
-  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatRoute
+  '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
+  '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/dang-ky'
-    | '/dang-nhap'
     | '/ke-toan'
     | '/khoi-phuc'
     | '/ly-lich'
+    | '/main'
     | '/ngan-hang'
     | '/nho-mat-khau'
     | '/obs-overlay'
@@ -181,10 +189,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dang-ky'
-    | '/dang-nhap'
     | '/ke-toan'
     | '/khoi-phuc'
     | '/ly-lich'
+    | '/main'
     | '/ngan-hang'
     | '/nho-mat-khau'
     | '/obs-overlay'
@@ -197,10 +205,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dang-ky'
-    | '/dang-nhap'
     | '/ke-toan'
     | '/khoi-phuc'
     | '/ly-lich'
+    | '/main'
     | '/ngan-hang'
     | '/nho-mat-khau'
     | '/obs-overlay'
@@ -214,18 +222,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DangKyRoute: typeof DangKyRoute
-  DangNhapRoute: typeof DangNhapRoute
   KeToanRoute: typeof KeToanRoute
   KhoiPhucRoute: typeof KhoiPhucRoute
   LyLichRoute: typeof LyLichRoute
+  MainRoute: typeof MainRoute
   NganHangRoute: typeof NganHangRoute
   NhoMatKhauRoute: typeof NhoMatKhauRoute
   ObsOverlayRoute: typeof ObsOverlayRoute
   QuenMatKhauRoute: typeof QuenMatKhauRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthGoogleOBSRoute: typeof AuthGoogleOBSRoute
-  RuntimeObsdonateRoute: typeof RuntimeObsdonateRoute
-  RuntimeYoutubelivechatRoute: typeof RuntimeYoutubelivechatRoute
+  RuntimeObsdonateLazyRoute: typeof RuntimeObsdonateLazyRoute
+  RuntimeYoutubelivechatLazyRoute: typeof RuntimeYoutubelivechatLazyRoute
 }
 export interface FileServerRoutesByFullPath {
   '/uploadFiles': typeof UploadFilesServerRoute
@@ -283,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NganHangRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/main': {
+      id: '/main'
+      path: '/main'
+      fullPath: '/main'
+      preLoaderRoute: typeof MainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ly-lich': {
       id: '/ly-lich'
       path: '/ly-lich'
@@ -304,13 +319,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KeToanRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dang-nhap': {
-      id: '/dang-nhap'
-      path: '/dang-nhap'
-      fullPath: '/dang-nhap'
-      preLoaderRoute: typeof DangNhapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dang-ky': {
       id: '/dang-ky'
       path: '/dang-ky'
@@ -329,14 +337,14 @@ declare module '@tanstack/react-router' {
       id: '/runtime/youtubelivechat'
       path: '/runtime/youtubelivechat'
       fullPath: '/runtime/youtubelivechat'
-      preLoaderRoute: typeof RuntimeYoutubelivechatRouteImport
+      preLoaderRoute: typeof RuntimeYoutubelivechatLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/runtime/obsdonate': {
       id: '/runtime/obsdonate'
       path: '/runtime/obsdonate'
       fullPath: '/runtime/obsdonate'
-      preLoaderRoute: typeof RuntimeObsdonateRouteImport
+      preLoaderRoute: typeof RuntimeObsdonateLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/googleOBS': {
@@ -377,18 +385,18 @@ declare module '@tanstack/react-start/server' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DangKyRoute: DangKyRoute,
-  DangNhapRoute: DangNhapRoute,
   KeToanRoute: KeToanRoute,
   KhoiPhucRoute: KhoiPhucRoute,
   LyLichRoute: LyLichRoute,
+  MainRoute: MainRoute,
   NganHangRoute: NganHangRoute,
   NhoMatKhauRoute: NhoMatKhauRoute,
   ObsOverlayRoute: ObsOverlayRoute,
   QuenMatKhauRoute: QuenMatKhauRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthGoogleOBSRoute: AuthGoogleOBSRoute,
-  RuntimeObsdonateRoute: RuntimeObsdonateRoute,
-  RuntimeYoutubelivechatRoute: RuntimeYoutubelivechatRoute,
+  RuntimeObsdonateLazyRoute: RuntimeObsdonateLazyRoute,
+  RuntimeYoutubelivechatLazyRoute: RuntimeYoutubelivechatLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
