@@ -3,7 +3,7 @@ import { useStore } from '@tanstack/react-store'
 import { toast } from 'sonner'
 import { createOptimisticAction } from '@tanstack/db'
 import type { YouTubeChatResponse } from '@/types'
-import { chatMessageCollection, useChatMessage } from '@/data/db.YouTubeChatCollections'
+import { chatTauriMessageCollection, useTauriChatMessage } from '@/data/db.YouTubeChatCollections'
 import { getYouTubeOBSLiveChatMessage } from '@/func/db.YouTubeChatFunc'
 import { IndexState, PollingStatusStore, PollingStatusStragery } from '@/store'
 import { websocketSendType } from '@/data/settings'
@@ -16,7 +16,7 @@ const MAX_EMPTY_POLLS = 2
 
 export default function usePollingYoutubeChat() {
   const { finishGoogleOBSAuth } = useStore(IndexState)
-  const { data: messages } = useChatMessage()
+  const { data: messages } = useTauriChatMessage()
   const { isError, isPaused, lastErrorMessage } = useStore(PollingStatusStore)
   const { setIsError, setIsPaused, setLastErrorMessage, setManualRetry } = useStore(PollingStatusStragery)
 
@@ -30,13 +30,13 @@ export default function usePollingYoutubeChat() {
   const insertMessages = createOptimisticAction<YouTubeChatResponse['messages']>({
     onMutate: (msgs) => {
       msgs.forEach(msg => {
-        chatMessageCollection.utils.writeUpsert(msg)
+        chatTauriMessageCollection.utils.writeUpsert(msg)
       })
     },
-    mutationFn: async (msgs) => {
+    mutationFn: async () => {
       safeSend(OBSTauriWebSocket.getSocket(), {
         type: websocketSendType.YouTubeMessage,
-        data: msgs
+        data: messages
       })
     }
   })
@@ -84,7 +84,7 @@ export default function usePollingYoutubeChat() {
       stateRef.current.nextPageToken = nextPageToken || ''
       stateRef.current.pollingInterval = pollingIntervalMillis || DEFAULT_INTERVAL
 
-      const unseenMessages = newMessages.filter(msg => !chatMessageCollection.has(msg.id))
+      const unseenMessages = newMessages.filter(msg => !chatTauriMessageCollection.has(msg.id))
 
       if (unseenMessages.length > 0) {
         insertMessages(unseenMessages)

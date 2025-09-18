@@ -3,10 +3,10 @@ import type { OBSOverlaySettingsWebsitePropsType, OBSOverlayWebsiteSettingStrage
 import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
 
 export const OBSOverlayWebsiteSettingsStore = new Store<OBSOverlaySettingsWebsitePropsType>({
-  currentKeyChatType: 'Moderator',
-  openStatePreset: false,
   showComment: false,
+  openStatePreset: false,
   currentPreset: 'default',
+  currentKeyChatType: 'Verified',
   DonateProps : {
     emojiURL: fallbackEmoji,
     soundURL: fallbackSound,
