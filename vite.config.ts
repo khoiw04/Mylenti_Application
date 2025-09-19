@@ -16,7 +16,7 @@ const config = defineConfig({
     tanstackStart({
       customViteReactPlugin: true,
       spa: {
-        enabled: true
+        enabled: false
       },
     }),
     viteReact(),
