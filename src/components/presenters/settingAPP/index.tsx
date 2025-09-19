@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { motion } from "motion/react";
+import { useStore } from "@tanstack/react-store";
 import type { Update } from '@tauri-apps/plugin-updater';
 import { 
     Sidebar,
@@ -24,7 +25,7 @@ import { Input } from "@/components/ui/input"
 import { DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
-import useTheme from "@/components/containers/db.useTheme";
+import { ThemeStore } from "@/store";
 
 const items = [
   {
@@ -41,7 +42,7 @@ const items = [
 
 export default function SettingApp() {
     const [open, setOpen] = useState(false)
-    const { theme, setTheme } = useTheme()
+    const { theme, setTheme } = useStore(ThemeStore)
     const [updateData, setUpdateData] = useState<{
         data: Update | null,
         allowUpdate: boolean,
@@ -125,7 +126,7 @@ export default function SettingApp() {
             </Sidebar>
             <SidebarInset className="relative">
                     <div className="flex flex-row gap-2 items-center mt-4 ml-4">
-                        <ThemeSwitcher onChange={setTheme} value={theme} defaultValue={theme} />
+                        <ThemeSwitcher onChange={setTheme} value={theme ?? 'light'} defaultValue={theme ?? 'light'} />
                         <SidebarTrigger className="px-3 py-2 bg-gray-100 dark:bg-gray-900 rounded">
                             Mở menu
                         </SidebarTrigger>

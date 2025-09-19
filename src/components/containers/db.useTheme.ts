@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { loadSetting, saveSetting } from "@/store";
+import { useStore } from "@tanstack/react-store";
+import { ThemeStore, loadSetting, saveSetting } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 
 export default function useTheme() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  
+  const { theme, setTheme } = useStore(ThemeStore)
   useTauriSafeEffect(() => {
     (async () => {
       const savedTheme = await loadSetting("theme");
@@ -21,7 +20,7 @@ export default function useTheme() {
 
   useTauriSafeEffect(() => {
     (async () => {
-      await saveSetting("theme", theme);
+      await saveSetting("theme", theme ?? 'dark');
       if (theme === "dark") {
         document.documentElement.classList.add("dark");
       } else {
@@ -29,6 +28,4 @@ export default function useTheme() {
       }
     })();
   }, [theme]);
-
-  return { theme, setTheme };
 }
