@@ -8,7 +8,6 @@ import {
 } from "lucide-react"
 
 import { useRouter } from "@tanstack/react-router"
-import { useStore } from "@tanstack/react-store"
 import SettingApp from "@/components/presenters/settingAPP"
 import {
   Avatar,
@@ -27,7 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import useLogOut from "@/components/containers/db.useLogOut"
 
 export default function UserMenu() {
@@ -92,6 +91,12 @@ export default function UserMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
       <DialogContent className="sm:max-w-[800px] sm:max-h-[700px] overflow-clip p-0">
+        <DialogTitle className="sr-only">
+          Cài đặt
+          <DialogDescription>
+            Cập nhật, API KEY, ...
+          </DialogDescription>
+        </DialogTitle>
         <SettingApp />
       </DialogContent>
     </Dialog>

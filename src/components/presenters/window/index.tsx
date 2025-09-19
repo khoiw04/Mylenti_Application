@@ -6,11 +6,15 @@ import { AppWindowStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
 import useWebSocketSepayAlertSend from '@/components/containers/db.useWebSocketSepayAlertSend'
 import useReceiveWebSocket from '@/components/containers/db.useReceiveWebSocketOBS'
+import useTheme from '@/components/containers/db.useTheme';
 
 export default function Main() {
-    // Websocket - INIT
+    // OBSOVERLAY - SYNC
     useInitOBSOverlaySettings()
     useSyncOBSOverlaySettings()
+
+    // USERSETTING - SYNC
+    useTheme()
     
     // Websocket - SEND
     useWebSocketSepayAlertSend()

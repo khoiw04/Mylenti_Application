@@ -8,4 +8,5 @@ export type ChatTypeType = {
     author?: string,
     comment?: string,
     show_com?: boolean
+    donatePrice?: string
 }

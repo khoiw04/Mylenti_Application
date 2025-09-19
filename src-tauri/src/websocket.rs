@@ -119,7 +119,8 @@ pub async fn start_websocket_server() -> tokio::io::Result<()> {
                                 Message::Close(frame) => {
                                     log::info!(
                                         "📴 Client {} gửi Close frame: {:?}",
-                                        client_id, frame
+                                        client_id,
+                                        frame
                                     );
                                     break;
                                 }

@@ -89,6 +89,8 @@ export default function NotificationMenu() {
             </button>
           )}
         </div>
+        {unreadCount > 0 &&
+        <>
         <div
           role="separator"
           aria-orientation="horizontal"
@@ -127,6 +129,8 @@ export default function NotificationMenu() {
             </div>
           </div>
         ))}
+        </>
+        }
       </PopoverContent>
     </Popover>
   )

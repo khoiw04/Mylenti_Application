@@ -33,23 +33,33 @@ export default function ChatMessages({ config, messages, ...props }: ChatMessage
                         ease: [0.25, 0.8, 0.25, 1],
                     }}
                 >
-                    {YouTubeChatType ? 
-                    <YouTubeChatType 
-                        author={msg.author}
-                        avatar={msg.avatar}
-                        comment={msg.message}
-                        preset={currentPreset}
-                        show_com={showComment}
-                        dataConfig={dataConfig!}
-                    />
-                    :
-                    <NormalType
-                        srcAvatarCommenter={msg.avatar}
-                        srcCommentCommmenter={msg.message}
-                        srcNameCommenter={msg.author}
-                        showComment={showComment}
-                    />
-                    }
+                    {(msg.superChat && YouTubeChatType) ? (
+                        <YouTubeChatType
+                            author={msg.superChat.supporterDetails.displayName}
+                            avatar={msg.superChat.supporterDetails.profileImageUrl}
+                            donatePrice={msg.superChat.displayString}
+                            comment={msg.superChat.commentText}
+                            preset={currentPreset}
+                            show_com={showComment}
+                            dataConfig={dataConfig!}
+                        />
+                    ) : YouTubeChatType ? (
+                        <YouTubeChatType 
+                            author={msg.author}
+                            avatar={msg.avatar}
+                            comment={msg.message}
+                            preset={currentPreset}
+                            show_com={showComment}
+                            dataConfig={dataConfig!}
+                        />
+                    ) : (
+                        <NormalType
+                            srcAvatarCommenter={msg.avatar}
+                            srcCommentCommmenter={msg.message}
+                            srcNameCommenter={msg.author}
+                            showComment={showComment}
+                        />
+                    )}
                 </motion.li>
                 )
             })}

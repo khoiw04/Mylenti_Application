@@ -72,7 +72,7 @@ export const MemberChat = ({ dataConfig, preset, avatar, author, comment, show_c
     />
 }
 
-export const SuperchatChat = ({ dataConfig, preset, avatar, author, comment, show_com }: ChatTypeType) => {
+export const SuperchatChat = ({ dataConfig, preset, avatar, author, comment, show_com, donatePrice }: ChatTypeType) => {
     const { showComment, currentPreset, currentKeyChatType } = useStore(OBSOverlayTauriSettingsProps)
     const { getCorrectChatTypeDataStragery } = useStore(OBSOverlayTauriSettingStragery)
     const data = dataConfig ?? getCorrectChatTypeDataStragery('Superchat')
@@ -88,5 +88,6 @@ export const SuperchatChat = ({ dataConfig, preset, avatar, author, comment, sho
         srcAvatarCommenter ={avatar ?? "./avatar-80-07.jpg"}
         srcNameCommenter={author ?? commenter_name_test}
         showComment={show_com ?? showComment}
+        donatePrice={donatePrice}
     />
 }
