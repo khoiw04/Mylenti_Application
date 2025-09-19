@@ -1,11 +1,11 @@
 use crate::websocket::start_websocket_server;
-use std::env;
-use url::Url;
-use std::process::Command;
-use std::time::Duration;
 use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
+use std::{env, process::Command, time::Duration};
 use tauri_plugin_http::reqwest::Client;
 use tokio::time::sleep;
+use tauri::Manager;
+use url::Url;
+
 mod update;
 mod websocket;
 
@@ -20,14 +20,22 @@ async fn is_flask_ready() -> bool {
     }
 }
 
+async fn is_node_ready() -> bool {
+    match Client::new()
+        .get("http://127.0.0.1:3000")
+        .send()
+        .await
+    {
+        Ok(res) => res.status().is_success(),
+        Err(_) => false,
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let port: u16 = 5173;
-    let url = Url::parse(&format!("http://localhost:{}", port)).unwrap();
-    let flask_exe_path = env::current_dir()
-        .unwrap()
-        .join("bin")
-        .join("donate_voice.exe");
+    let port: u16 = 3000;
+    let frontend_url: Url = format!("http://localhost:{}", port).parse().unwrap();
+
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
@@ -57,45 +65,78 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_localhost::Builder::new(port).build())
-        .setup(|app| {
-            let app_handle = app.handle().clone();
+        .setup(move |app| {
+            let app_handle = app.app_handle();
+            let app_handle_for_window = app_handle.clone();
+            let frontend_url_clone = frontend_url.clone();
+
+            let flask_exe_path = env::current_dir()
+                .unwrap()
+                .join("bin")
+                .join("donate_voice.exe");
+
+            let node_exe_path = env::current_dir()
+                .unwrap()
+                .join("bin")
+                .join("node_server.exe");
+
             if !flask_exe_path.exists() {
                 log::error!(
                     "❌ File donate_voice.exe không tồn tại tại: {}",
                     flask_exe_path.display()
                 );
                 return Ok(());
-            };
+            }
+
+            if !node_exe_path.exists() {
+                log::error!(
+                    "❌ File node_server.exe không tồn tại tại: {}",
+                    node_exe_path.display()
+                );
+                return Ok(());
+            }
 
             Command::new(flask_exe_path)
                 .spawn()
                 .expect("❌ Không thể chạy donate_voice.exe");
 
-            // Command::new("node")
-            //     .arg("../../../.output/server/index.mjs")
-            //     .spawn()
-            //     .expect("Failed to start Node server");
+            Command::new(node_exe_path)
+                .spawn()
+                .expect("❌ Không thể chạy node_server.exe");
 
             tauri::async_runtime::spawn(async move {
                 if let Err(e) = start_websocket_server().await {
                     log::error!("❌ WebSocket server lỗi: {}", e);
                 }
 
-                for attempt in 1..=20 {
+                for i in 1..=20 {
                     if is_flask_ready().await {
-                        log::info!("✅ Flask server đã sẵn sàng sau {} lần thử", attempt);
+                        log::info!("✅ Flask server đã sẵn sàng sau {} lần thử", i);
+                        break;
+                    } else {
+                        log::info!("⏳ Đang chờ Flask server... lần {}", i);
+                        sleep(Duration::from_millis(500)).await;
+                    }
+                }
 
-                        match WebviewWindowBuilder::new(&app_handle, "main", WebviewUrl::External(url.clone()))
-                            .title("Localhost")
-                            .build()
+                for i in 1..=20 {
+                    if is_node_ready().await {
+                        log::info!("✅ Node server đã sẵn sàng sau {} lần thử", i);
+
+                        if let Err(e) = WebviewWindowBuilder::new(
+                            &app_handle_for_window,
+                            "main".to_string(),
+                            WebviewUrl::External(frontend_url_clone),
+                        )
+                        .title("Localhost Mylenti")
+                        .build()
                         {
-                            Ok(_) => log::info!("✅ WebviewWindow đã được tạo thành công"),
-                            Err(e) => log::error!("❌ Lỗi tạo WebviewWindow: {}", e),
+                            log::error!("❌ Lỗi tạo WebviewWindow: {}", e);
                         }
 
                         break;
                     } else {
-                        log::info!("⏳ Đang chờ Flask server... lần {}", attempt);
+                        log::info!("⏳ Đang chờ Node server... lần {}", i);
                         sleep(Duration::from_millis(500)).await;
                     }
                 }
@@ -105,5 +146,5 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![update::run_update])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("❌ Lỗi khi chạy ứng dụng Tauri");
 }

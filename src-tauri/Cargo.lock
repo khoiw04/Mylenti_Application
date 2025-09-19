@@ -30,6 +30,7 @@ dependencies = [
  "tauri-plugin-store",
  "tauri-plugin-updater",
  "tauri-plugin-websocket",
+ "tauri-utils",
  "tokio",
  "tokio-tungstenite",
  "tower",

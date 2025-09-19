@@ -41,7 +41,7 @@
     "active": true,
     "targets": ["msi", "dmg", "deb", "appimage"],
     "createUpdaterArtifacts": true,
-    "resources": ["bin/donate_voice.exe"],
+    "resources": ["bin/donate_voice.exe", "bin/node_server.exe"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
