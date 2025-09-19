@@ -1,0 +1,17 @@
+{
+  "categories": [
+    {
+      "title": "🚀 Features",
+      "labels": ["feature", "enhancement"]
+    },
+    {
+      "title": "🐛 Fixes",
+      "labels": ["bug", "fix"]
+    },
+    {
+      "title": "🧹 Maintenance",
+      "labels": ["chore", "refactor"]
+    }
+  ],
+  "template": "# Changelog\n\n## Changes\n{{CHANGELOG}}"
+}
