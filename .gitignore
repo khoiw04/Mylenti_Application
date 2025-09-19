@@ -9,9 +9,9 @@ count.txt
 .tanstack
 .output
 .vinxi
+.env
 .env.development
 .env.production
-todos.json
 build
 dist
 src-tauri/bin
