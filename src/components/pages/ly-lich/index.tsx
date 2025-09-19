@@ -1,4 +1,4 @@
-import { Toaster } from "sonner"
+
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import { useCroppedAvatar } from "@/hooks/useCroppedAvatar"
@@ -13,7 +13,6 @@ export function ProfileForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Toaster expand richColors theme="light" />
       <Card>
         <CardContent>
           <form

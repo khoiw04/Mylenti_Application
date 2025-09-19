@@ -1,4 +1,4 @@
-import { Toaster } from "sonner"
+
 import { useStore } from "@tanstack/react-store"
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
@@ -15,7 +15,6 @@ export function BankForm({
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
-            <Toaster expand richColors theme="light" />
             <Card>
                 <CardContent>
                 <form

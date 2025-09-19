@@ -21,8 +21,7 @@
         "decorations": false,
         "devtools": true,
         "minWidth": 320,
-        "create": true,
-        "url": "http://localhost:3000"
+        "create": true
       }
     ],
     "security": {

@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { isTauri } from '@tauri-apps/api/core'
 import { LoaderCircleIcon } from "lucide-react"
-import { Toaster, toast } from 'sonner'
+import { toast } from 'sonner'
 import { exchangeCodeInClient } from '@/func/auth.Oauth'
 import { Skeleton } from '@/components/ui/skeleton'
 import Turtle from '@/components/pages/auth.callback/turtle'
@@ -65,7 +65,6 @@ function RouteComponent() {
         </>
       }
       <Skeleton className='size-full bg-neutral-300' />
-      <Toaster expand richColors theme='light' />
     </div>
   )
 }

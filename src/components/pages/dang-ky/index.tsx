@@ -1,4 +1,4 @@
-import { Toaster } from "sonner"
+
 import Navigate from "./navigate"
 import CheckEmail from "./check-email"
 import { cn } from "@/lib/utils"
@@ -13,7 +13,6 @@ export function LogupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Toaster expand richColors theme="light" />
       {
         isSuccess ? <CheckEmail /> :
         <Card>

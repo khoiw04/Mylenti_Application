@@ -78,6 +78,7 @@ jobs:
             src-tauri/target/release/bundle/**/*.deb
             src-tauri/target/release/bundle/**/*.rpm
             src-tauri/target/release/bundle/**/*.dmg
+            src-tauri/target/release/bundle/**/*.sig
             src-tauri/bin/donate_voice.exe
             checksums/sha256-${{ runner.os }}.txt
 
@@ -114,6 +115,45 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Read .sig files with validation
+        id: sigs
+        run: |
+          VERSION="${{ github.ref_name }}"
+          WIN_SIG=$(find downloads -name "Mylenti_${VERSION}_x64_en-US.msi.sig" | head -n 1)
+          MAC_SIG=$(find downloads -name "Mylenti_${VERSION}_en-US.dmg.sig" | head -n 1)
+          LINUX_SIG=$(find downloads -name "Mylenti_${VERSION}_en-US.AppImage.sig" | head -n 1)
+
+          if [ -z "$WIN_SIG" ] || [ -z "$MAC_SIG" ] || [ -z "$LINUX_SIG" ]; then
+            echo "❌ Thiếu file chữ ký .sig. Kiểm tra lại tên file hoặc quá trình build."
+            exit 1
+          fi
+
+          echo "windows_sig=$(cat "$WIN_SIG")" >> $GITHUB_OUTPUT
+          echo "macos_sig=$(cat "$MAC_SIG")" >> $GITHUB_OUTPUT
+          echo "linux_sig=$(cat "$LINUX_SIG")" >> $GITHUB_OUTPUT
+
+      - name: Generate latest.json
+        run: |
+          echo '{
+            "version": "'"${{ github.ref_name }}"'",
+            "notes": '"$(echo "${{ steps.changelog.outputs.changelog }}" | jq -Rs .)"',
+            "pub_date": "'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'",
+            "platforms": {
+              "windows": {
+                "signature": "'"${{ steps.sigs.outputs.windows_sig }}"'",
+                "url": "https://github.com/khoiw04/OBS_Mylenti/releases/download/${{ github.ref_name }}/Mylenti_${{ github.ref_name }}_x64_en-US.msi"
+              },
+              "macos": {
+                "signature": "'"${{ steps.sigs.outputs.macos_sig }}"'",
+                "url": "https://github.com/khoiw04/OBS_Mylenti/releases/download/${{ github.ref_name }}/Mylenti_${{ github.ref_name }}_en-US.dmg"
+              },
+              "linux": {
+                "signature": "'"${{ steps.sigs.outputs.linux_sig }}"'",
+                "url": "https://github.com/khoiw04/OBS_Mylenti/releases/download/${{ github.ref_name }}/Mylenti_${{ github.ref_name }}_en-US.AppImage"
+              }
+            }
+          }' > latest.json
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -124,6 +164,8 @@ jobs:
 
             ## 🔐 SHA256 Checksums
             ${{ steps.format.outputs.table }}
-          files: downloads/**/*
+          files: |
+            downloads/**/*
+            latest.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

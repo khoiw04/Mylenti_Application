@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Toaster } from 'sonner'
 import Header from '@/components/presenters/header'
 import Main from '@/components/pages/index'
 import useIndex from '@/components/containers/page.useIndex'
@@ -18,7 +17,6 @@ function App() {
     <>
       <Header />
       <Main />
-      <Toaster expand richColors theme='light' />
     </>
   )
 }

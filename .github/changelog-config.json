@@ -1,17 +1,10 @@
 {
   "categories": [
-    {
-      "title": "🚀 Features",
-      "labels": ["feature", "enhancement"]
-    },
-    {
-      "title": "🐛 Fixes",
-      "labels": ["bug", "fix"]
-    },
-    {
-      "title": "🧹 Maintenance",
-      "labels": ["chore", "refactor"]
-    }
+    { "title": "🚀 Features", "labels": ["feature", "enhancement"] },
+    { "title": "🐛 Fixes", "labels": ["bug", "fix"] },
+    { "title": "🧹 Maintenance", "labels": ["chore", "refactor"] },
+    { "title": "🧪 Thử nghiệm", "labels": ["experimental", "test"] }
   ],
-  "template": "# Changelog\n\n## Changes\n{{CHANGELOG}}"
+  "group_by": "contributor",
+  "template": "# 📦 Changelog\n\n📅 Release Date: {{RELEASE_DATE}}\n\n👥 Contributors: {{CONTRIBUTORS}}\n\n## Changes by Contributor\n{{CHANGELOG}}"
 }

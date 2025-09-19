@@ -1,8 +1,9 @@
 import { useStore } from '@tanstack/react-store'
 import { isTauri } from '@tauri-apps/api/core'
+import { Toaster } from 'sonner';
 import useWebsocketOBSOverlaySend from "@/components/containers/db.useWebsocketOBSSettingsSend";
 import useTauriWindow from '@/components/containers/api.useTauriWindow'
-import { AppWindowStore } from '@/store'
+import { AppWindowStore, ThemeStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
 import useWebSocketSepayAlertSend from '@/components/containers/db.useWebSocketSepayAlertSend'
 import useReceiveWebSocket from '@/components/containers/db.useReceiveWebSocketOBS'
@@ -24,10 +25,13 @@ export default function Main() {
     useReceiveWebSocket()
 
     useTauriWindow()
+    const { theme } = useStore(ThemeStore)
+  
     const { appWindow } = useStore(AppWindowStore)
     if (isTauri())
 
     return (
+        <>
         <div className="bg-transparent select-none grid grid-cols-[auto_max-content] fixed top-0 left-0 right-0">
             <div data-tauri-drag-region></div>
             <div className="flex flex-row **:px-1.5 **:p-[0.8vmin] *:hover:bg-neutral-300 *:hover:text-neutral-400 *:transition-colors *:first:rounded-bl-md">
@@ -69,5 +73,7 @@ export default function Main() {
                 </button>
             </div>
         </div>
+        <Toaster expand richColors theme={theme ?? 'system'} />
+        </>
     )
 }

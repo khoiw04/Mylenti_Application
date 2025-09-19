@@ -45,5 +45,5 @@ export default function useTheme() {
       document.documentElement.classList.toggle("dark", isDark);
       updateMetaTheme(isDark);
     })();
-  }, [theme]);
+  }, [theme])
 }

@@ -85,7 +85,7 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_localhost::Builder::new(port).build())
+        // .plugin(tauri_plugin_localhost::Builder::new(port).build())
         .setup(move |app| {
             let app_handle = app.app_handle();
             let app_handle_for_window = app_handle.clone();
@@ -121,9 +121,9 @@ pub fn run() {
                 .spawn()
                 .expect("❌ Không thể chạy donate_voice.exe");
 
-            Command::new(node_exe_path)
-                .spawn()
-                .expect("❌ Không thể chạy node_server.exe");
+            // Command::new(node_exe_path)
+            //     .spawn()
+            //     .expect("❌ Không thể chạy node_server.exe");
 
             tauri::async_runtime::spawn(async move {
                 if let Err(e) = start_websocket_server().await {

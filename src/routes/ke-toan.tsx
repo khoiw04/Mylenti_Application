@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Toaster } from 'sonner'
 import Header from '@/components/presenters/header'
 import { loaderStrategy } from '@/func/fn.stragery'
 import { removeAtPrefix } from '@/lib/utils'
@@ -26,7 +25,6 @@ function RouteComponent() {
     <>
       <Header />
       <Main />
-      <Toaster expand richColors theme='light' />
     </>
   )
 }

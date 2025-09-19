@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { isTauri } from '@tauri-apps/api/core'
 import { LoaderCircleIcon, Turtle } from 'lucide-react'
-import { Toaster, toast } from 'sonner'
+import { toast } from 'sonner'
 import { exchangeCodeForGoogleOBSTauri, exchangeCodeForGoogleOBSWebsite } from '@/func/auth.googleOBS'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -47,7 +47,6 @@ function RouteComponent() {
         </>
       }
       <Skeleton className='size-full bg-neutral-300' />
-      <Toaster expand richColors theme='light' />
     </div>
   )
 }

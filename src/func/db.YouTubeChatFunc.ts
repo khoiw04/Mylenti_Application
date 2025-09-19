@@ -38,13 +38,13 @@ export const getYouTubeOBSChannelID = createServerFn({ method: 'GET' })
 export const getYouTubeOBSVideoId = createServerFn({ method: 'GET' })
   .validator((d: { useVideoIDCached: boolean }) => d)
   .handler(async ({ data: { useVideoIDCached } }) => {
-    // const cached = await getCachedCookie({data: { key: 'videoId' }})
-    // if (cached && useVideoIDCached) return cached
+    const cached = await getCachedCookie({ data: { key: 'videoId' } })
+    if (cached && useVideoIDCached) return cached
 
     const accessToken = await getValidGoogleOBSAccessToken()
     const channelId = await getYouTubeOBSChannelID()
 
-    const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/search?part=id&channelId=${channelId}&type=video&eventType=live`, {
+    const res = await nativeFetch(`https://www.googleapis.com/youtube/v3/search?part=snippet,id&channelId=${channelId}&type=video&order=date`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         Accept: 'application/json',
@@ -53,11 +53,16 @@ export const getYouTubeOBSVideoId = createServerFn({ method: 'GET' })
 
     const data = await res.json()
     if (!data.items || data.items.length === 0) {
-        throw new Error(JSON.stringify(data, null, 2))
+      throw new Error('Không tìm thấy video nào trong kênh')
     }
 
-    const videoId = data.items[0].id.videoId
-    // await setCachedCookie({data: {key: 'videoId', value: videoId, maxAge: 1000 * 60 * 60 * 3}})
+    const liveVideo = data.items.find((item: any) => item.snippet?.liveBroadcastContent === 'live' && item.id?.videoId)
+    if (!liveVideo) {
+      throw new Error(JSON.stringify(liveVideo, null, 2))
+    }
+
+    const videoId = liveVideo.id.videoId
+    await setCachedCookie({ data: { key: 'videoId', value: videoId, maxAge: 1000 * 60 * 60 * 3 } })
     return videoId
   })
 
