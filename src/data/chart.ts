@@ -2,7 +2,7 @@ import type { ChartConfig } from "@/components/ui/chart"
 
 const headColorConfig = {
   'Doanh Thu': '',
-  'Ủng Hộ': "text-[var(--chart-1)]",
+  'Ủng Hộ': "text-[var(--chart-2)]",
   'Cửa Hàng': "text-[var(--chart-2)]",
 } as const
 

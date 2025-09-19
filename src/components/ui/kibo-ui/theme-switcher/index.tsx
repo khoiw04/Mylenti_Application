@@ -41,10 +41,8 @@ export const ThemeSwitcher = ({
   const [mounted, setMounted] = useState(false);
 
   const handleThemeClick = useCallback(
-    async (themeKey: "light" | "dark") => {
+    (themeKey: "light" | "dark") => {
       setTheme(themeKey);
-      await saveSetting("theme", themeKey);
-      document.documentElement.classList.toggle("dark", themeKey === "dark");
     },
     [setTheme]
   );
