@@ -8,7 +8,7 @@ export default function FullScreenButton() {
             icon={<LucideExpand />}
             description="Link Khung Chat dùng để gắn lên Browser Source"
             title="Lấy Link Khung Chat"
-            onClick={async () => await writeText('http://localhost:5173/runtime/youtubelivechat')}
+            onClick={async () => await writeText('http://localhost:3000/runtime/youtubelivechat')}
         />
     )
 }

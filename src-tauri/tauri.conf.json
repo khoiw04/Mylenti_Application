@@ -26,7 +26,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' http://localhost:3000 http://127.0.0.1:3000 http://localhost:4545 http://127.0.0.1:4545 http://ipc.localhost ipc: asset: data: blob:;",
+      "csp": "default-src 'self'; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 http://localhost:4455 http://127.0.0.1:4455 http://localhost:4545 http://127.0.0.1:4545 http://localhost:6000 http://127.0.0.1:6000 http://ipc.localhost ws: ipc:; img-src 'self' data: blob:; script-src 'self';",
       "assetProtocol": {
         "enable": true,
         "scope": [

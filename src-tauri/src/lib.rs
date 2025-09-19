@@ -36,6 +36,22 @@ fn ping() -> String {
     "pong".into()
 }
 
+#[tauri::command]
+fn log_frontend(level: String, message: String, source: Option<String>, lineno: Option<u32>, colno: Option<u32>) {
+    let prefix = match level.as_str() {
+        "error" => "🚨 ERROR",
+        "warn" => "⚠️ WARN",
+        "info" => "ℹ️ INFO",
+        _ => "🔍 LOG",
+    };
+
+    println!(
+        "{}: {}\nSource: {:?}\nLine: {:?}, Column: {:?}",
+        prefix, message, source, lineno, colno
+    );
+}
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let port: u16 = 3000;
@@ -105,9 +121,9 @@ pub fn run() {
                 .spawn()
                 .expect("❌ Không thể chạy donate_voice.exe");
 
-            // Command::new(node_exe_path)
-            //     .spawn()
-            //     .expect("❌ Không thể chạy node_server.exe");
+            Command::new(node_exe_path)
+                .spawn()
+                .expect("❌ Không thể chạy node_server.exe");
 
             tauri::async_runtime::spawn(async move {
                 if let Err(e) = start_websocket_server().await {
@@ -149,8 +165,11 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![update::run_update])
-        .invoke_handler(tauri::generate_handler![ping])
+        .invoke_handler(tauri::generate_handler![
+            update::run_update,
+            log_frontend,
+            ping
+        ])
         .run(tauri::generate_context!())
         .expect("❌ Lỗi khi chạy ứng dụng Tauri");
 }

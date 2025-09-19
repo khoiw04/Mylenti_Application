@@ -3,6 +3,10 @@
   "identifier": "default",
   "description": "Default permission set for desktop app",
   "windows": ["main"],
+  "platforms": ["macOS", "windows", "linux"],
+  "remote": {
+    "urls": ["http://localhost:3000", "http://localhost:4545", "http://localhost:4455", "http://localhost:6000"]
+  },
   "permissions": [
     "core:default",
     "os:default",

@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { cpSync, mkdirSync } from "node:fs";
+import { cpSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -14,6 +14,9 @@ try {
   console.log("🛠️ Building TanStack app...");
   execSync("bun run build", { stdio: "inherit" });
 
+  // Xóa toàn bộ thư mục server nếu tồn tại
+  rmSync(targetDir, { recursive: true, force: true })
+  
   // 2. Tạo thư mục bin/.output nếu chưa có
   mkdirSync(targetDir, { recursive: true });
 
@@ -22,8 +25,8 @@ try {
   cpSync(join(outputDir, "public"), join(targetDir, "public"), { recursive: true });
 
   // 4. Copy .output/server vào bin/.output/server
-  console.log("📦 Copying .output/server to bin/.output/server...");
-  cpSync(join(outputDir, "server"), join(targetDir, "server"), { recursive: true });
+  console.log("📦 Copying .output/server/chunks to bin/.output/server/chunks...");
+  cpSync(join(outputDir, "server", "chunks"), join(targetDir, "server", "chunks"), { recursive: true });
 
   // 5. Build node_server.exe với nexe
   console.log("🔨 Packing server with nexe (build mode)...");

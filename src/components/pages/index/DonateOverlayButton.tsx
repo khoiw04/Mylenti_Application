@@ -7,7 +7,7 @@ export default function DonateOverlayButton() {
         <ButtonFunction
             icon={<LucideBadgeTurkishLira />}
             description="Link Donate dùng để gắn lên Browser Source"
-            onClick={async () => await writeText('http://localhost:5173/runtime/obsdonate')}
+            onClick={async () => await writeText('http://localhost:3000/runtime/obsdonate')}
             title="Lấy Link Donate"
             align="start"
         />
