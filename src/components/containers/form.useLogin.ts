@@ -28,7 +28,7 @@ function useListenGoogleLoginOauth() {
 
             await Promise.all([
               cancel(port),
-              router.navigate({ to: '/main', reloadDocument: true })
+              router.navigate({ to: '/', reloadDocument: true })
             ])
           }
         })
@@ -44,7 +44,7 @@ export default function useLogInForm() {
   const { dimension } = useDimension()
   const mutation = createMutation(loginFn, {
     onSuccess() {
-      router.navigate({ to: '/main', reloadDocument: true })
+      router.navigate({ to: '/', reloadDocument: true })
       return 'Đã thắng Đăng nhập!'
     },
   })

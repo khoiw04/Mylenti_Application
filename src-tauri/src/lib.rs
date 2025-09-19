@@ -96,10 +96,10 @@ pub fn run() {
                 .join("bin")
                 .join("donate_voice.exe");
 
-            let node_exe_path = env::current_dir()
-                .unwrap()
-                .join("bin")
-                .join("node_server.exe");
+            // let node_exe_path = env::current_dir()
+            //     .unwrap()
+            //     .join("bin")
+            //     .join("node_server.exe");
 
             if !flask_exe_path.exists() {
                 log::error!(
@@ -109,21 +109,16 @@ pub fn run() {
                 return Ok(());
             }
 
-            if !node_exe_path.exists() {
-                log::error!(
-                    "❌ File node_server.exe không tồn tại tại: {}",
-                    node_exe_path.display()
-                );
-                return Ok(());
-            }
+            // if !node_exe_path.exists() {
+            //     log::error!(
+            //         "❌ File node_server.exe không tồn tại tại: {}",
+            //         node_exe_path.display()
+            //     );
+            //     return Ok(());
+            // }
 
-            Command::new(flask_exe_path)
-                .spawn()
-                .expect("❌ Không thể chạy donate_voice.exe");
-
-            // Command::new(node_exe_path)
-            //     .spawn()
-            //     .expect("❌ Không thể chạy node_server.exe");
+            Command::new(flask_exe_path).spawn().expect("❌ Không thể chạy donate_voice.exe");
+            // Command::new(node_exe_path).spawn().expect("❌ Không thể chạy node_server.exe");
 
             tauri::async_runtime::spawn(async move {
                 if let Err(e) = start_websocket_server().await {
@@ -140,26 +135,24 @@ pub fn run() {
                     }
                 }
 
-                for i in 1..=20 {
-                    if is_node_ready().await {
-                        log::info!("✅ Node server đã sẵn sàng sau {} lần thử", i);
+                // for i in 1..=20 {
+                //     if is_node_ready().await {
+                //         log::info!("✅ Node server đã sẵn sàng sau {} lần thử", i);
+                //         break;
+                //     }
+                //     log::info!("⏳ Đang chờ Node server... lần {}", i);
+                //     sleep(Duration::from_millis(500)).await;
+                // }
 
-                        if let Err(e) = WebviewWindowBuilder::new(
-                            &app_handle_for_window,
-                            "main".to_string(),
-                            WebviewUrl::External(frontend_url_clone),
-                        )
-                        .title("Localhost Mylenti")
-                        .build()
-                        {
-                            log::error!("❌ Lỗi tạo WebviewWindow: {}", e);
-                        }
-
-                        break;
-                    } else {
-                        log::info!("⏳ Đang chờ Node server... lần {}", i);
-                        sleep(Duration::from_millis(500)).await;
-                    }
+                if let Err(e) = WebviewWindowBuilder::new(
+                    &app_handle_for_window,
+                    "main".to_string(),
+                    WebviewUrl::External(frontend_url_clone),
+                )
+                .title("Localhost Mylenti")
+                .build()
+                {
+                    log::error!("❌ Lỗi tạo WebviewWindow: {}", e);
                 }
             });
 

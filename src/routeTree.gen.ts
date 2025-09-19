@@ -16,10 +16,10 @@ import { Route as QuenMatKhauRouteImport } from './routes/quen-mat-khau'
 import { Route as ObsOverlayRouteImport } from './routes/obs-overlay'
 import { Route as NhoMatKhauRouteImport } from './routes/nho-mat-khau'
 import { Route as NganHangRouteImport } from './routes/ngan-hang'
-import { Route as MainRouteImport } from './routes/main'
 import { Route as LyLichRouteImport } from './routes/ly-lich'
 import { Route as KhoiPhucRouteImport } from './routes/khoi-phuc'
 import { Route as KeToanRouteImport } from './routes/ke-toan'
+import { Route as DangNhapRouteImport } from './routes/dang-nhap'
 import { Route as DangKyRouteImport } from './routes/dang-ky'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
@@ -53,11 +53,6 @@ const NganHangRoute = NganHangRouteImport.update({
   path: '/ngan-hang',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MainRoute = MainRouteImport.update({
-  id: '/main',
-  path: '/main',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LyLichRoute = LyLichRouteImport.update({
   id: '/ly-lich',
   path: '/ly-lich',
@@ -71,6 +66,11 @@ const KhoiPhucRoute = KhoiPhucRouteImport.update({
 const KeToanRoute = KeToanRouteImport.update({
   id: '/ke-toan',
   path: '/ke-toan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DangNhapRoute = DangNhapRouteImport.update({
+  id: '/dang-nhap',
+  path: '/dang-nhap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DangKyRoute = DangKyRouteImport.update({
@@ -122,10 +122,10 @@ const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dang-ky': typeof DangKyRoute
+  '/dang-nhap': typeof DangNhapRoute
   '/ke-toan': typeof KeToanRoute
   '/khoi-phuc': typeof KhoiPhucRoute
   '/ly-lich': typeof LyLichRoute
-  '/main': typeof MainRoute
   '/ngan-hang': typeof NganHangRoute
   '/nho-mat-khau': typeof NhoMatKhauRoute
   '/obs-overlay': typeof ObsOverlayRoute
@@ -138,10 +138,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dang-ky': typeof DangKyRoute
+  '/dang-nhap': typeof DangNhapRoute
   '/ke-toan': typeof KeToanRoute
   '/khoi-phuc': typeof KhoiPhucRoute
   '/ly-lich': typeof LyLichRoute
-  '/main': typeof MainRoute
   '/ngan-hang': typeof NganHangRoute
   '/nho-mat-khau': typeof NhoMatKhauRoute
   '/obs-overlay': typeof ObsOverlayRoute
@@ -155,10 +155,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dang-ky': typeof DangKyRoute
+  '/dang-nhap': typeof DangNhapRoute
   '/ke-toan': typeof KeToanRoute
   '/khoi-phuc': typeof KhoiPhucRoute
   '/ly-lich': typeof LyLichRoute
-  '/main': typeof MainRoute
   '/ngan-hang': typeof NganHangRoute
   '/nho-mat-khau': typeof NhoMatKhauRoute
   '/obs-overlay': typeof ObsOverlayRoute
@@ -173,10 +173,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dang-ky'
+    | '/dang-nhap'
     | '/ke-toan'
     | '/khoi-phuc'
     | '/ly-lich'
-    | '/main'
     | '/ngan-hang'
     | '/nho-mat-khau'
     | '/obs-overlay'
@@ -189,10 +189,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dang-ky'
+    | '/dang-nhap'
     | '/ke-toan'
     | '/khoi-phuc'
     | '/ly-lich'
-    | '/main'
     | '/ngan-hang'
     | '/nho-mat-khau'
     | '/obs-overlay'
@@ -205,10 +205,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dang-ky'
+    | '/dang-nhap'
     | '/ke-toan'
     | '/khoi-phuc'
     | '/ly-lich'
-    | '/main'
     | '/ngan-hang'
     | '/nho-mat-khau'
     | '/obs-overlay'
@@ -222,10 +222,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DangKyRoute: typeof DangKyRoute
+  DangNhapRoute: typeof DangNhapRoute
   KeToanRoute: typeof KeToanRoute
   KhoiPhucRoute: typeof KhoiPhucRoute
   LyLichRoute: typeof LyLichRoute
-  MainRoute: typeof MainRoute
   NganHangRoute: typeof NganHangRoute
   NhoMatKhauRoute: typeof NhoMatKhauRoute
   ObsOverlayRoute: typeof ObsOverlayRoute
@@ -291,13 +291,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NganHangRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/main': {
-      id: '/main'
-      path: '/main'
-      fullPath: '/main'
-      preLoaderRoute: typeof MainRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/ly-lich': {
       id: '/ly-lich'
       path: '/ly-lich'
@@ -317,6 +310,13 @@ declare module '@tanstack/react-router' {
       path: '/ke-toan'
       fullPath: '/ke-toan'
       preLoaderRoute: typeof KeToanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dang-nhap': {
+      id: '/dang-nhap'
+      path: '/dang-nhap'
+      fullPath: '/dang-nhap'
+      preLoaderRoute: typeof DangNhapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dang-ky': {
@@ -385,10 +385,10 @@ declare module '@tanstack/react-start/server' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DangKyRoute: DangKyRoute,
+  DangNhapRoute: DangNhapRoute,
   KeToanRoute: KeToanRoute,
   KhoiPhucRoute: KhoiPhucRoute,
   LyLichRoute: LyLichRoute,
-  MainRoute: MainRoute,
   NganHangRoute: NganHangRoute,
   NhoMatKhauRoute: NhoMatKhauRoute,
   ObsOverlayRoute: ObsOverlayRoute,

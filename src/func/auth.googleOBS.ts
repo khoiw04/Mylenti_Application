@@ -132,7 +132,7 @@ export const exchangeCodeForGoogleOBSWebsite = async () => {
 export const exchangeCodeForGoogleOBSTauri = async (router: any) => {
   const code = new URLSearchParams(window.location.search).get('code')
   if (!code) {
-    router.navigate({ to: '/main' })
+    router.navigate({ to: '/' })
     return
   }
 
@@ -143,7 +143,7 @@ export const exchangeCodeForGoogleOBSTauri = async (router: any) => {
     const rawMessage = err?.message || 'Không xác định'
     const friendlyMessage = mapOAuthError(rawMessage)
     window.opener?.postMessage({ status: 'error', message: friendlyMessage }, window.location.origin)
-    router.navigate({ to: '/main' })
+    router.navigate({ to: '/' })
   } finally {
     router.navigate({ to: '/' })
   }

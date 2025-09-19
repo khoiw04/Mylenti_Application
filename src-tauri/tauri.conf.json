@@ -21,7 +21,8 @@
         "decorations": false,
         "devtools": true,
         "minWidth": 320,
-        "create": true
+        "create": true,
+        "hiddenTitle": true
       }
     ],
     "security": {

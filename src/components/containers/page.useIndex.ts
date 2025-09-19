@@ -2,15 +2,14 @@ import { useEffect, useMemo } from "react"
 import { toast } from "sonner";
 import { useStore } from "@tanstack/react-store";
 import { isTauri } from "@tauri-apps/api/core";
-import { redirect, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
 import { IndexStraregy } from "@/store"
 import { useDimension } from "@/hooks/useDimension";
 import { getYoutubeScopeWithURL } from "@/data";
-import { Route } from "@/routes/main";
+import { Route } from "@/routes";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
 
 function getGoogleOBSOauth() {
     const { x, y } = useDimension().dimension
@@ -86,7 +85,7 @@ function useOAuthGoogleTauri() {
             await getTokenGoogleOBS({ data: { code } }),
             await Promise.all([
                 cancel(port),
-                router.navigate({ to: '/main', reloadDocument: true })
+                router.navigate({ to: '/', reloadDocument: true })
             ])
         })
       })()

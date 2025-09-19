@@ -1,5 +1,5 @@
 export const navigationLinks = [
-  { href: "/main", label: "Giao diện" },
+  { href: "/", label: "Giao diện" },
   { href: "/obs-overlay", label: "OBS Cài đặt" },
 ] as const
 
@@ -15,7 +15,7 @@ export const searchGroups = [
     heading: "Hệ thống",
     items: [
       { value: "Giao dịch / Thống kê", href: "/ke-toan" },
-      { value: "Giao diện", href: "/main" },
+      { value: "Giao diện", href: "/" },
       { value: "OBS Overlay", href: "/obs-overlay" },
     ],
   },

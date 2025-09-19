@@ -52,6 +52,28 @@ jobs:
       - name: Run Python build script
         run: python src-tauri/python/build.py
 
+      - name: Rename Python binary
+        run: |
+          OS="${{ runner.os }}"
+          if [ "$OS" = "Windows" ]; then
+            mv bin/donate_voice.exe bin/donate_voice-x86_64-pc-windows-msvc.exe
+          elif [ "$OS" = "macOS" ]; then
+            mv bin/donate_voice bin/donate_voice-x86_64-apple-darwin
+          else
+            mv bin/donate_voice bin/donate_voice-x86_64-unknown-linux-gnu
+          fi
+
+      - name: Rename Node.js binary
+        run: |
+          OS="${{ runner.os }}"
+          if [ "$OS" = "Windows" ]; then
+            mv bin/node_server.exe bin/node_server-x86_64-pc-windows-msvc.exe
+          elif [ "$OS" = "macOS" ]; then
+            mv bin/node_server bin/node_server-x86_64-apple-darwin
+          else
+            mv bin/node_server bin/node_server-x86_64-unknown-linux-gnu
+          fi
+
       - name: Install Tauri CLI
         run: bun add -d @tauri-apps/cli
 
@@ -79,7 +101,8 @@ jobs:
             src-tauri/target/release/bundle/**/*.rpm
             src-tauri/target/release/bundle/**/*.dmg
             src-tauri/target/release/bundle/**/*.sig
-            src-tauri/bin/donate_voice.exe
+            bin/donate_voice-*
+            bin/node_server-*
             checksums/sha256-${{ runner.os }}.txt
 
   release:

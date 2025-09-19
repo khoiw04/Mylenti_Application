@@ -127,7 +127,7 @@ export default function SettingApp() {
             <SidebarInset className="relative">
                     <div className="flex flex-row gap-2 items-center mt-4 ml-4">
                         <ThemeSwitcher onChange={setTheme} value={theme ?? 'light'} defaultValue={theme ?? 'light'} />
-                        <SidebarTrigger className="px-3 py-2 bg-gray-100 dark:bg-gray-900 rounded">
+                        <SidebarTrigger className="px-3 py-2 bg-gray-100 dark:bg-neutral-900 rounded">
                             Mở menu
                         </SidebarTrigger>
                     </div>

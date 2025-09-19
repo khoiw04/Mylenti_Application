@@ -16,7 +16,7 @@ export default function Main() {
         <div className="flex flex-1 items-center gap-2">
             <Burger />
           <div className="flex items-center">
-            <Link to='/main' className="text-primary hover:text-primary/90">
+            <Link to='/' className="text-primary hover:text-primary/90">
               <Logo />
             </Link>
           </div>

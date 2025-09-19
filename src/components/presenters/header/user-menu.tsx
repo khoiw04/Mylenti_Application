@@ -2,6 +2,7 @@ import {
   BookOpenIcon,
   CircleUser,
   LandmarkIcon,
+  LogInIcon,
   LogOutIcon,
   LucideWrench,
   UserPenIcon 
@@ -32,7 +33,7 @@ import useLogOut from "@/components/containers/db.useLogOut"
 export default function UserMenu() {
   const router = useRouter()
   const { handleLogOut } = useLogOut()
-  const { display_avatar, display_name, email } = useAuthInfoExternalStore()
+  const { isAuthenticated, display_avatar, display_name, email } = useAuthInfoExternalStore()
 
   return (
     <Dialog>
@@ -53,15 +54,19 @@ export default function UserMenu() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="max-w-64" align="end">
-          <DropdownMenuLabel className="flex min-w-0 flex-col">
-            <span className="text-foreground truncate text-sm font-medium">
-              {display_name}
-            </span>
-            <span className="text-muted-foreground truncate text-xs font-normal">
-              {email}
-            </span>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          {isAuthenticated &&
+          <>
+            <DropdownMenuLabel className="flex min-w-0 flex-col">
+              <span className="text-foreground truncate text-sm font-medium">
+                {display_name}
+              </span>
+              <span className="text-muted-foreground truncate text-xs font-normal">
+                {email}
+              </span>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+          }
           <DropdownMenuGroup>
             <DropdownMenuItem onClick={() => router.navigate({ to: '/ly-lich' })}>
               <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
@@ -84,10 +89,17 @@ export default function UserMenu() {
                 <span>Cài đặt</span>
               </DropdownMenuItem>
             </DialogTrigger>
+          {isAuthenticated ?
           <DropdownMenuItem onClick={async () => await handleLogOut()}>
-            <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
+            <LogInIcon size={16} className="opacity-60" aria-hidden="true" />
             <span>Đăng xuất</span>
           </DropdownMenuItem>
+          :
+          <DropdownMenuItem onClick={() => router.navigate({ to: '/dang-nhap' })}>
+            <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
+            <span>Đăng Nhập</span>
+          </DropdownMenuItem>
+          }
         </DropdownMenuContent>
       </DropdownMenu>
       <DialogContent className="sm:max-w-[800px] sm:max-h-[700px] overflow-clip p-0">
