@@ -3,10 +3,10 @@ import { useEffect } from 'react'
 import { isTauri } from '@tauri-apps/api/core'
 import { LoaderCircleIcon } from "lucide-react"
 import { toast } from 'sonner'
-import { exchangeCodeInClient } from '@/func/auth.Oauth'
+import { exchangeCodeInClient } from '@/func/auth.SupabaseOauth'
 import { Skeleton } from '@/components/ui/skeleton'
 import Turtle from '@/components/pages/auth.callback/turtle'
-import { getUser } from '@/func/auth.User'
+import { getUser } from '@/func/auth.SupabaseUser'
 
 export const Route = createFileRoute('/auth/callback')({
   component: RouteComponent

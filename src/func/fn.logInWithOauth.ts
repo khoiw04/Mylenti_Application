@@ -1,7 +1,7 @@
 import { toast } from "sonner"
 import { isTauri } from "@tauri-apps/api/core"
-import { getUser } from "./auth.User"
-import { signInWithOauth } from "./auth.Oauth"
+import { getUser } from "./auth.SupabaseUser"
+import { signInWithOauth } from "./auth.SupabaseOauth"
 import { logInWithOauthStrategy } from "./fn.stragery"
 import type { OauthProps } from "@/types"
 

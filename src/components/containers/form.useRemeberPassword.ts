@@ -2,7 +2,7 @@ import { useRouter } from "@tanstack/react-router"
 import { createMutation } from "../../hooks/createMutations"
 import { useAppForm } from "../../hooks/useFormHook"
 import { forgetPassFn } from "@/func/auth.ForgetPasword"
-import { exchangeCodeInClient } from "@/func/auth.Oauth"
+import { exchangeCodeInClient } from "@/func/auth.SupabaseOauth"
 import { ResetPassSchema } from "@/schema"
 
 export default function useRemeberPassword() {

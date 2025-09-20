@@ -4,7 +4,7 @@ import { FormFrame } from '@/components/ui/frame'
 import { LogoForm } from '@/components/presenters/form'
 import { BankForm } from '@/components/pages/community.ngan-hang'
 import useCommunityBank from '@/components/containers/page.useCommunityBank'
-import DiscordOAuthButton from '@/components/pages/community.ly-lich/DiscordOauthButton'
+import DiscordOAuthButton from '@/components/pages/community.ly-lich/DiscordOAuthButton'
 import { useDiscordCommunityUser } from '@/lib/queries'
 
 export const Route = createFileRoute('/community/ngan-hang')({

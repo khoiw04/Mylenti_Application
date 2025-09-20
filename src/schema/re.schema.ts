@@ -49,7 +49,7 @@ export const nameSchema = z.string().min(1, 'Tên không được để trống'
 
 export const passwordSchema = z.string().min(4, 'Mật khẩu phải trên 4 kí tự')
 
-export const emailSchema = z.string().email('Email không hợp lệ')
+export const emailSchema = z.email('Email không hợp lệ')
 
 export const priceSchema = z
   .string()

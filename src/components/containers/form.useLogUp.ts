@@ -1,7 +1,7 @@
 import { useAppForm } from "../../hooks/useFormHook";
 import { createMutation } from "../../hooks/createMutations";
 import { LogUpSchema } from "@/schema";
-import { signupFn } from "@/func/auth.Log";
+import { signupFn } from "@/func/auth.SupabaseLog";
 
 export default function useLogUpForm() {
   const mutation = createMutation(signupFn, {

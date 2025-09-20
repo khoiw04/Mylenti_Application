@@ -5,7 +5,7 @@ import { createMutation } from "../../hooks/createMutations"
 import { updateUserSchema } from "@/schema"
 import { authInfoStore, avatarStore } from "@/store"
 import { publishImage } from "@/components/containers/db.usePublishImage"
-import { updateUser } from "@/func/auth.UpdateInfo"
+import { updateUser } from "@/func/db.SupabaseUpdateInfo"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 
 export default function useProfileForm() {

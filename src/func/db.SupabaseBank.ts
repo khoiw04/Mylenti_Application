@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start"
-import type { bankSchemaType } from "@/types"
+import type { bankSupabaseSchemaType } from "@/types"
 import { getSupabaseServerClient } from "@/lib/supabaseServer"
 
 export const handleSupabaseBanks = createServerFn()
-  .validator((d: bankSchemaType) => d)
+  .validator((d: bankSupabaseSchemaType) => d)
   .handler(async ({ data: { full_name, api_key, user_name, email, bank, number } }) => {
     const supabase = getSupabaseServerClient()
     const { data: { user }, error: errorUser }  = await supabase.auth.getUser()

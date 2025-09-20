@@ -2,7 +2,7 @@ import { useServerFn } from "@tanstack/react-start"
 import { useRouter } from "@tanstack/react-router"
 import { useQueryClient } from "@tanstack/react-query"
 import { createMutation } from "@/hooks/createMutations"
-import { updateUser } from "@/func/auth.UpdateInfo"
+import { updateUser } from "@/func/db.SupabaseUpdateInfo"
 import { authQueries, profileQueries } from "@/lib/queries"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 

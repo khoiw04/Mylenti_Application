@@ -1,28 +1,42 @@
-import { createMutation } from "@/hooks/createMutations";
 import { useAppForm } from "@/hooks/useFormHook";
-import { handleSupabaseBanks } from "@/func/db.SupabaseBank";
-import { bankSchema } from "@/schema";
-import { useDiscordCommunityUser } from "@/lib/queries";
+import { bankDiscordSchema } from "@/schema";
+import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
+import { upsertDiscordUser } from "@/data/discord.sqlite";
+import { createMutation } from "@/hooks/createMutations";
 
 export default function useBankForm() {
-    const { meta } = useDiscordCommunityUser().data
+    const { data: meta, avatar } = useSQLiteDiscordInfo()
 
-    const mutation = createMutation(handleSupabaseBanks, {
-        successMessage: 'Đã nhập thông tin'
+    const mutation = createMutation(async (value: {
+        full_name: string,
+        api_key: string,
+        number: string,
+        bank: string,
+    }) => {
+        await upsertDiscordUser({
+            id: meta.id,
+            name: meta.name,
+            email: meta.email,
+            full_name: value.full_name,
+            user_name: meta.user_name,
+            api_key: value.api_key,
+            number: value.number,
+            bank: value.bank
+        })
+    }, {
+        successMessage: 'Đã Cập Nhật'
     })
 
     const form = useAppForm({
         defaultValues: {
-            api_key: '',
-            number: '',
-            full_name: '',
-            bank: '',
-            email: meta.email,
-            user_name: meta.username
+            api_key: meta.api_key ?? '',
+            number: meta.number ?? '',
+            full_name: meta.full_name ?? '',
+            bank: meta.bank ?? '',
         },
-        validators: { onSubmit: bankSchema },
-        onSubmit({ value }) { mutation.mutate({ data: value }) }
+        validators: { onSubmit: bankDiscordSchema },
+        onSubmit: async ({ value }) => await mutation.mutateAsync(value)
     })
 
-    return { form, meta }
+    return { form, meta, avatar }
 }

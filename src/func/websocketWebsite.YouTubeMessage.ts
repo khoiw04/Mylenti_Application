@@ -1,5 +1,5 @@
 import type { YouTubeMessage } from "@/types"
-import { chatWebsiteMessageCollection } from "@/data/db.YouTubeChatCollections"
+import { chatWebsiteMessageCollection } from "@/data/db.YoutubeLiveChatCollections"
 
 export default function WebSocketYouTubeMessage(
     data: YouTubeMessage['data']

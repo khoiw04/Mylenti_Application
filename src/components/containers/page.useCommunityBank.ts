@@ -1,6 +1,5 @@
 import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
 import { useRouter } from "@tanstack/react-router";
-import { useStore } from '@tanstack/react-store';
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { isTauri } from '@tauri-apps/api/core';
@@ -35,34 +34,6 @@ function getDiscordOauth() {
         onDiscordLogOutClick: async () => await clearDiscordCookies()
     }), [])
     DiscordStraregy.setState((prev) => ({...prev, ...props}))
-}
-
-function isJoinOAuthDiscord() {
-    const { onFinishDiscordOAuth } = useStore(DiscordStraregy)
-    const { isAuthenticated } = useDiscordCommunityUser().data
-    useEffect(() => {isAuthenticated && onFinishDiscordOAuth()}, [isAuthenticated])
-}
-
-function handleOAuthMessage() {
-    const { onFinishDiscordOAuth } = useStore(DiscordStraregy)
-    useEffect(() => {
-        function message(event: MessageEvent) {
-            if (event.origin !== window.location.origin) return
-
-            if (event.data.status === 'success') {
-                toast.success('Đã thắng Đăng Nhập!')
-                onFinishDiscordOAuth()
-                return
-            }
-
-            if (event.data.status === 'error') {
-                toast.error(`Đăng nhập Thất bại: ${event.data.message}`)
-                return
-            }
-        }
-        window.addEventListener('message', message)
-        return () => window.removeEventListener('message', message)
-    }, [])
 }
 
 function useOAuthDiscordTauri() {
@@ -111,7 +82,5 @@ function useOAuthDiscordTauri() {
 
 export default function useCommunityBank() {
     getDiscordOauth()
-    isJoinOAuthDiscord()
-    handleOAuthMessage()
     useOAuthDiscordTauri()
 }

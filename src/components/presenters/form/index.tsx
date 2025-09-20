@@ -185,7 +185,7 @@ const FieldErrors = ({ meta }: { meta?: AnyFieldMeta }) => {
       {meta.errors.map(({ message }, index) => (
         <p
           key={`message_${index}`}
-          className="relative z-0 text-sm translate-y-1 text-paragraph-smaller font-medium text-left text-red-400 text-shadow-transparent"
+          className="relative z-0 text-wrap w-fit text-sm translate-y-1 text-paragraph-smaller font-medium text-left text-red-400 text-shadow-transparent"
         >
           {message}
         </p>

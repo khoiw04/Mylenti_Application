@@ -5,10 +5,10 @@ import { toast } from "sonner";
 import { useAppForm } from "@/hooks/useFormHook";
 import { createMutation } from "@/hooks/createMutations";
 import { LogInSchema } from "@/schema";
-import { loginFn } from "@/func/auth.Log";
+import { loginFn } from "@/func/auth.SupabaseLog";
 import { logInWithOauth } from "@/func/fn.logInWithOauth";
 import { useDimension } from "@/hooks/useDimension";
-import { exchangeCodeForSession } from "@/func/auth.Oauth";
+import { exchangeCodeForSession } from "@/func/auth.SupabaseOauth";
 
 function useListenGoogleLoginOauth() {
   const router = useRouter()

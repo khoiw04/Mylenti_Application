@@ -8,7 +8,7 @@ export function BankForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-    const { form, meta } = useCommunityBankForm()
+    const { form, avatar } = useCommunityBankForm()
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -21,7 +21,7 @@ export function BankForm({
                     }}
                 >
                     <div className="grid gap-6">
-                        <AvatarProfile url={meta.avatar} />
+                        <AvatarProfile url={avatar} />
                         <div className="grid gap-6">
                             <div className="grid gap-3">
                                 <form.AppField

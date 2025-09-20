@@ -1,18 +1,13 @@
-
-import { useRouter } from "@tanstack/react-router"
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import useCommunityProfileForm from "@/components/containers/form.useCommunityProfile"
 import { AvatarProfile } from "@/components/presenters/user"
-import { Button } from "@/components/ui/button"
-import { clearDiscordCookies } from "@/func/auth.discord"
 
 export function ProfileForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter()
-  const { form, meta } = useCommunityProfileForm()
+  const { form, avatar } = useCommunityProfileForm()
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -25,7 +20,7 @@ export function ProfileForm({
             }}
           >
             <div className="grid gap-6">
-              <AvatarProfile url={meta.avatar} />
+              <AvatarProfile url={avatar} />
               <div className="grid gap-6">
                 <div className="grid gap-3">
                   <form.AppField
@@ -81,18 +76,6 @@ export function ProfileForm({
                       Cập nhật
                     </form.ButtonSubmit>
                   </form.AppForm>
-                  <Button 
-                    type="button"
-                    className="w-full"
-                    onClick={
-                      async () => {
-                        await clearDiscordCookies()
-                        await router.navigate({ to: '/community/ly-lich', reloadDocument: true })
-                      }
-                    }
-                  >
-                    Đăng Xuất
-                  </Button>
                 </div>
               </div>
             </div>

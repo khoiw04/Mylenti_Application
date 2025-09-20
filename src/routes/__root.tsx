@@ -60,17 +60,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   },
   loader: async ({ context, location }) => {
     const isAuthenticated = context.authState.isAuthenticated
-    const user_name = context.authState.user.meta.user_name
+    const user_name_supabase = context.authState.user.meta.user_name
 
     const isOnInfoPage = location.pathname === '/khoi-phuc';
 
-    if (isAuthenticated && !user_name && !isOnInfoPage) {
+    if (isAuthenticated && !user_name_supabase && !isOnInfoPage) {
       throw redirect({ to: '/khoi-phuc' });
     }
 
     if (isAuthenticated) {
       const profile_db = await context.queryClient.ensureQueryData(
-        profileQueries.user(user_name)
+        profileQueries.user(user_name_supabase)
       )
 
       return { profile_db }

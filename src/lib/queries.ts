@@ -1,9 +1,10 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import type { UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
-import { getBankDatabase, getDonateDatabase } from "@/func/auth.Info";
-import { getProfile } from "@/func/auth.Profile";
-import { getUser } from "@/func/auth.User";
+import { getBankDatabase, getDonateDatabase } from "@/func/db.SupabaseInfo";
+import { getProfile } from "@/func/db.SupabaseProfile";
+import { getUser } from "@/func/auth.SupabaseUser";
 import { getDiscordUserInfo } from "@/func/auth.discord";
+import { getDiscordProfile } from "@/func/db.DiscordSQLite";
 
 export const bankQueries = {
     all: ['bank'],
@@ -29,7 +30,12 @@ export const profileQueries = {
         queryOptions({
             queryKey: [...profileQueries.all],
             queryFn: () => getProfile({ data: { user_name } })
-        })
+        }),
+    discord: (user_name: string) =>
+        queryOptions({
+            queryKey: [...profileQueries.all, 'discord', user_name],
+            queryFn: () => getDiscordProfile(user_name)
+        }),
 }
 
 export const authQueries = {

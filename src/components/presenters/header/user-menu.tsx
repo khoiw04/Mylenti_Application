@@ -29,28 +29,40 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import useLogOut from "@/components/containers/db.useLogOut"
+import { useDiscordCommunityUser } from "@/lib/queries"
+import { addAtPrefix } from "@/lib/utils"
 
 export default function UserMenu() {
   const router = useRouter()
   const { handleLogOut } = useLogOut()
   const { isAuthenticated, display_avatar, display_name, email } = useAuthInfoExternalStore()
+  const DiscordUser = useDiscordCommunityUser().data
 
   return (
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-auto z-50 p-0 hover:bg-transparent">
-            {display_avatar === '' ?
-              <div className="bg_icon_header">
-                <CircleUser className="icon_header" />
-              </div> :
-              <Avatar>
-                <AvatarImage src={display_avatar} />
-                <AvatarFallback>
-                  <Skeleton className="size-full" />
-                </AvatarFallback>
-              </Avatar>
-            }
+          <Avatar>
+            <AvatarImage
+              src={
+                display_avatar !== ''
+                  ? display_avatar
+                  : DiscordUser.meta.avatar !== ''
+                  ? DiscordUser.meta.avatar
+                  : undefined
+              }
+            />
+            <AvatarFallback>
+              {display_avatar === '' && DiscordUser.meta.avatar === '' ? (
+                <div className="bg_icon_header">
+                  <CircleUser className="icon_header" />
+                </div>
+              ) : (
+                <Skeleton className="size-full" />
+              )}
+            </AvatarFallback>
+          </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="max-w-64" align="end">
@@ -62,6 +74,19 @@ export default function UserMenu() {
               </span>
               <span className="text-muted-foreground truncate text-xs font-normal">
                 {email}
+              </span>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+          }
+          {DiscordUser.isAuthenticated &&
+          <>
+            <DropdownMenuLabel className="flex min-w-0 flex-col">
+              <span className="text-foreground truncate text-sm font-medium">
+                {addAtPrefix(DiscordUser.meta.username)}
+              </span>
+              <span className="text-muted-foreground truncate text-xs font-normal">
+                {DiscordUser.meta.email}
               </span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -89,7 +114,7 @@ export default function UserMenu() {
                 <span>Cài đặt</span>
               </DropdownMenuItem>
             </DialogTrigger>
-          {isAuthenticated ?
+          {DiscordUser.isAuthenticated || isAuthenticated ?
           <DropdownMenuItem onClick={async () => await handleLogOut()}>
             <LogInIcon size={16} className="opacity-60" aria-hidden="true" />
             <span>Đăng xuất</span>

@@ -3,7 +3,7 @@ import { Route } from "@/routes/ngan-hang"
 import { createMutation } from "@/hooks/createMutations";
 import { useAppForm } from "@/hooks/useFormHook";
 import { handleSupabaseBanks } from "@/func/db.SupabaseBank";
-import { bankSchema } from "@/schema";
+import { bankSupabaseSchema } from "@/schema";
 import { BankDisplayInfo } from "@/data/bank";
 import { bankPropsStore } from "@/store";
 import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo";
@@ -27,7 +27,7 @@ export default function useBankForm() {
             email: authInfo.email,
             user_name: authInfo.currentUser
         },
-        validators: { onSubmit: bankSchema },
+        validators: { onSubmit: bankSupabaseSchema },
         onSubmit({ value }) { mutation.mutate({ data: value }) }
     })
 

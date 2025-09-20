@@ -46,3 +46,4 @@ export type AuthDiscordState =
       isAuthenticated: false
       meta: DiscordUser
     }
+

@@ -1,9 +1,9 @@
 use crate::websocket::start_websocket_server;
-use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
 use std::{env, process::Command, time::Duration};
+use tauri::Manager;
+use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
 use tauri_plugin_http::reqwest::Client;
 use tokio::time::sleep;
-use tauri::Manager;
 use url::Url;
 
 mod update;
@@ -21,11 +21,7 @@ async fn is_flask_ready() -> bool {
 }
 
 async fn is_node_ready() -> bool {
-    match Client::new()
-        .get("http://127.0.0.1:3000")
-        .send()
-        .await
-    {
+    match Client::new().get("http://127.0.0.1:3000").send().await {
         Ok(res) => res.status().is_success(),
         Err(_) => false,
     }
@@ -37,7 +33,13 @@ fn ping() -> String {
 }
 
 #[tauri::command]
-fn log_frontend(level: String, message: String, source: Option<String>, lineno: Option<u32>, colno: Option<u32>) {
+fn log_frontend(
+    level: String,
+    message: String,
+    source: Option<String>,
+    lineno: Option<u32>,
+    colno: Option<u32>,
+) {
     let prefix = match level.as_str() {
         "error" => "🚨 ERROR",
         "warn" => "⚠️ WARN",
@@ -51,13 +53,13 @@ fn log_frontend(level: String, message: String, source: Option<String>, lineno: 
     );
 }
 
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let port: u16 = 3000;
     let frontend_url: Url = format!("http://localhost:{}", port).parse().unwrap();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_sql::Builder::new().build())
         .plugin(
             tauri_plugin_log::Builder::new()
                 .level(log::LevelFilter::Info)
@@ -117,7 +119,9 @@ pub fn run() {
             //     return Ok(());
             // }
 
-            Command::new(flask_exe_path).spawn().expect("❌ Không thể chạy donate_voice.exe");
+            Command::new(flask_exe_path)
+                .spawn()
+                .expect("❌ Không thể chạy donate_voice.exe");
             // Command::new(node_exe_path).spawn().expect("❌ Không thể chạy node_server.exe");
 
             tauri::async_runtime::spawn(async move {
