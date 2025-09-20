@@ -29,7 +29,8 @@ export default function useCommunityProfileForm() {
       user_name: meta.user_name,
       youtube: value.full_name,
       facebook: value.facebook,
-      x: value.x,
+      avatar: avatar,
+      x: value.x
     })
   }, {
     successMessage: 'Đã Cập Nhật'

@@ -139,10 +139,10 @@ pub fn run() {
                 .join("bin")
                 .join("cloudflared.exe");
 
-            // let node_exe_path = env::current_dir()
-            //     .unwrap()
-            //     .join("bin")
-            //     .join("node_server.exe");
+            let node_exe_path = env::current_dir()
+                .unwrap()
+                .join("bin")
+                .join("node_server.exe");
 
             start_process(&flask_exe_path, "donate_voice.exe");
             // start_process(&cloudflared_exe_path, "cloudflared.exe");
@@ -164,24 +164,14 @@ pub fn run() {
             tauri::async_runtime::spawn(async move {
                 log::info!("🚀 Bắt đầu async block trong setup");
 
-                let pool = match SqlitePool::connect(&db_url).await {
-                    Ok(p) => {
-                        log::info!("✅ Đã kết nối SQLite thành công");
-                        p
-                    }
-                    Err(e) => {
-                        log::error!("❌ Không thể kết nối SQLite: {:?}", e);
-                        return;
-                    }
-                };
-
-                if let Err(e) = sqlx::migrate!().run(&pool).await {
-                    log::error!("❌ Lỗi khi chạy migration: {:?}", e);
-                } else {
-                    log::info!("📦 Migration đã chạy thành công");
-                }
-
-                let pool = Arc::new(pool);
+                let pool = Arc::new(
+                    SqlitePool::connect(&db_url)
+                        .await
+                        .unwrap_or_else(|e| {
+                            log::error!("❌ Không thể kết nối SQLite: {:?}", e);
+                            panic!("Dừng ứng dụng vì không thể kết nối DB");
+                        }),
+                );
 
                 tokio::spawn({
                     let donate_pool = Arc::clone(&pool);

@@ -6,5 +6,14 @@ export const APPCONFIG = {
     TOKEN: {
         ACCESS_DISCORD: 'discordAccessToken',
         REFRESH_DISCORD: 'discordRefreshToken',
+    },
+    SNAKE: {
+        4455: 'WEBSOCKET',
+        8080: 'WEBHOOK',
+        3000: 'MAIN',
+        4545: 'TTS'
+    },
+    NOTE: {
+        CLOUDFLARE_TUNNEL: 'cloudflared tunnel --url http://localhost:8080'
     }
 } as const

@@ -6,7 +6,7 @@ use axum::{
     Json, Router,
 };
 use lazy_static::lazy_static;
-use serde::Serialize;
+use serde::{Serialize};
 use sqlx::{Row, SqlitePool};
 use std::{
     sync::{Arc, Mutex},
@@ -19,7 +19,7 @@ lazy_static! {
     static ref CONNECTION_COUNT: Arc<Mutex<u64>> = Arc::new(Mutex::new(0));
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 struct UserData {
     id: String,
     name: String,
@@ -32,16 +32,21 @@ struct UserData {
     youtube: Option<String>,
     facebook: Option<String>,
     x: Option<String>,
+    avatar: Option<String>,
 }
 
 #[derive(Serialize)]
-struct Donation {
+struct DonationPreview {
     code: String,
     display_name: String,
+    display_avatar: String,
+    user_name: String,
+    receiver: String,
     message: String,
     transfer_amount: i64,
-    timestamp: Option<String>,
+    created_at: String,
 }
+
 
 async fn health_handler(State(pool): State<SqlitePool>) -> impl IntoResponse {
     let uptime = SERVER_START.elapsed().as_secs();
@@ -83,6 +88,7 @@ async fn user_handler(Path(user_name): Path<String>, State(pool): State<SqlitePo
                 youtube: row.try_get("youtube").ok(),
                 facebook: row.try_get("facebook").ok(),
                 x: row.try_get("x").ok(),
+                avatar: row.try_get("avatar").ok(),
             };
 
             (StatusCode::OK, Json(data)).into_response()
@@ -105,20 +111,34 @@ async fn donations_handler(Path(user_name): Path<String>, State(pool): State<Sql
     let _ = CONNECTION_COUNT.lock().map(|mut c| *c += 1);
 
     match sqlx::query(
-        "SELECT code, display_name, message, transfer_amount, timestamp \
-         FROM donate_events WHERE user_name = ? ORDER BY timestamp DESC"
+        "SELECT code, display_name, user_name, receiver, message, transfer_amount, created_at \
+         FROM donate_events WHERE user_name = ? ORDER BY created_at DESC"
     )
     .bind(&user_name)
     .fetch_all(&pool)
     .await
     {
         Ok(rows) => {
-            let data: Vec<Donation> = rows.into_iter().map(|row| Donation {
-                code: row.try_get("code").unwrap_or_default(),
-                display_name: row.try_get("display_name").unwrap_or_default(),
-                message: row.try_get("message").unwrap_or_default(),
-                transfer_amount: row.try_get("transfer_amount").unwrap_or(0),
-                timestamp: row.try_get("timestamp").ok(),
+            let data: Vec<DonationPreview> = rows.into_iter().map(|row| {
+                let code = row.try_get::<String, _>("code").unwrap_or_default();
+                let display_name = row.try_get::<String, _>("display_name").unwrap_or_default();
+                let user_name = row.try_get::<String, _>("user_name").unwrap_or_default();
+                let receiver = row.try_get::<String, _>("receiver").unwrap_or_default();
+                let message = row.try_get::<String, _>("message").unwrap_or_default();
+                let transfer_amount = row.try_get::<i64, _>("transfer_amount").unwrap_or(0);
+                let created_at = row.try_get::<String, _>("created_at").unwrap_or_default();
+                let display_avatar = row.try_get::<String, _>("display_avatar").unwrap_or_default();
+
+                DonationPreview {
+                    code,
+                    display_name,
+                    display_avatar,
+                    user_name,
+                    receiver,
+                    message,
+                    transfer_amount,
+                    created_at,
+                }
             }).collect();
 
             (StatusCode::OK, Json(data)).into_response()

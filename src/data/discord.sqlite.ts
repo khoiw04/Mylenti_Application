@@ -24,7 +24,8 @@ export async function initDiscordUserTable() {
       bank TEXT,
       youtube TEXT,
       facebook TEXT,
-      x TEXT
+      x TEXT,
+      avatar TEXT
     )
   `)
 }
@@ -32,10 +33,11 @@ export async function initDiscordUserTable() {
 export async function insertDiscordUser(user: SQLiteDiscordUser) {
   const db = await getDB()
   await initDiscordUserTable()
+  await ensureAvatarColumnExists()
   await db.execute(`
     INSERT OR IGNORE INTO users (
-      id, name, user_name, email, api_key, number, full_name, bank, youtube, facebook, x
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      id, name, user_name, email, api_key, number, full_name, bank, youtube, facebook, x, avatar
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `, [
     user.id,
     user.name,
@@ -47,7 +49,8 @@ export async function insertDiscordUser(user: SQLiteDiscordUser) {
     user.bank ?? '',
     user.youtube ?? '',
     user.facebook ?? '',
-    user.x ?? ''
+    user.x ?? '',
+    user.avatar ?? ''
   ])
 }
 
@@ -78,10 +81,11 @@ export async function getAllDiscordUsers<T extends Partial<SQLiteDiscordUser>>(
 export async function upsertDiscordUser(user: SQLiteDiscordUser) {
   const db = await getDB()
   await initDiscordUserTable()
+  await ensureAvatarColumnExists()
   await db.execute(`
     INSERT INTO users (
-      id, name, user_name, email, api_key, number, full_name, bank, youtube, facebook, x
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      id, name, user_name, email, api_key, number, full_name, bank, youtube, facebook, x, avatar
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       name = excluded.name,
       user_name = excluded.user_name,
@@ -92,7 +96,8 @@ export async function upsertDiscordUser(user: SQLiteDiscordUser) {
       bank = excluded.bank,
       youtube = excluded.youtube,
       facebook = excluded.facebook,
-      x = excluded.x
+      x = excluded.x,
+      avatar = excluded.avatar
   `, [
     user.id,
     user.name,
@@ -104,7 +109,8 @@ export async function upsertDiscordUser(user: SQLiteDiscordUser) {
     user.bank ?? '',
     user.youtube ?? '',
     user.facebook ?? '',
-    user.x ?? ''
+    user.x ?? '',
+    user.avatar ?? ''
   ])
 }
 
@@ -113,7 +119,7 @@ export async function updateDiscordUser(user: SQLiteDiscordUser) {
   await initDiscordUserTable()
   await db.execute(`
     UPDATE users SET
-      name = ?, user_name = ?, email = ?, api_key = ?, number = ?, full_name = ?, bank = ?, youtube = ?, facebook = ?, x = ?
+      name = ?, user_name = ?, email = ?, api_key = ?, number = ?, full_name = ?, bank = ?, youtube = ?, facebook = ?, x = ?, avatar = ?
     WHERE id = ?
   `, [
     user.name,
@@ -126,8 +132,26 @@ export async function updateDiscordUser(user: SQLiteDiscordUser) {
     user.youtube ?? '',
     user.facebook ?? '',
     user.x ?? '',
+    user.avatar ?? '',
     user.id
   ])
+}
+
+export async function ensureAvatarColumnExists() {
+  const db = await getDB();
+
+  const columns = await db.select<Array<{ name: string }>>(
+    `PRAGMA table_info(users)`
+  );
+
+  const hasAvatar = columns.some(col => col.name === 'avatar');
+
+  if (!hasAvatar) {
+    await db.execute(`ALTER TABLE users ADD COLUMN avatar TEXT`);
+    console.log('✅ Đã thêm cột avatar vào bảng users');
+  } else {
+    console.log('ℹ️ Cột avatar đã tồn tại');
+  }
 }
 
 export const fallbackData = {
@@ -141,5 +165,6 @@ export const fallbackData = {
   bank: '',
   youtube: '',
   facebook: '',
-  x: ''
+  x: '',
+  avatar: ''
 } as SQLiteDiscordUser

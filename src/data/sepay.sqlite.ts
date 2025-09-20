@@ -8,6 +8,7 @@ export async function initSepayDonateTable() {
       code TEXT PRIMARY KEY,
       email TEXT,
       display_name TEXT,
+      display_avatar TEXT,
       user_name TEXT,
       message TEXT,
       receiver TEXT,
@@ -49,6 +50,7 @@ export async function initWebhookLogTable() {
 export async function insertSepayDonateTable(tx: WebhookSepaySchemaType & {
   email?: string
   display_name?: string
+  display_avatar?: string
   user_name?: string
   message?: string
   receiver?: string
@@ -59,7 +61,7 @@ export async function insertSepayDonateTable(tx: WebhookSepaySchemaType & {
 
   await db.execute(
     `INSERT OR IGNORE INTO donate_events (
-      code, email, display_name, user_name, message, receiver,
+      code, email, display_name, display_avatar, user_name, message, receiver,
       id_transaction, gateway, transaction_date, account_number, content,
       transfer_type, transfer_amount, accumulated, sub_account,
       reference_code, description, status
@@ -68,6 +70,7 @@ export async function insertSepayDonateTable(tx: WebhookSepaySchemaType & {
       tx.code,
       tx.email ?? '',
       tx.display_name ?? '',
+      tx.display_avatar ?? '',
       tx.user_name ?? '',
       tx.message ?? '',
       tx.receiver ?? '',
@@ -90,6 +93,7 @@ export async function insertSepayDonateTable(tx: WebhookSepaySchemaType & {
 export async function upsertSepayDonateTable(tx: WebhookSepaySchemaType & {
   email?: string
   display_name?: string
+  display_avatar?: string
   user_name?: string
   message?: string
   receiver?: string
@@ -100,7 +104,7 @@ export async function upsertSepayDonateTable(tx: WebhookSepaySchemaType & {
 
   await db.execute(
     `INSERT INTO donate_events (
-      code, email, display_name, user_name, message, receiver,
+      code, email, display_name, display_avatar, user_name, message, receiver,
       id_transaction, gateway, transaction_date, account_number, content,
       transfer_type, transfer_amount, accumulated, sub_account,
       reference_code, description, status
@@ -108,6 +112,7 @@ export async function upsertSepayDonateTable(tx: WebhookSepaySchemaType & {
     ON CONFLICT(code) DO UPDATE SET
       email = excluded.email,
       display_name = excluded.display_name,
+      display_avatar = excluded.display_avatar,
       user_name = excluded.user_name,
       message = excluded.message,
       receiver = excluded.receiver,
@@ -128,6 +133,7 @@ export async function upsertSepayDonateTable(tx: WebhookSepaySchemaType & {
       tx.code,
       tx.email ?? '',
       tx.display_name ?? '',
+      tx.display_avatar ?? '',
       tx.user_name ?? '',
       tx.message ?? '',
       tx.receiver ?? '',

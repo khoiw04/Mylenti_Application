@@ -24,6 +24,7 @@ export default function useSQLiteDiscordInfo() {
                     email,
                     name: global_name,
                     user_name: username,
+                    avatar: avatar
                 })
             }
         })()

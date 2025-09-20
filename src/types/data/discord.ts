@@ -10,4 +10,5 @@ export type SQLiteDiscordUser = {
     youtube?: string | null,
     facebook?: string | null,
     x?: string | null
+    avatar?: string | null
 }
