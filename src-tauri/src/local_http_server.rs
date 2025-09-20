@@ -137,7 +137,7 @@ pub async fn start_http_server(pool: SqlitePool) {
 
     let listener = match tokio::net::TcpListener::bind("0.0.0.0:8080").await {
         Ok(l) => {
-            log::info!("✅ Đã bind thành công cổng 8080");
+            log::info!("✅ Đã bind tại: {:?}", l.local_addr());
             l
         }
         Err(e) => {
@@ -157,4 +157,5 @@ pub async fn start_http_server(pool: SqlitePool) {
     if let Err(e) = axum::serve(listener, app.into_make_service()).await {
         log::error!("❌ Lỗi khi chạy Axum server: {}", e);
     }
+    log::info!("🛑 axum::serve() đã kết thúc");
 }
