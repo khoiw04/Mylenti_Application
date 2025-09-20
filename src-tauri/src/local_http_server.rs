@@ -11,6 +11,7 @@ use sqlx::{Row, SqlitePool};
 use std::{
     sync::{Arc, Mutex},
     time::Instant,
+    error::Error
 };
 
 lazy_static! {
@@ -132,7 +133,7 @@ async fn donations_handler(Path(user_name): Path<String>, State(pool): State<Sql
     }
 }
 
-pub async fn start_http_server(pool: SqlitePool) {
+pub async fn start_http_server(pool: SqlitePool) -> Result<(), Box<dyn Error>> {
     log::info!("📡 Bắt đầu start_http_server()");
 
     let listener = match tokio::net::TcpListener::bind("0.0.0.0:8080").await {
@@ -142,20 +143,18 @@ pub async fn start_http_server(pool: SqlitePool) {
         }
         Err(e) => {
             log::error!("❌ Không thể bind cổng 8080: {}", e);
-            return;
+            return Err(Box::new(e));
         }
     };
 
     let app = Router::new()
         .route("/health", get(health_handler))
-        .route("/data/:user_name", get(user_handler))
-        .route("/data/:user_name/donations", get(donations_handler))
+        .route("/data/{user_name}", get(user_handler))
+        .route("/data/{user_name}/donations", get(donations_handler))
         .with_state(pool.clone());
 
     log::info!("🚀 HTTP server đang chạy tại http://localhost:8080");
 
-    if let Err(e) = axum::serve(listener, app.into_make_service()).await {
-        log::error!("❌ Lỗi khi chạy Axum server: {}", e);
-    }
-    log::info!("🛑 axum::serve() đã kết thúc");
+    axum::serve(listener, app.into_make_service()).await?;
+    Ok(())
 }

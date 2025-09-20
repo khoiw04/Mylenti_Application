@@ -125,6 +125,7 @@ pub fn run() {
 
             let db_path = get_app_db_path();
             let db_url = format!("sqlite://{}", db_path.to_string_lossy().replace('\\', "/"));
+            let db_url_for_http = db_url.clone();
 
             log::info!("🔗 db_url: {}", db_url);
 
@@ -148,14 +149,20 @@ pub fn run() {
             // start_process(&node_exe_path, "node_server.exe");
 
             tauri::async_runtime::spawn(async move {
-                log::info!("🚀 Bắt đầu async block trong setup");
-
-                tokio::spawn(async {
-                    match start_websocket_server().await {
-                        Ok(_) => log::info!("🔌 WebSocket server đã khởi động thành công"),
-                        Err(e) => log::error!("❌ WebSocket server lỗi: {}", e),
+                let pool = match SqlitePool::connect(&db_url_for_http).await {
+                    Ok(p) => p,
+                    Err(e) => {
+                        log::error!("❌ Không thể kết nối SQLite cho HTTP server: {:?}", e);
+                        return;
                     }
-                });
+                };
+
+                if let Err(e) = start_http_server(pool).await {
+                    log::error!("❌ Lỗi khi chạy HTTP server: {:?}", e);
+                }
+            });
+            tauri::async_runtime::spawn(async move {
+                log::info!("🚀 Bắt đầu async block trong setup");
 
                 let pool = match SqlitePool::connect(&db_url).await {
                     Ok(p) => {
@@ -174,45 +181,23 @@ pub fn run() {
                     log::info!("📦 Migration đã chạy thành công");
                 }
 
-                let pool = std::sync::Arc::new(pool);
+                let pool = Arc::new(pool);
 
-                {
+                tokio::spawn({
                     let donate_pool = Arc::clone(&pool);
-                    tokio::spawn(async move {
+                    let app_handle = app_handle.clone();
+                    async move {
                         log::info!("📡 Bắt đầu start_donate_listener");
-                        start_donate_listener(app_handle.clone(), &(*donate_pool).clone());
-                        log::info!("✅ Đã gọi xong start_donate_listener");
-                    });
-                }
-
-                {
-                    let http_pool = Arc::clone(&pool);
-                    tokio::spawn(async move {
-                        log::info!("🌐 Bắt đầu start_http_server");
-                        start_http_server((*http_pool).clone()).await; // ✅ giải nén Arc
-                        log::info!("✅ Đã gọi xong start_http_server");
-                    });
-                }
-
-                for i in 1..=20 {
-                    if is_flask_ready().await {
-                        log::info!("✅ Flask server đã sẵn sàng sau {} lần thử", i);
-                        break;
-                    } else {
-                        log::info!("⏳ Đang chờ Flask server... lần {}", i);
-                        sleep(Duration::from_millis(500)).await;
+                        start_donate_listener(app_handle, &(*donate_pool).clone());
                     }
-                }
+                });
 
-                // for i in 1..=20 {
-                //     if node_exe_path().await {
-                //         log::info!("✅ Node server đã sẵn sàng sau {} lần thử", i);
-                //         break;
-                //     } else {
-                //         log::info!("⏳ Đang chờ Node server... lần {}", i);
-                //         sleep(Duration::from_millis(500)).await;
-                //     }
-                // }
+                tokio::spawn(async {
+                    match start_websocket_server().await {
+                        Ok(_) => log::info!("🔌 WebSocket server đã khởi động thành công"),
+                        Err(e) => log::error!("❌ WebSocket server lỗi: {}", e),
+                    }
+                });
 
                 log::info!("🪟 Đang tạo WebviewWindow");
                 match WebviewWindowBuilder::new(
@@ -227,7 +212,6 @@ pub fn run() {
                     Err(e) => log::error!("❌ Lỗi tạo WebviewWindow: {}", e),
                 }
             });
-
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
