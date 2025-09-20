@@ -5,9 +5,10 @@ import useWebsocketOBSOverlaySend from "@/components/containers/db.useWebsocketO
 import useTauriWindow from '@/components/containers/api.useTauriWindow'
 import { AppWindowStore, ThemeStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
-import useWebSocketSepayAlertSend from '@/components/containers/db.useWebSocketSepayAlertSend'
+import useSupabaseSepayAlertSend from '@/components/containers/db.useSupabaseSepayAlertSend'
 import useReceiveWebSocket from '@/components/containers/db.useReceiveWebSocketOBS'
 import useTheme from '@/components/containers/db.useTheme';
+import useDiscordSepayAlertSend from '@/hooks/useDiscordSepayAlertSend';
 
 export default function Main() {
     // OBSOVERLAY - SYNC
@@ -18,8 +19,9 @@ export default function Main() {
     useTheme()
     
     // Websocket - SEND
-    useWebSocketSepayAlertSend()
+    useSupabaseSepayAlertSend()
     useWebsocketOBSOverlaySend()
+    useDiscordSepayAlertSend()
 
     // Websocket - RECEIVE
     useReceiveWebSocket()

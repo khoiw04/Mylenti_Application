@@ -14,3 +14,11 @@ export type donateStoreProps = {
         virtualizeRank: Virtualizer<Element, Element>,
     }
 }
+
+export type donateDiscordStoreRealTime = {
+  code: string
+  display_name: string
+  message: string
+  user_name: string
+  transfer_amount: number
+}  

@@ -2,14 +2,16 @@ import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { websocketSendType } from "@/data/settings"
 import { safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSTauriWebSocket } from "@/class/WebSocketTauriManager"
-import useAuthInfo from "@/hooks/useAuthSupabaseInfo"
+import useAuthInfo, { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 import { NotificationStore } from "@/store"
 
-export default function useWebSocketSepayAlertSend() {
+export default function useSupabaseSepayAlertSend() {
   const authInfo = useAuthInfo()
+  const { isAuthenticated } = useAuthInfoExternalStore()
 
   useTauriSafeEffect(() => {
+    if (!isAuthenticated) return
     const channel = supabaseSSR.channel(authInfo.currentUser)
       .on('broadcast', { event: 'new-transaction' }, ({ payload }) => {
         const formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(payload.transferAmount).replace(/\u00A0/g, '');
@@ -39,5 +41,5 @@ export default function useWebSocketSepayAlertSend() {
     return () => {
       channel.unsubscribe()
     }
-  }, [])
+  }, [isAuthenticated])
 }

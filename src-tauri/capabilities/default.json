@@ -125,6 +125,7 @@
           "path": "$LOG/*"
         }
       ]
-    }
+    },
+    "window-state:default"
   ]
 }

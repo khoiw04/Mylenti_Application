@@ -62,6 +62,19 @@ export async function getDiscordUserByUserName(user_name: string) {
   return rows.length > 0 ? rows[0] : null
 }
 
+export async function getAllDiscordUsers<T extends Partial<SQLiteDiscordUser>>(
+  select?: Array<keyof SQLiteDiscordUser>
+): Promise<Array<T>> {
+  const db = await getDB()
+  await initDiscordUserTable()
+
+  const columns = select && select.length > 0 ? select.join(', ') : '*'
+  const query = `SELECT ${columns} FROM users`
+
+  const rows = await db.select<Array<T>>(query)
+  return rows
+}
+
 export async function upsertDiscordUser(user: SQLiteDiscordUser) {
   const db = await getDB()
   await initDiscordUserTable()

@@ -27,6 +27,7 @@ import { Route as CommunityLyLichRouteImport } from './routes/community.ly-lich'
 import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { ServerRoute as UploadFilesServerRouteImport } from './routes/uploadFiles'
+import { ServerRoute as WebhookSepayServerRouteImport } from './routes/webhook.sepay'
 import { ServerRoute as ApiTrpcSplatServerRouteImport } from './routes/api.trpc.$'
 
 const RuntimeYoutubelivechatLazyRouteImport = createFileRoute(
@@ -123,6 +124,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 const UploadFilesServerRoute = UploadFilesServerRouteImport.update({
   id: '/uploadFiles',
   path: '/uploadFiles',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const WebhookSepayServerRoute = WebhookSepayServerRouteImport.update({
+  id: '/webhook/sepay',
+  path: '/webhook/sepay',
   getParentRoute: () => rootServerRouteImport,
 } as any)
 const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
@@ -263,27 +269,31 @@ export interface RootRouteChildren {
 }
 export interface FileServerRoutesByFullPath {
   '/uploadFiles': typeof UploadFilesServerRoute
+  '/webhook/sepay': typeof WebhookSepayServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesByTo {
   '/uploadFiles': typeof UploadFilesServerRoute
+  '/webhook/sepay': typeof WebhookSepayServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/uploadFiles': typeof UploadFilesServerRoute
+  '/webhook/sepay': typeof WebhookSepayServerRoute
   '/api/trpc/$': typeof ApiTrpcSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/uploadFiles' | '/api/trpc/$'
+  fullPaths: '/uploadFiles' | '/webhook/sepay' | '/api/trpc/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/uploadFiles' | '/api/trpc/$'
-  id: '__root__' | '/uploadFiles' | '/api/trpc/$'
+  to: '/uploadFiles' | '/webhook/sepay' | '/api/trpc/$'
+  id: '__root__' | '/uploadFiles' | '/webhook/sepay' | '/api/trpc/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   UploadFilesServerRoute: typeof UploadFilesServerRoute
+  WebhookSepayServerRoute: typeof WebhookSepayServerRoute
   ApiTrpcSplatServerRoute: typeof ApiTrpcSplatServerRoute
 }
 
@@ -412,6 +422,13 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof UploadFilesServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/webhook/sepay': {
+      id: '/webhook/sepay'
+      path: '/webhook/sepay'
+      fullPath: '/webhook/sepay'
+      preLoaderRoute: typeof WebhookSepayServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/trpc/$': {
       id: '/api/trpc/$'
       path: '/api/trpc/$'
@@ -445,6 +462,7 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
   UploadFilesServerRoute: UploadFilesServerRoute,
+  WebhookSepayServerRoute: WebhookSepayServerRoute,
   ApiTrpcSplatServerRoute: ApiTrpcSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
