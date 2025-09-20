@@ -6,7 +6,7 @@ import { updateUserSchema } from "@/schema"
 import { authInfoStore, avatarStore } from "@/store"
 import { publishImage } from "@/components/containers/db.usePublishImage"
 import { updateUser } from "@/func/auth.UpdateInfo"
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
+import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 
 export default function useProfileForm() {
   const mutation = createMutation(updateUser, {

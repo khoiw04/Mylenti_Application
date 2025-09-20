@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { createMutation } from "@/hooks/createMutations"
 import { updateUser } from "@/func/auth.UpdateInfo"
 import { authQueries, profileQueries } from "@/lib/queries"
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
+import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 
 export function useResetMutation() {
     const router = useRouter()

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useStore } from "@tanstack/react-store";
 import type { NavigationHrefType } from "@/types";
 import { HeaderStrategy } from "@/store";
-import useAuthInfo from "@/hooks/useAuthInfo";
+import useAuthInfo from "@/hooks/useAuthSupabaseInfo";
 
 function useHeaderLinkSync() {
   const router = useRouter()

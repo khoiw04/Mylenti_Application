@@ -22,6 +22,8 @@ import { Route as KeToanRouteImport } from './routes/ke-toan'
 import { Route as DangNhapRouteImport } from './routes/dang-nhap'
 import { Route as DangKyRouteImport } from './routes/dang-ky'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CommunityNganHangRouteImport } from './routes/community.ngan-hang'
+import { Route as CommunityLyLichRouteImport } from './routes/community.ly-lich'
 import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { ServerRoute as UploadFilesServerRouteImport } from './routes/uploadFiles'
@@ -98,6 +100,16 @@ const RuntimeObsdonateLazyRoute = RuntimeObsdonateLazyRouteImport.update({
 } as any).lazy(() =>
   import('./routes/runtime.obsdonate.lazy').then((d) => d.Route),
 )
+const CommunityNganHangRoute = CommunityNganHangRouteImport.update({
+  id: '/community/ngan-hang',
+  path: '/community/ngan-hang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityLyLichRoute = CommunityLyLichRouteImport.update({
+  id: '/community/ly-lich',
+  path: '/community/ly-lich',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthGoogleOBSRoute = AuthGoogleOBSRouteImport.update({
   id: '/auth/googleOBS',
   path: '/auth/googleOBS',
@@ -132,6 +144,8 @@ export interface FileRoutesByFullPath {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/community/ly-lich': typeof CommunityLyLichRoute
+  '/community/ngan-hang': typeof CommunityNganHangRoute
   '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
   '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatLazyRoute
 }
@@ -148,6 +162,8 @@ export interface FileRoutesByTo {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/community/ly-lich': typeof CommunityLyLichRoute
+  '/community/ngan-hang': typeof CommunityNganHangRoute
   '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
   '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatLazyRoute
 }
@@ -165,6 +181,8 @@ export interface FileRoutesById {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/community/ly-lich': typeof CommunityLyLichRoute
+  '/community/ngan-hang': typeof CommunityNganHangRoute
   '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
   '/runtime/youtubelivechat': typeof RuntimeYoutubelivechatLazyRoute
 }
@@ -183,6 +201,8 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/community/ly-lich'
+    | '/community/ngan-hang'
     | '/runtime/obsdonate'
     | '/runtime/youtubelivechat'
   fileRoutesByTo: FileRoutesByTo
@@ -199,6 +219,8 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/community/ly-lich'
+    | '/community/ngan-hang'
     | '/runtime/obsdonate'
     | '/runtime/youtubelivechat'
   id:
@@ -215,6 +237,8 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/community/ly-lich'
+    | '/community/ngan-hang'
     | '/runtime/obsdonate'
     | '/runtime/youtubelivechat'
   fileRoutesById: FileRoutesById
@@ -232,6 +256,8 @@ export interface RootRouteChildren {
   QuenMatKhauRoute: typeof QuenMatKhauRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthGoogleOBSRoute: typeof AuthGoogleOBSRoute
+  CommunityLyLichRoute: typeof CommunityLyLichRoute
+  CommunityNganHangRoute: typeof CommunityNganHangRoute
   RuntimeObsdonateLazyRoute: typeof RuntimeObsdonateLazyRoute
   RuntimeYoutubelivechatLazyRoute: typeof RuntimeYoutubelivechatLazyRoute
 }
@@ -347,6 +373,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RuntimeObsdonateLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community/ngan-hang': {
+      id: '/community/ngan-hang'
+      path: '/community/ngan-hang'
+      fullPath: '/community/ngan-hang'
+      preLoaderRoute: typeof CommunityNganHangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community/ly-lich': {
+      id: '/community/ly-lich'
+      path: '/community/ly-lich'
+      fullPath: '/community/ly-lich'
+      preLoaderRoute: typeof CommunityLyLichRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/googleOBS': {
       id: '/auth/googleOBS'
       path: '/auth/googleOBS'
@@ -395,6 +435,8 @@ const rootRouteChildren: RootRouteChildren = {
   QuenMatKhauRoute: QuenMatKhauRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthGoogleOBSRoute: AuthGoogleOBSRoute,
+  CommunityLyLichRoute: CommunityLyLichRoute,
+  CommunityNganHangRoute: CommunityNganHangRoute,
   RuntimeObsdonateLazyRoute: RuntimeObsdonateLazyRoute,
   RuntimeYoutubelivechatLazyRoute: RuntimeYoutubelivechatLazyRoute,
 }

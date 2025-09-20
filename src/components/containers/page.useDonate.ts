@@ -3,7 +3,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import type { DonateDataType, VirtualizerConfig } from "@/types";
 import { donatePropsStore } from "@/store";
 import { Route } from "@/routes/ke-toan";
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo";
+import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo";
 
 export function useRankDonates(donateList: Array<DonateDataType>, currentUser: string) {
   return useMemo(() => {

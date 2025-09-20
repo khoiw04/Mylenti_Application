@@ -7,7 +7,7 @@ import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 import useTauriSafeEffect from '@/hooks/useTauriSideEffect'
-import { useAuthInfoExternalStore } from '@/hooks/useAuthInfo'
+import { useAuthInfoExternalStore } from '@/hooks/useAuthSupabaseInfo'
 
 export default function useWebsocketOBSOverlaySync() {
   const { isAuthenticated } = useAuthInfoExternalStore()

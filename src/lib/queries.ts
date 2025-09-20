@@ -3,6 +3,7 @@ import type { UseSuspenseInfiniteQueryResult } from "@tanstack/react-query";
 import { getBankDatabase, getDonateDatabase } from "@/func/auth.Info";
 import { getProfile } from "@/func/auth.Profile";
 import { getUser } from "@/func/auth.User";
+import { getDiscordUserInfo } from "@/func/auth.discord";
 
 export const bankQueries = {
     all: ['bank'],
@@ -37,11 +38,22 @@ export const authQueries = {
         queryOptions({
             queryKey: [...authQueries.all, 'user'],
             queryFn: () => getUser()
-        })
+        }),
+    discord: () =>    
+        queryOptions({
+            queryKey: [...authQueries.all, 'discord'],
+            queryFn: () => getDiscordUserInfo()
+        }),
 }
 
 export const useAuthenticatedUser = () => {
     const authQuery = useSuspenseQuery(authQueries.user())
+
+    return authQuery as UseSuspenseInfiniteQueryResult<typeof authQuery.data>
+}
+
+export const useDiscordCommunityUser = () => {
+    const authQuery = useSuspenseQuery(authQueries.discord())
 
     return authQuery as UseSuspenseInfiniteQueryResult<typeof authQuery.data>
 }

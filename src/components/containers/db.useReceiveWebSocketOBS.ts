@@ -4,7 +4,7 @@ import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 import { safeParse, safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSOverlayTauriSettingsProps } from "@/store"
 import { websocketSendType } from '@/data/settings'
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
+import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 
 export default function useReceiveWebSocket() {
   const { isAuthenticated } = useAuthInfoExternalStore()

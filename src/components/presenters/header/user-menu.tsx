@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useAuthInfoExternalStore } from "@/hooks/useAuthInfo"
+import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import useLogOut from "@/components/containers/db.useLogOut"
 

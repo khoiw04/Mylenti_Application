@@ -13,12 +13,14 @@ import { exchangeCodeForSession } from "@/func/auth.Oauth";
 function useListenGoogleLoginOauth() {
   const router = useRouter()
   useEffect(() => {
+    let portRef: number | null = null
     try {
       (async () => {
         const port = await start({
           ports: [3001],
           response: "Qua trinh dang nhap hoan tat! Vui long dong cua so nay."
         });
+        portRef = port
 
         await onUrl(async (redirectUrl) => {
           const urlObj = new URL(redirectUrl)
@@ -35,6 +37,11 @@ function useListenGoogleLoginOauth() {
       })()
     } catch (error) {
       toast.error(`Lỗi khởi tạo OAuth server:, ${error}`);
+    }
+    return () => {
+        if (portRef !== null) {
+            cancel(portRef)
+        }
     }
   }, [])
 }

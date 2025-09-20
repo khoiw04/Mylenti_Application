@@ -52,7 +52,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       authQueries.user()
     )
 
-    return { authState }
+    const authDiscordState = await context.queryClient.ensureQueryData(
+      authQueries.discord()
+    )
+
+    return { authState, authDiscordState }
   },
   loader: async ({ context, location }) => {
     const isAuthenticated = context.authState.isAuthenticated

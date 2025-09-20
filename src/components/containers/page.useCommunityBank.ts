@@ -1,30 +1,30 @@
-import { useEffect, useMemo } from "react"
-import { toast } from "sonner";
-import { useStore } from "@tanstack/react-store";
-import { isTauri } from "@tauri-apps/api/core";
-import { useRouter } from "@tanstack/react-router";
 import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
-import { GoogleStraregy } from "@/store"
-import { useDimension } from "@/hooks/useDimension";
-import { getYoutubeScopeWithURL } from "@/data";
-import { Route } from "@/routes";
-import { logInWithOauthStrategy } from "@/func/fn.stragery";
-import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
+import { useRouter } from "@tanstack/react-router";
+import { useStore } from '@tanstack/react-store';
+import { useEffect, useMemo } from "react";
+import { toast } from "sonner";
+import { isTauri } from '@tauri-apps/api/core';
+import { DiscordStraregy } from '@/store';
+import { clearDiscordCookies, getDiscordToken } from '@/func/auth.discord';
+import { logInWithOauthStrategy } from '@/func/fn.stragery';
+import { APPCONFIG } from '@/data/config';
+import { useDimension } from '@/hooks/useDimension';
+import { useDiscordCommunityUser } from '@/lib/queries';
 
-function getGoogleOBSOauth() {
+function getDiscordOauth() {
     const { x, y } = useDimension().dimension
 
     const props = useMemo(() => ({
-        onGoogleLogInClick: () => {
+        onDiscordLogInClick: () => {
             if (isTauri()) {
                 logInWithOauthStrategy.tauriDirect(
-                    getYoutubeScopeWithURL
+                    APPCONFIG.URL.DISCORD_OAUTH2
                 )
                 return
             }
             
             const popup = window.open(
-                getYoutubeScopeWithURL, 
+                APPCONFIG.URL.DISCORD_OAUTH2, 
                 '_blank', 
                 `scrollbars=yes, width=${y/2}, height=${x}, top=${x/2}, left=${y/2}`
             )
@@ -32,20 +32,26 @@ function getGoogleOBSOauth() {
                 popup.focus()
             }
         },
-        onGoogleLogOutClick: async () => await clearGoogleOBSCookies()
+        onDiscordLogOutClick: async () => await clearDiscordCookies()
     }), [])
-    GoogleStraregy.setState((prev) => ({...prev, ...props}))
+    DiscordStraregy.setState((prev) => ({...prev, ...props}))
+}
+
+function isJoinOAuthDiscord() {
+    const { onFinishDiscordOAuth } = useStore(DiscordStraregy)
+    const { isAuthenticated } = useDiscordCommunityUser().data
+    useEffect(() => {isAuthenticated && onFinishDiscordOAuth()}, [isAuthenticated])
 }
 
 function handleOAuthMessage() {
-    const { onFinishGoogleOBSAuth } = useStore(GoogleStraregy)
+    const { onFinishDiscordOAuth } = useStore(DiscordStraregy)
     useEffect(() => {
         function message(event: MessageEvent) {
             if (event.origin !== window.location.origin) return
 
             if (event.data.status === 'success') {
                 toast.success('Đã thắng Đăng Nhập!')
-                onFinishGoogleOBSAuth()
+                onFinishDiscordOAuth()
                 return
             }
 
@@ -59,18 +65,12 @@ function handleOAuthMessage() {
     }, [])
 }
 
-function getAuthGoogleOBSCookie() {
-    const { onFinishGoogleOBSAuth } = useStore(GoogleStraregy)
-    const isGoogleOBSCookieAuth = Route.useLoaderData()
-    useEffect(() => {isGoogleOBSCookieAuth && onFinishGoogleOBSAuth()}, [isGoogleOBSCookieAuth])
-}
-
-function useOAuthGoogleTauri() {
+function useOAuthDiscordTauri() {
   const router = useRouter()
-  const isGoogleOBSCookieAuth = Route.useLoaderData()
+  const { isAuthenticated } = useDiscordCommunityUser().data
   useEffect(() => {
     let portRef: number | null = null
-    if (!isGoogleOBSCookieAuth)
+    if (isAuthenticated) return
     try {
       (async () => {
         const port = await start({
@@ -86,11 +86,16 @@ function useOAuthGoogleTauri() {
                 toast.error('Không lấy được code trên đường Link')
                 return
             }
-            await getTokenGoogleOBS({ data: { code } }),
-            await Promise.all([
-                cancel(port),
-                router.navigate({ to: '/', reloadDocument: true })
-            ])
+            
+            try {
+                await getDiscordToken({ data: { code } })
+                await Promise.all([
+                    cancel(port),
+                    router.navigate({ to: '/community/ngan-hang', reloadDocument: true })
+                ])
+            } catch (err) {
+                toast.error(`Lỗi xác thực Discord:, ${err}`);
+            }
         })
       })()
     } catch (error) {
@@ -101,12 +106,12 @@ function useOAuthGoogleTauri() {
             cancel(portRef)
         }
     }
-  }, [isGoogleOBSCookieAuth])
+  }, [isAuthenticated])
 }
 
-export default function useIndex() {
-    getGoogleOBSOauth()
+export default function useCommunityBank() {
+    getDiscordOauth()
+    isJoinOAuthDiscord()
     handleOAuthMessage()
-    useOAuthGoogleTauri()
-    getAuthGoogleOBSCookie()
+    useOAuthDiscordTauri()
 }

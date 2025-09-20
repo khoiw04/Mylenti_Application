@@ -2,7 +2,7 @@ import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { websocketSendType } from "@/data/settings"
 import { safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSTauriWebSocket } from "@/class/WebSocketTauriManager"
-import useAuthInfo from "@/hooks/useAuthInfo"
+import useAuthInfo from "@/hooks/useAuthSupabaseInfo"
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 import { NotificationStore } from "@/store"
 

@@ -3,10 +3,10 @@ import GoogleLogOutButton from "./GoogleLogOutButton"
 import DonateOverlayButton from "./DonateOverlayButton"
 import FullScreenButton from "./FullScreenButton"
 import ResumePolling from "./ResumePolling"
-import { IndexState, PollingStatusStore } from "@/store"
+import { GoogleState, PollingStatusStore } from "@/store"
 
 export default function Footer() {
-    const { finishGoogleOBSAuth } = useStore(IndexState)
+    const { finishGoogleOBSAuth } = useStore(GoogleState)
     const { isPaused, isError } = useStore(PollingStatusStore)
 
     if (!finishGoogleOBSAuth) return null
