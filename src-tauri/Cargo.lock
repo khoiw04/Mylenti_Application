@@ -7,6 +7,7 @@ name = "Mylenti"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "axum-macros",
  "chrono",
  "dirs 6.0.0",
  "futures-util",
@@ -39,6 +40,7 @@ dependencies = [
  "tokio",
  "tokio-tungstenite",
  "tower",
+ "tower-http",
  "url",
 ]
 
@@ -417,6 +419,17 @@ dependencies = [
  "tower-layer",
  "tower-service",
  "tracing",
+]
+
+[[package]]
+name = "axum-macros"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "604fde5e028fea851ce1d8570bbdc034bec850d157f7569d10f347d06808c05c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.106",
 ]
 
 [[package]]

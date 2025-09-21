@@ -34,16 +34,18 @@ pub fn start_donate_listener(app: AppHandle, pool: &SqlitePool) {
     let app = app.clone();
 
     tokio::spawn(async move {
-        match sqlx::query(
-            "CREATE TABLE IF NOT EXISTS donate_events (
+        match 
+        sqlx::query(
+            "
+                CREATE TABLE IF NOT EXISTS donate_events (
                 code TEXT PRIMARY KEY,
-                email TEXT,
+                email TEXT DEFAULT NULL,
                 display_name TEXT,
                 display_avatar TEXT,
                 user_name TEXT,
                 message TEXT,
                 receiver TEXT,
-                
+
                 id_transaction INTEGER,
                 gateway TEXT,
                 transaction_date TEXT,
@@ -58,7 +60,7 @@ pub fn start_donate_listener(app: AppHandle, pool: &SqlitePool) {
                 notified BOOLEAN DEFAULT 0,
                 status TEXT CHECK (status IN ('error', 'pending', 'received')),
 
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                created_at TEXT
             )"
         )
         .execute(&pool)
@@ -88,7 +90,7 @@ pub fn start_donate_listener(app: AppHandle, pool: &SqlitePool) {
             }
 
             sleep(Duration::from_secs(2)).await;
-        }
+        };
     });
 }
 

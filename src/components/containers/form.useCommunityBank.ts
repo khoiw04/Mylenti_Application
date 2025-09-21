@@ -19,9 +19,13 @@ export default function useBankForm() {
             email: meta.email,
             full_name: value.full_name,
             user_name: meta.user_name,
+            x: meta.x,
+            youtube: meta.youtube,
+            facebook: meta.facebook,
             api_key: value.api_key,
             number: value.number,
-            bank: value.bank
+            bank: value.bank,
+            avatar: avatar
         })
     }, {
         successMessage: 'Đã Cập Nhật'

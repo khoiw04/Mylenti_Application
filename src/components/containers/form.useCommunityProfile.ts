@@ -27,7 +27,7 @@ export default function useCommunityProfileForm() {
       email: meta.email,
       name: value.full_name,
       user_name: meta.user_name,
-      youtube: value.full_name,
+      youtube: value.youtube,
       facebook: value.facebook,
       avatar: avatar,
       x: value.x

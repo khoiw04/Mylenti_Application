@@ -6,7 +6,7 @@ export async function initSepayDonateTable() {
   await db.execute(`
     CREATE TABLE IF NOT EXISTS donate_events (
       code TEXT PRIMARY KEY,
-      email TEXT,
+      email TEXT DEFAULT NULL,
       display_name TEXT,
       display_avatar TEXT,
       user_name TEXT,
@@ -27,7 +27,7 @@ export async function initSepayDonateTable() {
       notified BOOLEAN DEFAULT 0,
       status TEXT CHECK (status IN ('error', 'pending', 'received')),
 
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      created_at TEXT
     )
   `)
 }

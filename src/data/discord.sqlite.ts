@@ -30,30 +30,6 @@ export async function initDiscordUserTable() {
   `)
 }
 
-export async function insertDiscordUser(user: SQLiteDiscordUser) {
-  const db = await getDB()
-  await initDiscordUserTable()
-  await ensureAvatarColumnExists()
-  await db.execute(`
-    INSERT OR IGNORE INTO users (
-      id, name, user_name, email, api_key, number, full_name, bank, youtube, facebook, x, avatar
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `, [
-    user.id,
-    user.name,
-    user.user_name,
-    user.email,
-    user.api_key ?? '',
-    user.number ?? '',
-    user.full_name ?? '',
-    user.bank ?? '',
-    user.youtube ?? '',
-    user.facebook ?? '',
-    user.x ?? '',
-    user.avatar ?? ''
-  ])
-}
-
 export async function getDiscordUserByUserName(user_name: string) {
   const db = await getDB()
   await initDiscordUserTable()
@@ -81,23 +57,22 @@ export async function getAllDiscordUsers<T extends Partial<SQLiteDiscordUser>>(
 export async function upsertDiscordUser(user: SQLiteDiscordUser) {
   const db = await getDB()
   await initDiscordUserTable()
-  await ensureAvatarColumnExists()
   await db.execute(`
     INSERT INTO users (
       id, name, user_name, email, api_key, number, full_name, bank, youtube, facebook, x, avatar
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
-      name = excluded.name,
-      user_name = excluded.user_name,
-      email = excluded.email,
-      api_key = excluded.api_key,
-      number = excluded.number,
-      full_name = excluded.full_name,
-      bank = excluded.bank,
+      name = CASE WHEN excluded.name != '' THEN excluded.name ELSE users.name END,
+      user_name = CASE WHEN excluded.user_name != '' THEN excluded.user_name ELSE users.user_name END,
+      email = CASE WHEN excluded.email != '' THEN excluded.email ELSE users.email END,
+      api_key = CASE WHEN excluded.api_key != '' THEN excluded.api_key ELSE users.api_key END,
+      number = CASE WHEN excluded.number != '' THEN excluded.number ELSE users.number END,
+      full_name = CASE WHEN excluded.full_name != '' THEN excluded.full_name ELSE users.full_name END,
+      bank = CASE WHEN excluded.bank != '' THEN excluded.bank ELSE users.bank END,
       youtube = excluded.youtube,
       facebook = excluded.facebook,
       x = excluded.x,
-      avatar = excluded.avatar
+      avatar = CASE WHEN excluded.avatar != '' THEN excluded.avatar ELSE users.avatar END
   `, [
     user.id,
     user.name,
@@ -112,46 +87,6 @@ export async function upsertDiscordUser(user: SQLiteDiscordUser) {
     user.x ?? '',
     user.avatar ?? ''
   ])
-}
-
-export async function updateDiscordUser(user: SQLiteDiscordUser) {
-  const db = await getDB()
-  await initDiscordUserTable()
-  await db.execute(`
-    UPDATE users SET
-      name = ?, user_name = ?, email = ?, api_key = ?, number = ?, full_name = ?, bank = ?, youtube = ?, facebook = ?, x = ?, avatar = ?
-    WHERE id = ?
-  `, [
-    user.name,
-    user.user_name,
-    user.email,
-    user.api_key ?? '',
-    user.number ?? '',
-    user.full_name ?? '',
-    user.bank ?? '',
-    user.youtube ?? '',
-    user.facebook ?? '',
-    user.x ?? '',
-    user.avatar ?? '',
-    user.id
-  ])
-}
-
-export async function ensureAvatarColumnExists() {
-  const db = await getDB();
-
-  const columns = await db.select<Array<{ name: string }>>(
-    `PRAGMA table_info(users)`
-  );
-
-  const hasAvatar = columns.some(col => col.name === 'avatar');
-
-  if (!hasAvatar) {
-    await db.execute(`ALTER TABLE users ADD COLUMN avatar TEXT`);
-    console.log('✅ Đã thêm cột avatar vào bảng users');
-  } else {
-    console.log('ℹ️ Cột avatar đã tồn tại');
-  }
 }
 
 export const fallbackData = {
