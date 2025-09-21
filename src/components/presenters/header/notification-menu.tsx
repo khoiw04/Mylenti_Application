@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { BellIcon } from "lucide-react"
 
 import { useStore } from "@tanstack/react-store"
@@ -59,6 +59,12 @@ export default function NotificationMenu() {
     )
   }
 
+  const uniqueNotifications = useMemo(() => {
+    return Array.from(
+      new Map(notifications.map(n => [n.id, n])).values()
+    );
+  }, [notifications]) 
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -80,23 +86,21 @@ export default function NotificationMenu() {
       <PopoverContent className="w-80 p-1">
         <div className="flex items-baseline justify-between gap-4 px-3 py-2">
           <div className="text-sm font-semibold">Thông báo</div>
-          {unreadCount > 0 && (
             <button
-              className="text-xs font-medium hover:underline"
+              disabled={unreadCount === 0}
+              className="text-xs font-medium hover:underline disabled:hidden"
               onClick={handleMarkAllAsRead}
             >
               Đánh dấu "Đã Đọc"
             </button>
-          )}
         </div>
-        {unreadCount > 0 &&
-        <>
         <div
           role="separator"
           aria-orientation="horizontal"
-          className="bg-border -mx-1 my-1 h-px"
-        ></div>
-        {notifications.map((notification) => (
+          data-hidden={unreadCount === 0}
+          className="bg-border -mx-1 my-1 h-px data-[hidden=true]:hidden"
+        />
+        {uniqueNotifications.map((notification) => (
           <div
             key={notification.id}
             className="hover:bg-accent rounded-md px-3 py-2 text-sm transition-colors"
@@ -113,8 +117,7 @@ export default function NotificationMenu() {
                   {'gửi'}{" "}
                   <span className="text-foreground font-medium hover:underline">
                     {notification.amount}
-                  </span>
-                  .
+                  </span>: {notification.message}                  .
                 </button>
                 <div className="text-muted-foreground text-xs">
                   {timeAgo(notification.timestamp)}
@@ -129,8 +132,6 @@ export default function NotificationMenu() {
             </div>
           </div>
         ))}
-        </>
-        }
       </PopoverContent>
     </Popover>
   )

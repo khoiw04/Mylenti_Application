@@ -25,7 +25,7 @@ export default function useDiscordSepayAlertSend() {
             unread: true
           }
 
-          console.log('🎉 Giao dịch mới:', payload)
+          console.log('🎉 Giao dịch mới:', `${payload.display_name} ủng hộ ${formattedAmount}: ${payload.message}`)
           NotificationStore.setState((prev) => [...prev, newNotification])
 
           safeSend(OBSTauriWebSocket.getSocket(), {

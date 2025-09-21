@@ -126,7 +126,6 @@ export default function OBSDonate() {
             srcDonateComment={currentDonate.name}
             srcDonateParagraph={currentDonate.message}
             srcDonateEmoji={currentDonate.emoji}
-            style={{ color: 'white' }}
           />
         </motion.div>
       )}
