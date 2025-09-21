@@ -1,7 +1,7 @@
 import { debounce } from '@tanstack/react-pacer';
 import useTauriSafeEffect from './useTauriSideEffect';
 import { OBSOverlayTauriSettingsProps, loadOBSSetting, saveOBSSetting } from '@/store';
-import { sanitizeOBSOverlaySettings } from '@/data/db.sanitizeOBSOverlaySettings';
+import { sanitizeOBSOverlaySettings } from '@/func/db.sanitizeOBSOverlaySettings';
 
 export const useInitOBSOverlaySettings = () => {
   useTauriSafeEffect(() => {

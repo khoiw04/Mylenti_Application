@@ -8,7 +8,6 @@ use tauri::Manager;
 use std::path::PathBuf;
 use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
 use tauri_plugin_http::reqwest::Client;
-use tauri::AppHandle;
 use url::Url;
 
 mod donate_events;

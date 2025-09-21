@@ -1,6 +1,6 @@
 import { Store } from '@tauri-apps/plugin-store';
 import type { OBSOverlaySettingsTauriPropsType } from '@/types';
-import { fallbackEmoji, fallbackSound } from '@/data/obs-overlay';
+import { fallbackEmoji, fallbackSound } from '@/data/fallback';
 
 export const OBSOVERLAY_SETTINGS_FILE = 'obs_overlay_settings-store.json';
 export const OBSOVERLAY_SETTINGS_KEY = 'obs_overlay_settings';

@@ -9,9 +9,8 @@ import { BankForm } from '@/components/pages/ngan-hang'
 export const Route = createFileRoute('/ngan-hang')({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
-    if (!context.authState.isAuthenticated) {
+    if (!context.authState.isAuthenticated) 
       throw redirect({ to: '/community/ngan-hang' })
-    }
   },
   loader: async ({ context }) => {
     const user_name = context.authState.user.meta.user_name

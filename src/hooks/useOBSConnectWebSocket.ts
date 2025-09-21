@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import type { WebSocketMessageType } from '@/types'
-import { WEBSOCKET_OBSURL } from '@/data'
 import { WebSocketReceiveStrategy, messagesWebSocketLogStrategy as messageLog } from '@/func/fn.stragery'
+import { APPCONFIG } from '@/data/config'
 
 export default function useOBSConnectWebSocket() {
     const hasConnected = useRef(false)
@@ -19,7 +19,7 @@ export default function useOBSConnectWebSocket() {
         localStorage.setItem("clientId", clientId)
 
         const connect = () => {
-            const socket = new WebSocket(WEBSOCKET_OBSURL)
+            const socket = new WebSocket(APPCONFIG.URL.WEBSOCKET_OBSURL)
             socketRef.current = socket
 
             socket.onopen = () => {

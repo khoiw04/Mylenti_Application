@@ -25,3 +25,31 @@ export const DiscordDonationsFallBack: Array<DonateEventSchemaType> = [
     created_at: ""
   }
 ]
+
+export const initialDonateFiles = [
+  {
+    id: 'omori',
+    size: 3232,
+    name: "OMORI",
+    type: "image/*",
+    url: "/assets/images/emoji/woven_spaces.webp",
+  },
+]
+
+export const fallbackEmoji = [{
+  name: 'OMORI',
+  path: initialDonateFiles[0].url,
+  preview: initialDonateFiles[0].url,
+  type: 'image/jpeg',
+  size: 3434,
+  binary: new Uint8Array(10)
+}];
+
+export const fallbackSound = [{
+  name: 'OMORI',
+  path: initialDonateFiles[0].url,
+  preview: initialDonateFiles[0].url,
+  type: 'image/jpeg',
+  size: 3434,
+  binary: new Uint8Array(10)
+}];

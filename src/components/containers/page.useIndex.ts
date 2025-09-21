@@ -6,10 +6,10 @@ import { useRouter } from "@tanstack/react-router";
 import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
 import { GoogleStraregy } from "@/store"
 import { useDimension } from "@/hooks/useDimension";
-import { getYoutubeScopeWithURL } from "@/data";
 import { Route } from "@/routes";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
+import { getYoutubeScopeWithURL } from "@/data/config";
 
 function getGoogleOBSOauth() {
     const { x, y } = useDimension().dimension

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { fallbackEmoji, fallbackSound, initialDonateFiles } from './obs-overlay';
+import { fallbackEmoji, fallbackSound, initialDonateFiles } from '../data/fallback';
 import type { OBSOverlaySettingsTauriPropsType } from '@/types';
 
 export const sanitizeOBSOverlaySettings = (

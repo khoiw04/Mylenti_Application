@@ -1,6 +1,6 @@
 import { Store } from "@tanstack/store"
 import type { OBSOverlaySettingsWebsitePropsType, OBSOverlayWebsiteSettingStrageryType } from "@/types"
-import { fallbackEmoji, fallbackSound } from "@/data/obs-overlay"
+import { fallbackEmoji, fallbackSound } from "@/data/fallback"
 
 export const OBSOverlayWebsiteSettingsStore = new Store<OBSOverlaySettingsWebsitePropsType>({
   showComment: true,

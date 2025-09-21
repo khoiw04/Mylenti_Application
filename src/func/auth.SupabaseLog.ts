@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { LogInSchemaType, LogUpSchemaType } from '@/types';
 import { getSupabaseServerClient } from '@/lib/supabaseServer';
-import { redirectSupbaseSignUpUrl } from '@/data/oauth';
+import { APPCONFIG } from '@/data/config';
 
 export const loginFn = createServerFn({ method: 'POST' })
   .validator((d: LogInSchemaType) => d)
@@ -49,7 +49,7 @@ export const signupFn = createServerFn({ method: 'POST' })
           full_name: full_name,
           user_name: user_name
         },
-        emailRedirectTo: redirectSupbaseSignUpUrl
+        emailRedirectTo: APPCONFIG.URL.REDIRECTSUPABASESIGNUPURL
       }
     })
 

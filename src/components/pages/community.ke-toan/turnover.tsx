@@ -5,7 +5,7 @@ import type { TitleProps } from '@/types'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CardContent as BentoContent, CardHeader as BentoHeader, CardPrice as BentoPrice, CardTitle as BentoTitle } from '@/components/ui/card'
-import { chartConfig, headColorConfig } from '@/data/chart'
+import { chartConfig, headColorConfig } from '@/data/settings'
 import { dashboardData, dashboardState, dashboardStrategy } from '@/store'
 import { calculateChangePercent, cn } from '@/lib/utils'
 

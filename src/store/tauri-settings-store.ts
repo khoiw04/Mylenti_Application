@@ -1,11 +1,11 @@
 import { Store } from '@tauri-apps/plugin-store';
-import { TAURI_SETTING_FILE } from '@/data';
+import { APPCONFIG } from '@/data/config';
 
 let settingInstance: Store | null = null;
 
 export const getSetting = async (): Promise<Store> => {
     if (!settingInstance) {
-        settingInstance = await Store.load(TAURI_SETTING_FILE);
+        settingInstance = await Store.load(APPCONFIG.FILE.TAURI_SETTING_FILE_JSON);
     }
     return settingInstance
 }

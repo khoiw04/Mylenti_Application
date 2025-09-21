@@ -10,7 +10,7 @@ import { useFileUpload } from "@/hooks/use-donate-upload"
 import { Button } from "@/components/ui/button"
 import { formatBytes } from "@/lib/utils";
 import { OBSOverlayTauriSettingsProps, loadEmojis, saveEmojis } from "@/store";
-import { fallbackEmoji } from "@/data/obs-overlay";
+import { fallbackEmoji } from "@/data/fallback";
 
 export default function EmojiFileUpload() {
   const maxFiles = 4

@@ -7,9 +7,8 @@ import { ProfileForm } from '@/components/pages/ly-lich'
 export const Route = createFileRoute('/ly-lich')({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
-    if (!context.authState.isAuthenticated) {
+    if (!context.authState.isAuthenticated) 
       throw redirect({ to: '/community/ly-lich' })
-    }
   }
 })
 

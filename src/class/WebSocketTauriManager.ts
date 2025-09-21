@@ -1,7 +1,7 @@
 import WebSocket from "@tauri-apps/plugin-websocket";
 import { toast } from "sonner";
 import type { Message } from "@tauri-apps/plugin-websocket";
-import { WEBSOCKET_OBSURL } from "@/data";
+import { APPCONFIG } from "@/data/config";
 
 type MessageHandler = (msg: Message) => void;
 
@@ -27,7 +27,7 @@ class WebSocketTauriManager {
         if (this.isConnect) return
 
         try {
-            this.socket = await WebSocket.connect(WEBSOCKET_OBSURL);
+            this.socket = await WebSocket.connect(APPCONFIG.URL.WEBSOCKET_OBSURL);
             this.isConnect = true
 
             this.socket.send(JSON.stringify({

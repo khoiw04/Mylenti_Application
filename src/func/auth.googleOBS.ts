@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server'
-import { OAUTH_YOUTUBE_ID, OAUTH_YOUTUBE_SECRET, redirectGoogleOBSURl } from '@/data'
+import { APPCONFIG } from '@/data/config'
+import { env } from '@/env/client'
 
 function mapOAuthError(message: string) {
   if (message.includes('invalid_grant')) return 'Mã xác thực không hợp lệ hoặc đã hết hạn.'
@@ -23,9 +24,9 @@ export const getTokenGoogleOBS = createServerFn({ method: 'POST' })
         },
         body: JSON.stringify({
             code,
-            client_id: OAUTH_YOUTUBE_ID,
-            client_secret: OAUTH_YOUTUBE_SECRET,
-            redirect_uri: redirectGoogleOBSURl,
+            client_id: env.VITE_OAUTH_YOUTUBE_ID,
+            client_secret: env.VITE_OAUTH_YOUTUBE_SERECT,
+            redirect_uri: APPCONFIG.URL.REDIRECTGOOGLEOBSURL,
             grant_type: 'authorization_code',
         }),
       })
@@ -36,14 +37,14 @@ export const getTokenGoogleOBS = createServerFn({ method: 'POST' })
 
       const { access_token, refresh_token, expires_in } = await response.json()
 
-      setCookie('googleOBS_AccessToken', access_token, {
+      setCookie(APPCONFIG.TOKEN.ACCESS_GOOGLE, access_token, {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
         maxAge: expires_in,
       })
 
-      setCookie('googleOBS_RefreshToken', refresh_token, {
+      setCookie(APPCONFIG.TOKEN.REFRESH_GOOGLE, refresh_token, {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
@@ -61,8 +62,8 @@ export const refreshGoogleOBSToken = createServerFn({ method: 'POST' })
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        client_id: OAUTH_YOUTUBE_ID,
-        client_secret: OAUTH_YOUTUBE_SECRET,
+        client_id: env.VITE_OAUTH_YOUTUBE_ID,
+        client_secret: env.VITE_OAUTH_YOUTUBE_SERECT,
         refresh_token: refresh_token,
         grant_type: 'refresh_token',
       }),
@@ -72,7 +73,7 @@ export const refreshGoogleOBSToken = createServerFn({ method: 'POST' })
 
     const { access_token, expires_in } = await res.json()
 
-    setCookie('googleOBS_AccessToken', access_token, {
+    setCookie(APPCONFIG.TOKEN.ACCESS_GOOGLE, access_token, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
@@ -83,10 +84,10 @@ export const refreshGoogleOBSToken = createServerFn({ method: 'POST' })
   })
 
 export const getGoogleOBSAccessToken = createServerFn({ method: 'GET' })
-  .handler(() => getCookie('googleOBS_AccessToken'))
+  .handler(() => getCookie(APPCONFIG.TOKEN.ACCESS_GOOGLE))
 
 export const getGoogleOBSRefreshToken = createServerFn({ method: 'GET' })
-  .handler(() => getCookie('googleOBS_RefreshToken'))
+  .handler(() => getCookie(APPCONFIG.TOKEN.REFRESH_GOOGLE))
 
 export const getValidGoogleOBSAccessToken = createServerFn({ method: 'GET' })
   .handler(async () => {
@@ -107,8 +108,8 @@ export const getValidGoogleOBSAccessToken = createServerFn({ method: 'GET' })
 
 export const clearGoogleOBSCookies = createServerFn({ method: 'POST' })
   .handler(() => {
-    deleteCookie('googleOBS_AccessToken')
-    deleteCookie('googleOBS_RefreshToken')
+    deleteCookie(APPCONFIG.TOKEN.ACCESS_GOOGLE)
+    deleteCookie(APPCONFIG.TOKEN.REFRESH_GOOGLE)
 
     return { status: 'success', message: 'Đã xóa cookie Google OBS' }
   })
