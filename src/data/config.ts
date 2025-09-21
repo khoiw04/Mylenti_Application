@@ -14,7 +14,11 @@ export const APPCONFIG = {
         ACCESS_DISCORD: 'discordAccessToken',
         REFRESH_DISCORD: 'discordRefreshToken',
         ACCESS_GOOGLE: 'googleOBS_AccessToken',
-        REFRESH_GOOGLE: 'googleOBS_RefreshToken'
+        REFRESH_GOOGLE: 'googleOBS_RefreshToken',
+    },
+    COOKIE: {
+        VIDEO_ID: 'videoId',
+        LIVE_CHAT_ID: 'liveChatId'
     },
     FILE: {
         TAURI_SETTING_FILE_JSON: 'settings.json',

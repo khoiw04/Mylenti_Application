@@ -7,31 +7,12 @@ use std::{env, process::Command};
 use tauri::Manager;
 use std::path::PathBuf;
 use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
-use tauri_plugin_http::reqwest::Client;
 use url::Url;
 
 mod donate_events;
 mod local_http_server;
 mod update;
 mod websocket;
-
-async fn is_flask_ready() -> bool {
-    match Client::new()
-        .get("http://127.0.0.1:6000/health")
-        .send()
-        .await
-    {
-        Ok(res) => res.status().is_success(),
-        Err(_) => false,
-    }
-}
-
-async fn is_node_ready() -> bool {
-    match Client::new().get("http://127.0.0.1:3000").send().await {
-        Ok(res) => res.status().is_success(),
-        Err(_) => false,
-    }
-}
 
 #[tauri::command]
 fn ping() -> String {

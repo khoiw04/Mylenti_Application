@@ -4,7 +4,7 @@ import { useStore } from "@tanstack/react-store";
 import { isTauri } from "@tauri-apps/api/core";
 import { useRouter } from "@tanstack/react-router";
 import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
-import { GoogleStraregy } from "@/store"
+import { GoogleState, GoogleStraregy } from "@/store"
 import { useDimension } from "@/hooks/useDimension";
 import { Route } from "@/routes";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
@@ -68,9 +68,10 @@ function getAuthGoogleOBSCookie() {
 function useOAuthGoogleTauri() {
   const router = useRouter()
   const isGoogleOBSCookieAuth = Route.useLoaderData()
+  const { finishGoogleOBSAuth } = useStore(GoogleState)
   useEffect(() => {
     let portRef: number | null = null
-    if (!isGoogleOBSCookieAuth)
+    if (!isGoogleOBSCookieAuth || !finishGoogleOBSAuth)
     try {
       (async () => {
         const port = await start({
@@ -101,7 +102,7 @@ function useOAuthGoogleTauri() {
             cancel(portRef)
         }
     }
-  }, [isGoogleOBSCookieAuth])
+  }, [isGoogleOBSCookieAuth, finishGoogleOBSAuth])
 }
 
 export default function useIndex() {
