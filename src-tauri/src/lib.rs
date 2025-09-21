@@ -4,9 +4,14 @@ use crate::websocket::start_websocket_server;
 use sqlx::SqlitePool;
 use std::sync::Arc;
 use std::{env, process::Command};
-use tauri::Manager;
 use std::path::PathBuf;
-use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
+use tauri::{
+    Manager,
+    webview::WebviewWindowBuilder, 
+    WebviewUrl, 
+    tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState},
+    menu::{Menu, MenuItem},
+};
 use url::Url;
 
 mod donate_events;
@@ -108,6 +113,11 @@ pub fn run() {
 
             log::info!("🔗 db_url: {}", db_url);
 
+            let quit_item = MenuItem::with_id(app, "quit", "Thoát", true, None::<&str>)?;
+            let show_item = MenuItem::with_id(app, "show", "Hiện ứng dụng", true, None::<&str>)?;
+            let hide_item = MenuItem::with_id(app, "hide", "Ẩn ứng dụng", true, None::<&str>)?;
+            let tray_menu = Menu::with_items(app, &[&show_item, &hide_item, &quit_item])?;
+
             let flask_exe_path = env::current_dir()
                 .unwrap()
                 .join("bin")
@@ -181,6 +191,43 @@ pub fn run() {
                     Err(e) => log::error!("❌ Lỗi tạo WebviewWindow: {}", e),
                 }
             });
+
+            TrayIconBuilder::new()
+                .icon(app.default_window_icon().unwrap().clone())
+                .tooltip("Ứng dụng đang chạy")
+                .menu(&tray_menu)
+                .on_menu_event(|app, event| {
+                let window = app.get_webview_window("main").unwrap();
+                match event.id.as_ref() {
+                    "show" => {
+                    window.show().unwrap();
+                    window.set_focus().unwrap();
+                    }
+                    "hide" => {
+                    window.hide().unwrap();
+                    }
+                    "quit" => {
+                    app.exit(0);
+                    }
+                    _ => {}
+                }
+                })
+                .on_tray_icon_event(|tray, event| match event {
+                TrayIconEvent::Click {
+                    button: MouseButton::Left,
+                    button_state: MouseButtonState::Up,
+                    ..
+                } => {
+                    let app = tray.app_handle();
+                    if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.unminimize();
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                    }
+                }
+                _ => {}
+                })
+                .build(app)?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

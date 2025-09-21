@@ -59,7 +59,7 @@ export default function Main() {
                         <path fill="currentColor" d="M4 4h16v16H4zm2 4v10h12V8z" />
                     </svg>
                 </button>
-                <button onClick={() => appWindow?.close()}>
+                <button onClick={() => appWindow?.hide()}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"

@@ -35,6 +35,7 @@
     "core:window:allow-current-monitor",
     "core:window:allow-create",
     "core:window:allow-available-monitors",
+    "core:window:allow-hide",
     "autostart:allow-enable",
     "autostart:allow-disable",
     "autostart:allow-is-enabled",
