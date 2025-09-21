@@ -4,13 +4,10 @@ import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 import { safeParse, safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSOverlayTauriSettingsProps } from "@/store"
 import { websocketSendType } from '@/data/settings'
-import { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
 
-export default function useReceiveWebSocket() {
-  const { isAuthenticated } = useAuthInfoExternalStore()
+export default function useInitWebSocket() {
   const OBSOverlayTauriSettingsRuntime = useStore(OBSOverlayTauriSettingsProps)
   useTauriSafeEffect(() => {
-    if (!isAuthenticated) return
     OBSTauriWebSocket.connect((msg) => {
       try {
         const parsed = safeParse<{type: string}>(msg)
@@ -19,7 +16,7 @@ export default function useReceiveWebSocket() {
           safeSend(OBSTauriWebSocket.getSocket(), {
             type: websocketSendType.OBSSetting,
             data: OBSOverlayTauriSettingsRuntime
-          });
+          })
         }
 
       } catch (err) {
@@ -30,5 +27,5 @@ export default function useReceiveWebSocket() {
     return () => {
       OBSTauriWebSocket.disconnect()
     }
-  }, [isAuthenticated, OBSOverlayTauriSettingsRuntime])
+  }, [OBSOverlayTauriSettingsRuntime])
 }

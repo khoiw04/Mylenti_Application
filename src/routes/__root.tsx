@@ -46,6 +46,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent() {
+      <div>Not Found</div>
+  },
   beforeLoad: async ({ context }) => {
     const authState = await context.queryClient.ensureQueryData(
       authQueries.user()

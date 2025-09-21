@@ -1,4 +1,4 @@
-import type { WebhookLogEntry, WebhookSepaySchemaType } from "@/types"
+import type { DonateEventSchemaType, WebhookLogEntry, WebhookSepaySchemaType } from "@/types"
 import { getDB } from "@/data/discord.sqlite"
 
 export async function initSepayDonateTable() {
@@ -153,6 +153,18 @@ export async function upsertSepayDonateTable(tx: WebhookSepaySchemaType & {
   )
 }
 
+export async function getDonationsByUser(userName: string): Promise<Array<DonateEventSchemaType>> {
+  const db = await getDB()
+
+  const rows = await db.select(
+    `SELECT * FROM donate_events 
+     WHERE status = 'received' AND user_name = ? 
+     ORDER BY transaction_date DESC`,
+    [userName]
+  )
+
+  return rows as Array<DonateEventSchemaType>
+}
 
 export async function logWebhookFailure(entry: WebhookLogEntry) {
   const db = await getDB()

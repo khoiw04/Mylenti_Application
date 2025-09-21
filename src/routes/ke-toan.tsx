@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import Header from '@/components/presenters/header'
 import { loaderStrategy } from '@/func/fn.stragery'
 import { removeAtPrefix } from '@/lib/utils'
@@ -9,6 +9,10 @@ import { useDonate } from '@/components/containers/page.useDonate'
 export const Route = createFileRoute('/ke-toan')({
   component: RouteComponent,
   loader: async ({ context }) => {
+    if (!context.authState.isAuthenticated) {
+      throw redirect({ to: '/community/ke-toan' })
+    }
+
     const user_name = context.authState.user.meta.user_name
     const data = await loaderStrategy.getDonateDatabaseList(removeAtPrefix(user_name), context)
 

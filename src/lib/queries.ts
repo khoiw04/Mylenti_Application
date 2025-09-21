@@ -5,6 +5,8 @@ import { getProfile } from "@/func/db.SupabaseProfile";
 import { getUser } from "@/func/auth.SupabaseUser";
 import { getDiscordUserInfo } from "@/func/auth.discord";
 import { getDiscordProfile } from "@/func/db.DiscordSQLite";
+import { getDonationsByUser } from "@/data/sepay.sqlite";
+import { DiscordDonationsFallBack } from "@/data/fallback";
 
 export const bankQueries = {
     all: ['bank'],
@@ -19,9 +21,15 @@ export const donateQueries = {
     all: ['donate'],
     donate: (user_name: string) =>
         queryOptions({
-            queryKey: [...donateQueries.all],
+            queryKey: [...donateQueries.all, 'supabase', user_name],
             queryFn: () => getDonateDatabase({ data: { user_name } })
-        })
+        }),
+    discord: (user_name: string) =>    
+        queryOptions({
+            queryKey: [...donateQueries.all, 'discord', user_name],
+            queryFn: () => getDonationsByUser(user_name),
+            placeholderData: DiscordDonationsFallBack
+        }),
 }
 
 export const profileQueries = {

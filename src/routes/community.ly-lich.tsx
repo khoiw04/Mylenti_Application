@@ -14,6 +14,7 @@ export const Route = createFileRoute('/community/ly-lich')({
 function RouteComponent() {
   useCommunityProfile()
   const { isAuthenticated } = useDiscordCommunityUser().data
+
   return (
     <>
     <Header />

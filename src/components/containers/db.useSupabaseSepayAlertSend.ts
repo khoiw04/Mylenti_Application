@@ -2,13 +2,14 @@ import { supabaseSSR } from "@/lib/supabaseBrowser"
 import { websocketSendType } from "@/data/settings"
 import { safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSTauriWebSocket } from "@/class/WebSocketTauriManager"
-import useAuthInfo, { useAuthInfoExternalStore } from "@/hooks/useAuthSupabaseInfo"
+import useAuthInfo from "@/hooks/useAuthSupabaseInfo"
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 import { NotificationStore } from "@/store"
+import { useAuthenticatedUser } from "@/lib/queries"
 
 export default function useSupabaseSepayAlertSend() {
   const authInfo = useAuthInfo()
-  const { isAuthenticated } = useAuthInfoExternalStore()
+  const { isAuthenticated } = useAuthenticatedUser().data
 
   useTauriSafeEffect(() => {
     if (!isAuthenticated) return

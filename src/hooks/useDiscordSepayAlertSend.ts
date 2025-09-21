@@ -10,6 +10,7 @@ import { websocketSendType } from '@/data/settings'
 export default function useDiscordSepayAlertSend() {
   const { meta } = useDiscordCommunityUser().data
   useTauriSafeEffect(() => {
+    if (!meta.username) return;
     let unlisten: (() => void) | null = null
     const setup = async () => {
       unlisten = await listen<donateDiscordStoreRealTime>('donate_received', ({ payload }) => {

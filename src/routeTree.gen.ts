@@ -24,6 +24,7 @@ import { Route as DangKyRouteImport } from './routes/dang-ky'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunityNganHangRouteImport } from './routes/community.ngan-hang'
 import { Route as CommunityLyLichRouteImport } from './routes/community.ly-lich'
+import { Route as CommunityKeToanRouteImport } from './routes/community.ke-toan'
 import { Route as AuthGoogleOBSRouteImport } from './routes/auth.googleOBS'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { ServerRoute as UploadFilesServerRouteImport } from './routes/uploadFiles'
@@ -111,6 +112,11 @@ const CommunityLyLichRoute = CommunityLyLichRouteImport.update({
   path: '/community/ly-lich',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityKeToanRoute = CommunityKeToanRouteImport.update({
+  id: '/community/ke-toan',
+  path: '/community/ke-toan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthGoogleOBSRoute = AuthGoogleOBSRouteImport.update({
   id: '/auth/googleOBS',
   path: '/auth/googleOBS',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/community/ke-toan': typeof CommunityKeToanRoute
   '/community/ly-lich': typeof CommunityLyLichRoute
   '/community/ngan-hang': typeof CommunityNganHangRoute
   '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/community/ke-toan': typeof CommunityKeToanRoute
   '/community/ly-lich': typeof CommunityLyLichRoute
   '/community/ngan-hang': typeof CommunityNganHangRoute
   '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/quen-mat-khau': typeof QuenMatKhauRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/googleOBS': typeof AuthGoogleOBSRoute
+  '/community/ke-toan': typeof CommunityKeToanRoute
   '/community/ly-lich': typeof CommunityLyLichRoute
   '/community/ngan-hang': typeof CommunityNganHangRoute
   '/runtime/obsdonate': typeof RuntimeObsdonateLazyRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/community/ke-toan'
     | '/community/ly-lich'
     | '/community/ngan-hang'
     | '/runtime/obsdonate'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/community/ke-toan'
     | '/community/ly-lich'
     | '/community/ngan-hang'
     | '/runtime/obsdonate'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/quen-mat-khau'
     | '/auth/callback'
     | '/auth/googleOBS'
+    | '/community/ke-toan'
     | '/community/ly-lich'
     | '/community/ngan-hang'
     | '/runtime/obsdonate'
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   QuenMatKhauRoute: typeof QuenMatKhauRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthGoogleOBSRoute: typeof AuthGoogleOBSRoute
+  CommunityKeToanRoute: typeof CommunityKeToanRoute
   CommunityLyLichRoute: typeof CommunityLyLichRoute
   CommunityNganHangRoute: typeof CommunityNganHangRoute
   RuntimeObsdonateLazyRoute: typeof RuntimeObsdonateLazyRoute
@@ -397,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityLyLichRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community/ke-toan': {
+      id: '/community/ke-toan'
+      path: '/community/ke-toan'
+      fullPath: '/community/ke-toan'
+      preLoaderRoute: typeof CommunityKeToanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/googleOBS': {
       id: '/auth/googleOBS'
       path: '/auth/googleOBS'
@@ -452,6 +472,7 @@ const rootRouteChildren: RootRouteChildren = {
   QuenMatKhauRoute: QuenMatKhauRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthGoogleOBSRoute: AuthGoogleOBSRoute,
+  CommunityKeToanRoute: CommunityKeToanRoute,
   CommunityLyLichRoute: CommunityLyLichRoute,
   CommunityNganHangRoute: CommunityNganHangRoute,
   RuntimeObsdonateLazyRoute: RuntimeObsdonateLazyRoute,

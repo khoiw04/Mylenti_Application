@@ -3,6 +3,7 @@ import { useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { isTauri } from '@tauri-apps/api/core';
+import { useQuery } from '@tanstack/react-query';
 import { DiscordStraregy } from '@/store';
 import { clearDiscordCookies, getDiscordToken } from '@/func/auth.discord';
 import { useDimension } from '@/hooks/useDimension';

@@ -6,7 +6,7 @@ import useTauriWindow from '@/components/containers/api.useTauriWindow'
 import { AppWindowStore, ThemeStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
 import useSupabaseSepayAlertSend from '@/components/containers/db.useSupabaseSepayAlertSend'
-import useReceiveWebSocket from '@/components/containers/db.useReceiveWebSocketOBS'
+import useInitWebSocket from '@/components/containers/db.useInitWebSocket'
 import useTheme from '@/components/containers/db.useTheme';
 import useDiscordSepayAlertSend from '@/hooks/useDiscordSepayAlertSend';
 
@@ -18,13 +18,13 @@ export default function Main() {
     // USERSETTING - SYNC
     useTheme()
     
+    // Websocket - INIT
+    useInitWebSocket()
+
     // Websocket - SEND
     useSupabaseSepayAlertSend()
     useWebsocketOBSOverlaySend()
     useDiscordSepayAlertSend()
-
-    // Websocket - RECEIVE
-    useReceiveWebSocket()
 
     useTauriWindow()
     const { theme } = useStore(ThemeStore)

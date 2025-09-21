@@ -76,33 +76,40 @@ export const getMimeType = (filename: string): string => {
 };
 
 
-export function timeAgo(timestamp: string, locale: 'vi' | 'en' = 'vi') {
+export function timeAgo(
+  timestamp: string,
+  locale: 'vi' | 'en' = 'vi',
+  reverse: boolean = true
+) {
   const now = new Date()
-  const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000)
   const past = new Date(timestamp)
-  const diff = Math.floor((nowUTC.getTime() - past.getTime()) / 1000)
+  const diff = Math.floor((now.getTime() - past.getTime()) / 1000)
 
   const formats = {
     vi: {
-      seconds: 'giây trước',
-      minutes: 'phút trước',
-      hours: 'tiếng trước',
-      days: 'ngày trước',
+      seconds: ['giây trước', '%s giây trước'],
+      minutes: ['phút trước', '%s phút trước'],
+      hours: ['tiếng trước', '%s tiếng trước'],
+      days: ['ngày trước', '%s ngày trước'],
     },
     en: {
-      seconds: 'seconds ago',
-      minutes: 'minutes ago',
-      hours: 'hours ago',
-      days: 'days ago',
+      seconds: ['seconds ago', '%s seconds ago'],
+      minutes: ['minutes ago', '%s minutes ago'],
+      hours: ['hours ago', '%s hours ago'],
+      days: ['days ago', '%s days ago'],
     },
   }
 
   const f = formats[locale]
+  const absDiff = Math.abs(diff)
 
-  if (diff < 60) return `${diff} ${f.seconds}`
-  if (diff < 3600) return `${Math.floor(diff / 60)} ${f.minutes}`
-  if (diff < 86400) return `${Math.floor(diff / 3600)} ${f.hours}`
-  return `${Math.floor(diff / 86400)} ${f.days}`
+  let phrase = ''
+  if (absDiff < 60) phrase = reverse ? f.seconds[1].replace('%s', absDiff.toString()) : `${absDiff} ${f.seconds[0]}`
+  else if (absDiff < 3600) phrase = reverse ? f.minutes[1].replace('%s', Math.floor(absDiff / 60).toString()) : `${Math.floor(absDiff / 60)} ${f.minutes[0]}`
+  else if (absDiff < 86400) phrase = reverse ? f.hours[1].replace('%s', Math.floor(absDiff / 3600).toString()) : `${Math.floor(absDiff / 3600)} ${f.hours[0]}`
+  else phrase = reverse ? f.days[1].replace('%s', Math.floor(absDiff / 86400).toString()) : `${Math.floor(absDiff / 86400)} ${f.days[0]}`
+
+  return phrase
 }
 
 export function calculateChangePercent(current: number, previous: number): number {
