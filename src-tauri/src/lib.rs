@@ -3,13 +3,12 @@ use crate::local_http_server::start_http_server;
 use crate::websocket::start_websocket_server;
 use sqlx::SqlitePool;
 use std::sync::Arc;
-use std::{env, process::Command, time::Duration};
+use std::{env, process::Command};
 use tauri::Manager;
 use std::path::PathBuf;
 use tauri::{webview::WebviewWindowBuilder, WebviewUrl};
 use tauri_plugin_http::reqwest::Client;
 use tauri::AppHandle;
-use tokio::time::sleep;
 use url::Url;
 
 mod donate_events;

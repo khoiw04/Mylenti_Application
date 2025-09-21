@@ -37,7 +37,7 @@ pub fn start_donate_listener(app: AppHandle, pool: &SqlitePool) {
         match 
         sqlx::query(
             "
-                CREATE TABLE IF NOT EXISTS donate_events (
+            CREATE TABLE IF NOT EXISTS donate_events (
                 code TEXT PRIMARY KEY,
                 email TEXT DEFAULT NULL,
                 display_name TEXT,

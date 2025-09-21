@@ -15,5 +15,9 @@ export const APPCONFIG = {
     },
     NOTE: {
         CLOUDFLARE_TUNNEL: 'cloudflared tunnel --url http://localhost:8080'
+    },
+    TABLE: {
+        DISCORD: 'users',
+        DONATE_EVENT: 'donate_events'
     }
 } as const

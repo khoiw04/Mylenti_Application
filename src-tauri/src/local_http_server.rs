@@ -6,7 +6,6 @@ use axum::{
     Json, Router,
 };
 use axum_macros::debug_handler;
-use http::HeaderValue;
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, SqlitePool};
@@ -47,6 +46,23 @@ struct DonationPreview {
     transfer_amount: i64,
     created_at: String,
     status: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[allow(non_snake_case)]
+pub struct SePayWebhook {
+    id: i64,
+    gateway: String,
+    transactionDate: String,
+    accountNumber: String,
+    code: Option<String>,
+    content: String,
+    transferType: String,
+    transferAmount: i64,
+    accumulated: i64,
+    subAccount: Option<String>,
+    referenceCode: String,
+    description: String,
 }
 
 async fn health_handler(State(pool): State<SqlitePool>) -> impl IntoResponse {
@@ -203,6 +219,110 @@ async fn post_donation_handler(
     }
 }
 
+#[debug_handler]
+pub async fn webhook_sepay_handler(
+    Path(user_name): Path<String>,
+    State(pool): State<SqlitePool>,
+    headers: axum::http::HeaderMap,
+    Json(payload): Json<SePayWebhook>,
+) -> impl IntoResponse {
+    let auth_header = headers.get("authorization").and_then(|v| v.to_str().ok());
+    let source = headers.get("user-agent").and_then(|v| v.to_str().ok()).unwrap_or("unknown");
+
+    if auth_header.is_none() {
+        log::warn!("❌ Thiếu Authorization header từ {}", source);
+        return (StatusCode::UNAUTHORIZED, "Thiếu header Authorization").into_response();
+    }
+
+    let auth = auth_header.unwrap();
+
+    let user_row = match sqlx::query("SELECT api_key FROM users WHERE user_name = ?")
+        .bind(&user_name)
+        .fetch_optional(&pool)
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            log::error!("❌ DB error: {:?}", e);
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "DB error",
+            )
+                .into_response();
+        }
+    };
+
+    let api_key = match user_row {
+        Some(row) => row.try_get::<String, _>("api_key").unwrap_or_default(),
+        None => {
+            log::warn!("❌ Không tìm thấy user_name: {}", user_name);
+            return (StatusCode::UNAUTHORIZED, "User not found").into_response();
+        }
+    };
+
+    if format!("Apikey {}", api_key) != auth {
+        log::warn!("❌ Sai API Key cho user_name: {}", user_name);
+        return (StatusCode::UNAUTHORIZED, "Unauthorized").into_response();
+    }
+
+    let code = match &payload.code {
+        Some(c) if !c.trim().is_empty() => c.trim(),
+        _ => {
+            log::warn!("❌ Payload không có code hợp lệ");
+            return (StatusCode::BAD_REQUEST, "Missing or empty code").into_response();
+        }
+    };
+
+    let result = sqlx::query(
+        "INSERT INTO donate_events (
+            code, user_name, id_transaction, gateway, transaction_date, account_number, content,
+            transfer_type, transfer_amount, accumulated, sub_account, reference_code,
+            description, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(code) DO UPDATE SET
+            id_transaction = excluded.id_transaction,
+            gateway = excluded.gateway,
+            transaction_date = excluded.transaction_date,
+            account_number = excluded.account_number,
+            content = excluded.content,
+            transfer_type = excluded.transfer_type,
+            transfer_amount = excluded.transfer_amount,
+            accumulated = excluded.accumulated,
+            sub_account = excluded.sub_account,
+            reference_code = excluded.reference_code,
+            description = excluded.description,
+            status = excluded.status"
+    )
+    .bind(code)
+    .bind(&user_name)
+    .bind(payload.id)
+    .bind(&payload.gateway)
+    .bind(&payload.transactionDate)
+    .bind(&payload.accountNumber)
+    .bind(&payload.content)
+    .bind(&payload.transferType)
+    .bind(payload.transferAmount)
+    .bind(payload.accumulated)
+    .bind(&payload.subAccount)
+    .bind(&payload.referenceCode)
+    .bind(&payload.description)
+    .bind("received")
+    .execute(&pool)
+    .await;
+
+    if let Err(e) = result {
+        log::error!("❌ Lỗi khi upsert từ webhook SePay: {:?}", e);
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("DB error: {}", e),
+        )
+        .into_response();
+    }
+
+    log::info!("✅ Webhook SePay xử lý thành công");
+    (StatusCode::OK, "Webhook received").into_response()
+}
+
 pub async fn start_http_server(pool: SqlitePool) -> Result<(), Box<dyn Error>> {
     log::info!("📡 Bắt đầu start_http_server()");
     let cors = CorsLayer::new()
@@ -216,6 +336,7 @@ pub async fn start_http_server(pool: SqlitePool) -> Result<(), Box<dyn Error>> {
         .route("/data/{user_name}/donations", get(donations_handler))
         .route("/data/{user_name}/donations", post(post_donation_handler))
         .route("/data/{user_name}/donations", options(|| async { StatusCode::OK }))
+        .route("/{user_name}/webhook/sepay", post(webhook_sepay_handler))
         .layer(cors)
         .with_state(pool.clone());
 
