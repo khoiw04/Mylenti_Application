@@ -2,9 +2,11 @@ use crate::donate_events::start_donate_listener;
 use crate::local_http_server::start_http_server;
 use crate::websocket::start_websocket_server;
 use sqlx::SqlitePool;
-use std::sync::Arc;
-use std::{env, process::Command};
-use std::path::PathBuf;
+use std::{
+    path::PathBuf,
+    sync::Arc,
+    env,
+};
 use tauri::{
     Manager,
     webview::WebviewWindowBuilder, 
@@ -13,7 +15,7 @@ use tauri::{
     menu::{Menu, MenuItem},
 };
 use url::Url;
-
+use tauri_plugin_shell::ShellExt;
 mod donate_events;
 mod local_http_server;
 mod update;
@@ -45,15 +47,15 @@ fn log_frontend(
     );
 }
 
-fn start_process(path: &std::path::Path, name: &str) {
-    if !path.exists() {
-        log::error!("❌ File {} không tồn tại tại: {}", name, path.display());
-        return;
+fn start_sidecar(name: &str, args: &[&str], app: &tauri::AppHandle) {
+    let mut command = app.shell().sidecar(name).unwrap();
+    for arg in args {
+        command = command.arg(arg);
     }
 
-    match Command::new(path).spawn() {
-        Ok(_) => log::info!("🚀 Đã khởi động {}", name),
-        Err(e) => log::error!("❌ Không thể chạy {}: {}", name, e),
+    match command.spawn() {
+        Ok(_) => log::info!("🚀 Đã khởi động sidecar: {}", name),
+        Err(e) => log::error!("❌ Không thể chạy sidecar {}: {}", name, e),
     }
 }
 
@@ -118,24 +120,7 @@ pub fn run() {
             let hide_item = MenuItem::with_id(app, "hide", "Ẩn ứng dụng", true, None::<&str>)?;
             let tray_menu = Menu::with_items(app, &[&show_item, &hide_item, &quit_item])?;
 
-            let flask_exe_path = env::current_dir()
-                .unwrap()
-                .join("bin")
-                .join("donate_voice.exe");
-
-            let cloudflared_exe_path = env::current_dir()
-                .unwrap()
-                .join("bin")
-                .join("cloudflared.exe");
-
-            let node_exe_path = env::current_dir()
-                .unwrap()
-                .join("bin")
-                .join("node_server.exe");
-
-            start_process(&flask_exe_path, "donate_voice.exe");
-            // start_process(&cloudflared_exe_path, "cloudflared.exe");
-            // start_process(&node_exe_path, "node_server.exe");
+            start_sidecar("donate_voice", &[], &app_handle);
 
             tauri::async_runtime::spawn(async move {
                 let pool = match SqlitePool::connect(&db_url_for_http).await {

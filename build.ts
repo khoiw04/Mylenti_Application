@@ -1,40 +1,43 @@
 import { execSync } from "node:child_process";
-import { cpSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, mkdirSync, renameSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
 const outputDir = join(root, ".output");
 const targetDir = join(root, "src-tauri", "bin", ".output");
 
-const serverEntry = join(outputDir, "server", "index.mjs");
-const outputExe = join(root, "src-tauri", "bin", "node_server.exe");
+const ext = process.platform === "win32" ? ".exe" : "";
+
+const rustInfo = execSync("rustc -vV").toString();
+const targetTripleMatch = /host: (\S+)/g.exec(rustInfo);
+if (!targetTripleMatch) {
+  console.error("❌ Failed to determine platform target triple");
+  process.exit(1);
+}
+const targetTriple = targetTripleMatch[1];
+
+const finalExe = join(root, `src-tauri/bin/node_server-${targetTriple}${ext}`);
 
 try {
-  // 1. Build TanStack Start
   console.log("🛠️ Building TanStack app...");
   execSync("bun run build", { stdio: "inherit" });
 
-  // Xóa toàn bộ thư mục server nếu tồn tại
-  rmSync(targetDir, { recursive: true, force: true })
-  
-  // 2. Tạo thư mục bin/.output nếu chưa có
+  rmSync(targetDir, { recursive: true, force: true });
   mkdirSync(targetDir, { recursive: true });
 
-  // 3. Copy .output/public vào bin/.output/public
-  console.log("📦 Copying .output/public to bin/.output/public...");
+  console.log("📦 Copying .output/public...");
   cpSync(join(outputDir, "public"), join(targetDir, "public"), { recursive: true });
 
-  // 4. Copy .output/server vào bin/.output/server
-  console.log("📦 Copying .output/server/chunks to bin/.output/server/chunks...");
+  console.log("📦 Copying .output/server/chunks...");
   cpSync(join(outputDir, "server", "chunks"), join(targetDir, "server", "chunks"), { recursive: true });
 
-  // 5. Build node_server.exe với nexe
-  console.log("🔨 Packing server with nexe (build mode)...");
-  execSync(`nexe -i "${serverEntry}" -o "${outputExe}" --build`, {
-    stdio: "inherit",
-  });
+  console.log("🔨 Packing server with nexe...");
+  const tempExe = join(root, "node_server_temp" + ext);
+  execSync(`nexe -i "${join(outputDir, "server", "index.mjs")}" -o "${tempExe}" --build`, { stdio: "inherit" });
 
-  console.log("✅ All done! Everything is in src-tauri/bin/.output/");
+  renameSync(tempExe, finalExe);
+
+  console.log(`✅ Done! Sidecar binary is at ${finalExe}`);
 } catch (err) {
   console.error("❌ Build failed:", err);
   process.exit(1);

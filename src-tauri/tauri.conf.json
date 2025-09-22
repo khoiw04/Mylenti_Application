@@ -7,7 +7,7 @@
     "frontendDist": "../.output/public",
     "devUrl": "http://localhost:3000",
     "beforeDevCommand": "bun run dev",
-    "beforeBuildCommand": "bun build.ts && python build.py"
+    "beforeBuildCommand": "bun build.ts && python build.py && python download-cloudflare.py"
   },
   "app": {
     "windows": [
@@ -43,7 +43,8 @@
     "active": true,
     "targets": ["msi", "dmg", "deb", "appimage"],
     "createUpdaterArtifacts": true,
-    "resources": ["bin/.output", "bin/donate_voice.exe", "bin/node_server.exe", "bin/cloudflared.exe"],
+    "resources": ["bin/.output", "bin/cloudflared/config.yml"],
+    "externalBin": ["bin/donate_voice", "bin/node_server", "bin/cloudflared"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

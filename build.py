@@ -6,6 +6,18 @@ import importlib.util
 
 print(f"🐍 Using Python: {sys.executable}")
 
+def get_target_triple():
+    try:
+        rust_info = subprocess.check_output(["rustc", "-vV"], text=True)
+        for line in rust_info.splitlines():
+            if line.startswith("host:"):
+                return line.split("host:")[1].strip()
+        print("❌ Không xác định được target triple từ rustc")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Lỗi khi chạy rustc -vV: {e}")
+        sys.exit(1)
+
 def copy_vietvoicetts():
     spec = importlib.util.find_spec("vietvoicetts")
     if spec and spec.origin:
@@ -51,9 +63,10 @@ def build_executable():
     print("🔧 Đang build donate_voice.exe...")
     subprocess.run(cmd, check=True)
 
-def move_executable():
+def move_executable(target_triple):
     dist_path = "dist/donate_voice.exe"
-    target_path = "src-tauri/bin/donate_voice.exe"
+    ext = ".exe" if sys.platform == "win32" else ""
+    target_path = f"src-tauri/bin/donate_voice-{target_triple}{ext}"
     if os.path.exists(dist_path):
         os.replace(dist_path, target_path)
         print(f"✅ Đã di chuyển: {dist_path} → {target_path}")
@@ -65,4 +78,5 @@ if __name__ == "__main__":
     copy_vietvoicetts()
     clean_previous_build()
     build_executable()
-    move_executable()
+    target_triple = get_target_triple()
+    move_executable(target_triple)
