@@ -1,6 +1,8 @@
 use crate::donate_events::start_donate_listener;
 use crate::local_http_server::start_http_server;
 use crate::websocket::start_websocket_server;
+use crate::tunnel::create_and_save_tunnel;
+use crate::tunnel::ensure_credentials;
 use sqlx::SqlitePool;
 use std::{
     path::PathBuf,
@@ -12,7 +14,6 @@ use tauri::{
     webview::WebviewWindowBuilder,
     tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState},
     menu::{Menu, MenuItem},
-    path::BaseDirectory,
     RunEvent,
 };
 use url::Url;
@@ -23,6 +24,7 @@ mod donate_events;
 mod local_http_server;
 mod update;
 mod websocket;
+mod tunnel;
 
 #[tauri::command]
 fn ping() -> String {
@@ -82,11 +84,9 @@ pub fn run() {
 
     let donate_voice_process = Arc::new(Mutex::new(None));
     // let node_server_process = Arc::new(Mutex::new(None));
-    // let cloudflared_process = Arc::new(Mutex::new(None));
 
     let donate_voice_process_for_exit = donate_voice_process.clone();
     // let node_server_process_for_exit = node_server_process.clone();
-    // let cloudflared_process_for_exit = cloudflared_process.clone();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_window_state::Builder::new().build())
@@ -122,7 +122,6 @@ pub fn run() {
         .setup({
             let donate_voice_process = donate_voice_process.clone();
             // let node_server_process = node_server_process.clone();
-            // let cloudflared_process = cloudflared_process.clone();
 
             move |app| {
                 log::info!("🔧 Đang chạy setup Tauri");
@@ -142,44 +141,12 @@ pub fn run() {
                 let hide_item = MenuItem::with_id(app, "hide", "Ẩn ứng dụng", true, None::<&str>)?;
                 let tray_menu = Menu::with_items(app, &[&show_item, &hide_item, &quit_item])?;
 
-                let cloudflared_config = app_handle
-                    .path()
-                    .resolve("bin/cloudflared/config.yml", BaseDirectory::Resource)
-                    .expect("❌ Không tìm thấy config.yml")
-                    .to_string_lossy()
-                    .to_string();
-
-                // start_sidecar("donate_voice", &[], &app_handle);
                 let donate_voice = start_sidecar("donate_voice", &[], &app_handle);
                 *donate_voice_process.lock().unwrap() = donate_voice;
 
                 // start_sidecar("node_server", &[], &app_handle);
                 // let node_server = start_sidecar("node_server", &[], &app_handle);
                 // *node_server_process.lock().unwrap() = node_server;
-
-                // start_sidecar(
-                //     "cloudflared",
-                //     &[
-                //         "tunnel",
-                //         "--config",
-                //         &cloudflared_config,
-                //         "run",
-                //         "mylenti-tunnel"
-                //     ],
-                //     &app_handle,
-                // );
-                // let cloudflared = start_sidecar(
-                //     "cloudflared",
-                //     &[
-                //         "tunnel",
-                //         "--config",
-                //         &cloudflared_config,
-                //         "run",
-                //         "mylenti-tunnel"
-                //     ],
-                //     &app_handle,
-                // );
-                // *cloudflared_process.lock().unwrap() = cloudflared;
 
                 tauri::async_runtime::spawn(async move {
                     let pool = match SqlitePool::connect(&db_url_for_http).await {
@@ -278,6 +245,8 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            create_and_save_tunnel,
+            ensure_credentials,
             update::run_update,
             log_frontend,
             ping
@@ -286,10 +255,6 @@ pub fn run() {
         .expect("❌ Lỗi khi build ứng dụng Tauri")
         .run(move |_app_handle, event| {
             if let RunEvent::ExitRequested { .. } = event {
-                // if let Some(child) = cloudflared_process_for_exit.lock().unwrap().take() {
-                //     let _ = child.kill();
-                //     log::info!("🛑 Đã dừng cloudflared");
-                // }
                 if let Some(child) = donate_voice_process_for_exit.lock().unwrap().take() {
                     let _ = child.kill();
                     log::info!("🛑 Đã dừng donate_voice");

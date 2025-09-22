@@ -1,9 +1,14 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { invoke } from "@tauri-apps/api/core";
+import { homeDir } from '@tauri-apps/api/path';
+import { Command } from '@tauri-apps/plugin-shell';
 import { AppWindowStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
+import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
 
-export default function useTauriWindow() {
+export default function useTauriInit() {
+    const { data: { user_name } } = useSQLiteDiscordInfo()
+
     useTauriSafeEffect(() => {
         const appWindow = getCurrentWindow();
         AppWindowStore.setState(prev => ({ ...prev, appWindow }))
@@ -55,4 +60,20 @@ export default function useTauriWindow() {
             sendLog("error", String(event.reason));
         };
     }, [])
+
+    useTauriSafeEffect(() => {
+        if (!user_name) return
+        (async () => {
+            const home = await homeDir();
+            const configPath = `${home}.cloudflared/config.yml`;
+
+            await Command.sidecar('bin/cloudflared', [
+                'tunnel',
+                '--config',
+                configPath,
+                'run',
+                user_name,
+            ]).execute();
+        })()
+    }, [user_name])
 }

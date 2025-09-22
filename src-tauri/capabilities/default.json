@@ -127,6 +127,26 @@
         }
       ]
     },
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "args": [
+            "tunnel",
+            "--config",
+            {
+              "validator": ".*config\\.yml$"
+            },
+            "run",
+            {
+              "validator": "\\S+"
+            }
+          ],
+          "name": "bin/cloudflared",
+          "sidecar": true
+        }
+      ]
+    },
     "window-state:default"
   ]
 }

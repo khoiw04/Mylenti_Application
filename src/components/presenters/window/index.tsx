@@ -2,7 +2,7 @@ import { useStore } from '@tanstack/react-store'
 import { isTauri } from '@tauri-apps/api/core'
 import { Toaster } from 'sonner';
 import useWebsocketOBSOverlaySend from "@/components/containers/db.useWebsocketOBSSettingsSend";
-import useTauriWindow from '@/components/containers/api.useTauriWindow'
+import useTauriInit from '@/components/containers/api.useTauriInit'
 import { AppWindowStore, ThemeStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
 import useSupabaseSepayAlertSend from '@/components/containers/db.useSupabaseSepayAlertSend'
@@ -26,7 +26,7 @@ export default function Main() {
     useWebsocketOBSOverlaySend()
     useDiscordSepayAlertSend()
 
-    useTauriWindow()
+    useTauriInit()
     const { theme } = useStore(ThemeStore)
   
     const { appWindow } = useStore(AppWindowStore)
