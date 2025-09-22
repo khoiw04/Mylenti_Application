@@ -3,7 +3,7 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { useCallback, useEffect, useState } from 'react';
 
-import type { FileUploadActions, FileUploadOptions, FileUploadState, FileWithPreview } from '@/types/func/useFileUpload';
+import type { FileUploadActions, FileUploadOptions, FileUploadState } from '@/types/func/useFileUpload';
 import { getMimeType } from '@/lib/utils';
 
 export const useFileUpload = (
@@ -17,26 +17,36 @@ export const useFileUpload = (
   })
 
   // Back-end
-  const extractMetadata = async (paths: Array<string>): Promise<Array<FileWithPreview>> => {
-    const files = await Promise.all(
-      paths.map(async (path) => {
-        const name = path.split(/[/\\]/).pop()!;
-        const fileStat = await stat(path);
-        const type = getMimeType(name);
-        const binary = await readFile(path);
-
-        return {
-          name,
-          path,
-          preview: convertFileSrc(path),
-          size: fileStat.size,
-          type,
-          binary,
-        };
-      })
-    );
-    return files;
-  };
+  const uploadFiles = useCallback(async (paths: Array<string>) => {
+    try {
+      const metadata = await Promise.all(
+        paths.map(async (path) => {
+          const name = path.split(/[/\\]/).pop()!;
+          const fileStat = await stat(path);
+          const type = getMimeType(name);
+          const binary = await readFile(path);
+  
+          return {
+            name,
+            path,
+            preview: convertFileSrc(path),
+            size: fileStat.size,
+            type,
+            binary,
+          };
+        })
+      );
+      const combined = [...state.files, ...metadata].slice(0, maxFiles);
+      setState(prev => ({ ...prev, files: combined, errors: [] }));
+      onFilesChange?.(combined)
+    } catch (err) {
+        setState((prev) => ({
+          ...prev,
+          errors: [`Không thể thêm link: ${paths}`],
+        }));
+      }
+    },
+    [state.files, maxFiles])
 
   const loadFromStore = useCallback(async () => {
     try {
@@ -46,15 +56,6 @@ export const useFileUpload = (
       console.warn('Không thể đọc từ store:', err);
     }
   }, []);
-
-  const updateFiles = useCallback(async (newPaths: Array<string>) => {
-    const metadata = await extractMetadata(newPaths);
-    const combined = [...state.files, ...metadata].slice(0, maxFiles);
-
-    setState(prev => ({ ...prev, files: combined, errors: [] }));
-    
-    onFilesChange?.(combined)
-  }, [state.files, maxFiles, extractMetadata]);
 
   const handleUpload = useCallback(async () => {
       // eslint-disable-next-line no-shadow
@@ -76,9 +77,9 @@ export const useFileUpload = (
       if (!selected) return
     
       const paths = Array.isArray(selected) ? selected : [selected]
-      await updateFiles(paths)
+      await uploadFiles(paths)
       return []
-  }, [updateFiles]);
+  }, [uploadFiles]);
 
 
   // Front-end
@@ -93,8 +94,8 @@ export const useFileUpload = (
       .map((f) => (f as any).path)
       .filter(Boolean);
 
-    await updateFiles(paths);
-  }, [updateFiles]);
+    await uploadFiles(paths);
+  }, [uploadFiles]);
 
   const clearFiles = useCallback(() => {
     setState(prev => ({ ...prev, files: [], errors: [] }));

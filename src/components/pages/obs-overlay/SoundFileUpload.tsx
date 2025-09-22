@@ -2,15 +2,15 @@ import {
   AlertCircleIcon,
   LucideAudioWaveform,
   Trash2Icon,
-  UploadIcon,
   XIcon,
 } from "lucide-react"
-import { useFileUpload } from "@/hooks/use-donate-upload"
+import { useFileUpload } from "@/hooks/use-link-direct-upload"
 
 import { Button } from "@/components/ui/button"
 import { formatBytes } from "@/lib/utils";
 import { OBSOverlayTauriSettingsProps, loadSounds, saveSounds } from "@/store";
-import { fallbackSound } from "@/data/obs-overlay";
+import { fallbackSound } from "@/data/fallback";
+import { Input } from "@/components/ui/input";
 
 export default function SoundFileUpload() {
   const maxFiles = 4
@@ -18,11 +18,10 @@ export default function SoundFileUpload() {
   const [
     { files, errors },
     {
-      openFileDialog,
       getInputProps,
-      handleDrop,
       handleDelete,
-      clearFiles
+      clearFiles,
+      addFromUrl
     },
   ] = useFileUpload({
     maxFiles,
@@ -44,7 +43,6 @@ export default function SoundFileUpload() {
   return (
     <div className="flex flex-col gap-2">
       <div
-        onDrop={handleDrop}
         data-files={files.length > 0 || undefined}
         className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors not-data-[files]:justify-center has-[input:focus]:ring-[3px]"
       >
@@ -60,13 +58,6 @@ export default function SoundFileUpload() {
                 Âm thanh ({files.length})
               </h3>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={openFileDialog}>
-                  <UploadIcon
-                    className="-ms-0.5 size-3.5 opacity-60"
-                    aria-hidden="true"
-                  />
-                  Đăng âm thanh
-                </Button>
                 <Button variant="outline" size="sm" onClick={clearFiles}>
                   <Trash2Icon
                     className="-ms-0.5 size-3.5 opacity-60"
@@ -114,14 +105,6 @@ export default function SoundFileUpload() {
             >
               <LucideAudioWaveform className="size-4 opacity-60" />
             </div>
-            <p className="mb-1.5 text-sm font-medium">Hãy chọn Âm thanh</p>
-            <p className="text-muted-foreground text-xs">
-              Tối đa {maxFiles} âm thanh
-            </p>
-            <Button variant="outline" className="mt-4" onClick={openFileDialog}>
-              <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
-              Chọn âm thanh
-            </Button>
           </div>
         )}
       </div>
@@ -135,6 +118,26 @@ export default function SoundFileUpload() {
           <span>{errors[0]}</span>
         </div>
       )}
+
+      <div className="space-y-2">
+        <div className="bg-background gap-2 rounded-lg border p-2 pe-3">
+          <Input
+            className="truncate text-[13px] font-medium w-full text-center"
+            placeholder="Dán link Âm thanh và nhấn Enter"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                const url = (e.target as HTMLInputElement).value.trim();
+                if (url) {
+                  e.preventDefault();
+                  addFromUrl(url);
+                  (e.target as HTMLInputElement).value = '';
+                }
+              }
+            }}
+          />
+        </div>
+      </div>
+
     </div>
   )
 }

@@ -123,7 +123,7 @@ export function truncateMessage(message: string, maxLength: number = 200): strin
     : message;
 }
 
-export const nativeFetch = async (url: string, options: RequestInit) => {
+export const nativeFetch = async (url: string, options?: RequestInit) => {
   return !isTauri() ? 
     await fetch(url, options) :
     await TauriFetch(url, options);

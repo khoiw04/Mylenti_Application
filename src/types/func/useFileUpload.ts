@@ -26,4 +26,12 @@ export interface FileUploadActions {
   openFileDialog: () => void;
   getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
   handleDelete: (id: string) => void;
+  addFromUrl?: (url: string) => void
+}
+
+export interface HTMLUploadActions {
+  clearFiles: () => void;
+  getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
+  handleDelete: (id: string) => void;
+  addFromUrl: (url: string) => void
 }

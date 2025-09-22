@@ -22,8 +22,9 @@ export const APPCONFIG = {
     },
     FILE: {
         TAURI_SETTING_FILE_JSON: 'settings.json',
-        TAURI_SETTING_FILE_DAT: '.settings.dat',
-        TAURI_USERNAME_KEY_DAT: "discord_user_name"
+        DONATE_FILE: 'donate-files.json',
+        EMOJI_DONATE_KEY: 'emojis',
+        SOUND_DONATE_KEY: 'sound',
     },
     SNAKE: {
         4455: 'WEBSOCKET',

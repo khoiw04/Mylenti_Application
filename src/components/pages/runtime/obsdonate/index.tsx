@@ -33,8 +33,8 @@ export default function OBSDonate() {
     const unsubscribe = OBSOverlayDataDonateWebsiteStore.subscribe(({ prevVal, currentVal }) => {
       if (JSON.stringify(currentVal) !== JSON.stringify(prevVal)) {
 
-        const selectedEmoji = BinarytoBLOB(emojiURL[RandomNumberInRange(emojiURL.length)], { undefinedType: "application/octet-stream", fallbackType: 'audio/mpeg' });
-        const selectedSound = BinarytoBLOB(soundURL[RandomNumberInRange(soundURL.length)], { undefinedType: "application/octet-stream", fallbackType: 'audio/mpeg' });
+        const selectedEmoji = emojiURL[RandomNumberInRange(emojiURL.length)].path
+        const selectedSound = soundURL[RandomNumberInRange(soundURL.length)].path
 
         const newDonate = {
           name: currentVal.name,
