@@ -15,8 +15,8 @@ export default function GoogleLogOutButton() {
                 await onGoogleLogOutClick()
                 onLogOutGoogleOBSAuth()
             }}
-            description="Đăng xuất vì không còn dùng tới tài khoản này nữa, hoặc muốn đổi sang tài khoản khác"
-            title="Đăng Xuất với Google"
+            description="Đăng xuất khỏi tài khoản YouTube"
+            title="Đăng Xuất YouTube"
             align="end"
         />
     )
