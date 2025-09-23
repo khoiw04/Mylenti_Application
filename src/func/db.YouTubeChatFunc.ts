@@ -35,7 +35,7 @@ export const getYouTubeOBSVideoId = createServerFn({ method: 'GET' })
     const items = result.items
 
     if (!items || items.length === 0) {
-      throw new Error('Không có livestream nào đang diễn ra')
+      throw new Error(JSON.stringify(result, null, 2))
     }
 
     const liveVideo = items.find((item: any) => item?.id)

@@ -49,5 +49,7 @@ bun tauri build
 Bạn có thể đọc tiếp phần hướng dẫn ở [Mylenti Documentation](https://blog.mylenti.khoiw04.com).
 
 ## 📄 License
+Dự án này được cấp phép dưới Giấy Phép Chấp Thuận Mylenti, với hai phiên bản ngôn ngữ để thuận tiện cho người dùng.
 
-- 🧠 **Software (Mylenti)**: Licensed under the Mylenti License Agreement – non-commercial use only. See [LICENSE](./LICENSE.txt).
+- 📘 [Tiếng Việt](./LICENSE_vi.txt)
+- 📗 [English](./LICENSE_en.txt)

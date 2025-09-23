@@ -1,0 +1,33 @@
+Mylenti License Agreement
+Copyright (c) 2025 khoiw04
+
+1. Grant of Use
+The software "Mylenti" is licensed for download, installation, and use by individuals solely for personal, non-commercial purposes.
+
+2. Definitions
+- Individual: A person using the software for personal, educational, or recreational purposes, not for creating products, services, or systems that generate revenue. Voluntary donations or financial support from others are not considered commercial activity, provided the software is not used as a tool to generate business value.
+
+- Sole Proprietor: An individual engaged in business activities, including but not limited to selling goods, offering digital services, or using the software within a business or commercial environment. Use of the software in such contexts is strictly prohibited.
+
+- Personal Support: Voluntary donations, gifts, or financial contributions made by one individual to another, not promoted, embedded, or linked within the software, and not tied to access, usage, or unlocking any feature of the software.
+
+3. Source Code Access
+Users are permitted to access, modify, and experiment with the source code of this software solely for personal learning, research, or non-commercial contribution. Modified versions may not be used to create paid products, services, or systems, nor be integrated into any business or commercial environment.
+
+Any contributions or modifications are encouraged to be shared with the community, but may not be redistributed commercially or publicly without the author's permission.
+
+4. Restrictions
+You may not:
+- Use this software for any commercial purpose.
+- Integrate this software into any business system, commercial website, or platform intended to generate financial gain.
+- Distribute, sublicense, sell, or modify this software for public release.
+- Reverse engineer, decompile, or disassemble any part of this software.
+- Use this software in any way that violates applicable laws or regulations.
+
+5. Disclaimer
+This software is provided "as is", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or noninfringement. The author shall not be liable for any claim, damages, or other liability arising from the use of this software.
+
+6. Acceptance
+By using this software, you agree to all terms outlined in this license.
+
+Contact: khoiw04@example.com

@@ -1,0 +1,33 @@
+Mylenti License Agreement
+Copyright (c) 2025 khoiw04
+
+1. Quyền sử dụng
+Phần mềm "Mylenti" được cấp phép cho cá nhân sử dụng, tải xuống, và cài đặt chỉ cho mục đích cá nhân, phi thương mại.
+
+2. Định nghĩa
+- Cá nhân: Là người sử dụng phần mềm cho mục đích học tập, giải trí, hoặc cá nhân, không nhằm tạo ra sản phẩm, dịch vụ, hoặc hệ thống có thu phí. Việc nhận ủng hộ tự nguyện từ người khác không bị xem là hoạt động thương mại, miễn là phần mềm không được sử dụng như công cụ tạo ra giá trị kinh doanh.
+
+- Doanh nghiệp cá nhân: Là cá nhân hoạt động nhằm mục tiêu kinh doanh, bao gồm nhưng không giới hạn ở việc bán hàng, cung cấp dịch vụ kỹ thuật số, hoặc sử dụng phần mềm trong môi trường doanh nghiệp. Mọi hình thức sử dụng phần mềm trong bối cảnh này đều bị cấm.
+
+- Ủng hộ cá nhân: Là hành vi tự nguyện gửi tặng, donate, hoặc hỗ trợ tài chính cho cá nhân khác, không kèm theo yêu cầu, quảng bá, hoặc tích hợp trong phần mềm, và không liên quan đến việc truy cập, sử dụng, hoặc mở khóa bất kỳ tính năng nào của phần mềm.
+
+3. Quyền truy cập mã nguồn
+Người dùng được phép truy cập, chỉnh sửa, và thử nghiệm mã nguồn của phần mềm này cho mục đích học tập, nghiên cứu cá nhân, hoặc đóng góp phi thương mại. Việc chỉnh sửa mã nguồn không được sử dụng để tạo ra sản phẩm, dịch vụ, hoặc hệ thống có thu phí, hoặc tích hợp vào môi trường kinh doanh.
+
+Mọi bản chỉnh sửa hoặc đóng góp nên được chia sẻ lại với cộng đồng nếu phù hợp, nhưng không được phân phối lại dưới dạng thương mại hoặc công khai mà không có sự cho phép của tác giả.
+
+4. Hạn chế sử dụng
+Bạn không được:
+- Sử dụng phần mềm cho bất kỳ mục đích thương mại nào.
+- Tích hợp phần mềm vào hệ thống kinh doanh, website thương mại, hoặc nền tảng phục vụ mục tiêu tài chính.
+- Phân phối, bán lại, cấp phép lại, hoặc chỉnh sửa phần mềm để phát hành công khai.
+- Reverse engineer, decompile, hoặc disassemble bất kỳ phần nào của phần mềm.
+- Sử dụng phần mềm vi phạm pháp luật hoặc quy định hiện hành.
+
+5. Miễn trừ trách nhiệm
+Phần mềm này được cung cấp “nguyên trạng”, không có bất kỳ bảo đảm nào, dù rõ ràng hay ngụ ý, bao gồm nhưng không giới hạn ở bảo đảm về khả năng thương mại, phù hợp với mục đích cụ thể, hoặc không vi phạm quyền sở hữu trí tuệ. Tác giả không chịu trách nhiệm cho bất kỳ thiệt hại nào phát sinh từ việc sử dụng phần mềm.
+
+6. Chấp nhận giấy phép
+Bằng việc sử dụng phần mềm này, bạn đồng ý với tất cả các điều khoản trong giấy phép này.
+
+Liên hệ: khoiw04@example.com
