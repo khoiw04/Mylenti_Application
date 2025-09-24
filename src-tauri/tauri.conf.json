@@ -20,7 +20,6 @@
         "fullscreen": false,
         "decorations": false,
         "devtools": true,
-        "minWidth": 320,
         "create": true,
         "hiddenTitle": true
       }

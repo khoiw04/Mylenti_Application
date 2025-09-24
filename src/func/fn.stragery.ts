@@ -91,18 +91,21 @@ export const VerifiedIconStrategy: VerifiedIconStrategyType = {
   default: ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
   "Mori Seikai": ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
   "Siini": ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
+  "Empty": ({ srcAvatar }) => DefaultAvatarVertifed({ srcAvatar }),
 }
 
 export const ModeratorIconStrategy: ModeratorIconStrategyType = {
   default: ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),
   "Mori Seikai": ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),
   "Siini": ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),
+  "Empty": ({ srcAvatar }) => DefaultAvatarModerator({ srcAvatar }),  
 }
 
 export const MemberIconStrategy: MemberIconStrategyType = {
   default: ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
   "Mori Seikai": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
   "Siini": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
+  "Empty": ({ srcAvatar, srcTypeMember }) => DefaultAvatarMember({ srcAvatar, srcTypeMember }),
 }
 
 export const SuperchatIconStrategy: SuperchatIconStrategyType = {

@@ -1,34 +1,37 @@
 import { cva } from "class-variance-authority";
 import { defaultVariants } from "@/data/obs-overlay";
 
-const donaterMainContainerVariants = cva("flex flex-col items-center text-center", {
+const donaterMainContainerVariants = cva("", {
   variants: {
     currentPreset: {
-      default: "max-w-lg",
+      default: "max-w-lg flex flex-col items-center text-center",
       "Mori Seikai": "",
       "Siini": "",
+      "Empty": ""
     },
   },
   ...defaultVariants
 })
 
-const donateEmojiContainerVarients = cva("overflow-hidden relative", {
+const donateEmojiContainerVarients = cva("", {
   variants: {
     currentPreset: {
-      default: "size-40 rounded-4xl",
+      default: "size-40 rounded-4xl overflow-hidden relative",
       "Mori Seikai": "",
       "Siini": "",
+      "Empty": ""
     },
   },
   ...defaultVariants
 })
 
-const donaterNameVariants = cva("mt-4 mb-2", {
+const donaterNameVariants = cva("", {
   variants: {
     currentPreset: {
-      default: "font-medium",
+      default: "font-medium mt-4 mb-2",
       "Mori Seikai": "",
       "Siini": "",
+      "Empty": ""
     },
   },
   ...defaultVariants
@@ -40,6 +43,7 @@ const donaterCommentVariants = cva("", {
       default: "",
       "Mori Seikai": "",
       "Siini": "",
+      "Empty": ""
     },
   },
   ...defaultVariants

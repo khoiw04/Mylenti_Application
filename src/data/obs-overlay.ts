@@ -1,5 +1,5 @@
 export const defaultVariants = { currentPreset: "default" }
-export const presetUserVariants = ['Mori Seikai', 'Siini', 'default'] as const
+export const presetUserVariants = ['Mori Seikai', 'Siini', 'Empty', 'default'] as const
 export const overlayFieldConfigs = [
   { key: 'commenter_avatar', label: 'Avatar' },
   { key: 'commenter_name', label: 'Tên' }

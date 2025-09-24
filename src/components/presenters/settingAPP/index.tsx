@@ -1,6 +1,6 @@
 import { LucideInbox, LucideKeyRound } from "lucide-react"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { motion } from "motion/react";
@@ -26,6 +26,7 @@ import { DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
 import { ThemeStore } from "@/store";
+import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 
 const items = [
   {
@@ -55,7 +56,7 @@ export default function SettingApp() {
         percent: 0
     })
 
-    useEffect(() => {
+    useTauriSafeEffect(() => {
         (async () => {
             const update = await check()
             if (update) {
@@ -64,7 +65,7 @@ export default function SettingApp() {
         })()
     }, [])
 
-    useEffect(() => {
+    useTauriSafeEffect(() => {
         (async () => {
             if (updateData.allowUpdate && updateData.data) {
                 let downloaded = 0;

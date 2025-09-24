@@ -38,8 +38,9 @@ export default function useTheme() {
   }, []);
 
   useTauriSafeEffect(() => {
+    if (!theme) return
     (async () => {
-      const currentTheme = theme ?? "dark";
+      const currentTheme = theme;
       await saveSetting("theme", currentTheme);
       const isDark = currentTheme === "dark";
       document.documentElement.classList.toggle("dark", isDark);
