@@ -7,13 +7,13 @@ const commenterMainContainerVariants = cva("", {
       default: "inline-flex items-center gap-4",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containerlivechat main"
+      "Empty": ""
     },
     memberPreset: {
       default: 'bg-neutral-300 rounded-2xl p-2',
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containerlivechat member"
+      "Empty": ""
     }
   },
   ...defaultVariants
@@ -25,7 +25,7 @@ const infoCommenterContainerVariants = cva("", {
       default: "inline-flex items-center gap-4",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containerlivechat main info"
+      "Empty": ""
     },
   },
   ...defaultVariants
@@ -37,7 +37,7 @@ const commenterNameVariants = cva("", {
       default: "font-bold",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containerlivechat main info name"
+      "Empty": ""
     },
   },
   ...defaultVariants
@@ -49,7 +49,7 @@ const commentVariants = cva("", {
       default: "",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containerlivechat main info comment"
+      "Empty": ""
     },
   },
   ...defaultVariants

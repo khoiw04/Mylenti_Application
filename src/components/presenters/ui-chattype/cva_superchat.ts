@@ -7,7 +7,7 @@ const containerSuperChatVariants = cva("", {
       default: "inline-flex max-w-sm flex-col divide-y items-start bg-neutral-300 rounded-2xl px-4 py-3 *:first:pb-2.5 *:last:pt-2.5",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containersuperchat main"
+      "Empty": ""
     },
   },
   ...defaultVariants
@@ -19,7 +19,7 @@ const infoUserSuperchatContainerVariants = cva("", {
       default: "inline-flex w-full items-center gap-4",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containersuperchat main info"
+      "Empty": ""
     },
   },
   ...defaultVariants
@@ -31,7 +31,7 @@ const containerPriceVariants = cva("", {
       default: "font-bold flex flex-col *:last:font-normal",
       "Mori Seikai": "",
       "Siini": "",
-      "Empty": "containersuperchat main info price"
+      "Empty": ""
     },
   },
   ...defaultVariants

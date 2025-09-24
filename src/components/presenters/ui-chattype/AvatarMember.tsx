@@ -9,7 +9,7 @@ export function DefaultAvatarMember({
   srcTypeMember = 'https://yt3.ggpht.com/uekwnT0_9Q7maqBWXvbUa4-RpXroZyyThDwKak0rfFJW-CaMIokwDuzp5IZDsTLPS09WgF5b=s32-k-nd' 
 }) {
   return (
-    <div className="relative size-6 containerlivechat main info avatar">
+    <div id="livechatAvatar" className="relative size-6">
       <Avatar className="size-6">
         <AvatarImage src={srcAvatar} />
         <AvatarFallback>KK</AvatarFallback>

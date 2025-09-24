@@ -43,8 +43,10 @@ export default function SuperchatType({
         className={cn(
           containerVarient,
           classNameMainContainer
-        )}>
-          <div className={cn(infoUserContainerVarient, classNameUserContainer)}>
+        )}
+        id="superchatContainer"
+      >
+          <div id="superchatInfoContainer" className={cn(infoUserContainerVarient, classNameUserContainer)}>
             {showAvatar && IconComponent ? 
               <IconComponent
                 srcAvatar={srcAvatarCommenter}
@@ -58,7 +60,7 @@ export default function SuperchatType({
               )
             }
             {showCommenter &&
-            <div className={cn(containerPriceVariant, classNameCommenter)}>
+            <div id="superchatInfo" className={cn(containerPriceVariant, classNameCommenter)}>
                 <span>
                   {srcNameCommenter}
                 </span>
@@ -69,7 +71,7 @@ export default function SuperchatType({
           </div>
           <div>
             {showComment &&
-              <p className={cn(commentVariant, classNameComment)}>
+              <p id="superchatComment" className={cn(commentVariant, classNameComment)}>
                 {truncateMessage(srcCommentCommmenter)}
               </p>
             }

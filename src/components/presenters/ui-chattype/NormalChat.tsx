@@ -28,8 +28,8 @@ export default function  NormalType({
   const commentVariant = commentVariants({ currentPreset });
 
   return (
-    <div {...props} className={cn(containerVarient, classNameMainContainer)}>
-        <span className={cn(infoUserContainerVarient, classNameUserContainer)}>
+    <div id="livechatContainer" {...props} className={cn(containerVarient, classNameMainContainer)}>
+        <span id="livechatInfo" className={cn(infoUserContainerVarient, classNameUserContainer)}>
           {showAvatar && (
           <Avatar className="size-6">
             <AvatarImage src={srcAvatarCommenter} />
@@ -37,13 +37,13 @@ export default function  NormalType({
           </Avatar>
           )}
           {showCommenter && (
-            <h2 className={cn(commenterNameVariant, classNameCommenter)}>
+            <h2 id="livechatName" className={cn(commenterNameVariant, classNameCommenter)}>
               {srcNameCommenter}
             </h2>
           )}
         </span>
         {showComment && (
-          <p className={cn(commentVariant, classNameComment)}>
+          <p id="livechatComment" className={cn(commentVariant, classNameComment)}>
             {truncateMessage(srcCommentCommmenter)}
           </p>
         )}

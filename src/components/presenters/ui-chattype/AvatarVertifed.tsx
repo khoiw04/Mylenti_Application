@@ -6,7 +6,7 @@ import {
 
 export function DefaultAvatarVertifed({ srcAvatar = './avatar-80-07.jpg' }) {
   return (
-    <div className="relative size-6 containerlivechat main info avatar">
+    <div id="livechatAvatar" className="relative size-6">
       <Avatar className="size-6">
         <AvatarImage src={srcAvatar} />
         <AvatarFallback>KK</AvatarFallback>

@@ -30,19 +30,19 @@ export default function ModeratorType({
     const IconComponent = ModeratorIconStrategy[currentPreset!];
 
     return (
-        <div {...props} className={cn(containerVarient, classNameMainContainer)}>
-              <span className={cn(infoUserContainerVarient, classNameUserContainer)}>
-                {showAvatar && IconComponent ? <IconComponent srcAvatar={srcAvatarCommenter} /> : null}
-                {showCommenter &&
-                <h2 className={cn(commenterNameVariant, classNameCommenter)}>
-                    {srcNameCommenter}
-                </h2>}
-              </span>
-              {showComment &&
-                <p className={cn(commentVariant, classNameComment)}>
-                  {truncateMessage(srcCommentCommmenter)}
-                </p>
-              }
+        <div id="livechatContainer" {...props} className={cn(containerVarient, classNameMainContainer)}>
+          <span id="livechatInfo" className={cn(infoUserContainerVarient, classNameUserContainer)}>
+            {showAvatar && IconComponent ? <IconComponent srcAvatar={srcAvatarCommenter} /> : null}
+            {showCommenter &&
+            <h2 id="livechatName" className={cn(commenterNameVariant, classNameCommenter)}>
+                {srcNameCommenter}
+            </h2>}
+          </span>
+          {showComment &&
+            <p id="livechatComment" className={cn(commentVariant, classNameComment)}>
+              {truncateMessage(srcCommentCommmenter)}
+            </p>
+          }
         </div>
     )
 }

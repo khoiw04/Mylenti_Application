@@ -31,8 +31,8 @@ export default function MemberType({
     const IconComponent = MemberIconStrategy[currentPreset!];
 
     return (
-        <div {...props} className={cn(containerVarient, classNameMainContainer)}>
-              <span className={cn(infoUserContainerVarient, classNameUserContainer)}>
+        <div id="livechatContainer" {...props} className={cn(containerVarient, classNameMainContainer)}>
+              <span id="livechatInfo" className={cn(infoUserContainerVarient, classNameUserContainer)}>
                 {showAvatar && IconComponent ?
                   <IconComponent
                     srcAvatar={srcAvatarCommenter}
@@ -41,13 +41,13 @@ export default function MemberType({
                   : null
                 }
                 {showCommenter &&
-                <h2 className={cn(commenterNameVariant, classNameCommenter)}>
+                <h2 id="livechatName" className={cn(commenterNameVariant, classNameCommenter)}>
                   {srcNameCommenter}
                 </h2>}
               </span>
               {!showAvatar && <img src={srcTypeMember} width={22} height={22} />}
               {showComment &&
-                <p className={cn(commentVariant, classNameComment)}>
+                <p id="livechatComment" className={cn(commentVariant, classNameComment)}>
                   {truncateMessage(srcCommentCommmenter)}
                 </p>
               }
