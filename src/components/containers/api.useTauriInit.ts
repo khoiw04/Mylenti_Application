@@ -2,7 +2,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { invoke } from "@tauri-apps/api/core";
 import { homeDir, join } from '@tauri-apps/api/path';
 import { Command } from '@tauri-apps/plugin-shell';
-import { AppWindowStore } from "@/store";
+import { AppWindowStore, tunnelProcessStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
 
@@ -69,15 +69,16 @@ export default function useTauriInit() {
             const home = await homeDir();
             const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
 
-            await Command.sidecar('bin/cloudflared', [
+            const tunnelProcess = await Command.sidecar('bin/cloudflared', [
                 'tunnel',
                 '--config',
                 configPath,
                 'run',
                 user_name,
-            ]).execute();
+            ]).spawn();
 
-            console.log('Tunnel started!');
+            tunnelProcessStore.setState(prev => ({...prev, tunnelProcess}))
+            return () => tunnelProcess.kill()
         } catch (err) {
             console.error('Lỗi khi chạy tunnel:', err);
         }

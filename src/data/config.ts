@@ -2,14 +2,16 @@ import { env } from "@/env/client"
 
 export const APPCONFIG = {
     URL: {
-        CLOUDFLARE_: 'https://create-subdomain-mylenti.khoi-w04.workers.dev',
+        CLOUDFLARE_TUNNEL_WORKERS: 'https://create-subdomain-mylenti.khoi-w04.workers.dev',
         DISCORD_OAUTH2: 'https://discord.com/oauth2/authorize?client_id=1418751357556363416&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fdiscord&scope=identify+email',
         DISCORD_REDIRECT: 'http://localhost:3001/auth/discord',
         REDIRECTGOOGLEOBSURL: `http://localhost:3001/auth/googleOBS`,
         WEBSOCKET_OBSURL: 'ws://127.0.0.1:4455',
         REDIRECTSUPABASEOAUTHURL: 'http://localhost:3001/auth/callback',
         REDIRECTSUPABASEFORGETURL: 'http://localhost:3001/nho-mat-khau',
-        REDIRECTSUPABASESIGNUPURL: 'http://localhost:3001/'
+        REDIRECTSUPABASESIGNUPURL: 'http://localhost:3001/',
+        DONATIONS_LINK: 'http://localhost:3000/runtime/obsdonate',
+        APP_URL: (user_name: string) => `https://${user_name}.mylenti.khoiwn04.com`
     },
     TOKEN: {
         ACCESS_DISCORD: 'discordAccessToken',

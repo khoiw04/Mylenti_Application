@@ -7,71 +7,56 @@ import { profileQueries, useDiscordCommunityUser } from "@/lib/queries"
 import { fallbackData, upsertDiscordUser } from "@/data/discord.sqlite"
 
 export default function useSQLiteDiscordInfo() {
-    const {
-        meta: {
-            id,
-            username,
-            global_name,
-            email,
-            avatar
-        },
-    } = useDiscordCommunityUser().data
-    const router = useRouter()
+  const {
+    meta: { id, username, global_name, email, avatar },
+  } = useDiscordCommunityUser().data;
 
-useEffect(() => {
-  (async () => {
-    try {
-      const result = await invoke("setup_tunnel", { userName: username });
+  const router = useRouter();
 
-      await upsertDiscordUser({
-        id,
-        email,
-        name: global_name,
-        user_name: username,
-        avatar: avatar
-      });
-    } catch (error: any) {
-      console.error("Tauri invoke error:", error);
+  const userPayload = {
+    id,
+    email,
+    name: global_name,
+    user_name: username,
+    avatar,
+  };
 
-      const parsedError = typeof error === "string" ? (() => {
-        try {
-          return JSON.parse(error);
-        } catch {
-          return {};
+  useEffect(() => {
+    (async () => {
+      try {
+        await invoke("setup_tunnel", { userName: username });
+        await upsertDiscordUser(userPayload);
+      } catch (error: any) {
+        const parsedError =
+          typeof error === "string"
+            ? (() => {
+                try {
+                  return JSON.parse(error);
+                } catch {
+                  return {};
+                }
+              })()
+            : error;
+
+        if (parsedError.code === "HTTP_409" && typeof parsedError.subdomain === "string") {
+          console.warn("Tunnel already exists, continuing with subdomain:", parsedError.subdomain);
+          await upsertDiscordUser(userPayload);
+          return;
         }
-      })() : error;
 
-      if (
-        parsedError.code === "HTTP_409" &&
-        typeof parsedError.subdomain === "string"
-      ) {
-        console.warn("Tunnel already exists, continuing with subdomain:", parsedError.subdomain);
-
-        await upsertDiscordUser({
-          id,
-          email,
-          name: global_name,
-          user_name: username,
-          avatar: avatar
+        toast.error("Lỗi khi tạo tunnel", {
+          description: typeof error === "string" ? error : "Không rõ nguyên nhân",
+          duration: 8000,
         });
-
-        return;
       }
+    })();
+  }, []);
 
-      toast.error("Lỗi khi tạo tunnel", {
-        description: typeof error === "string" ? error : "Không rõ nguyên nhân",
-        duration: 8000,
-      });
-    }
-  })();
-}, []);
+  const { data } = useQuery({
+    ...profileQueries.discord(username),
+    placeholderData: fallbackData,
+    enabled: !router.isServer,
+  });
 
-
-    const { data } = useQuery({
-        ...profileQueries.discord(username),
-        placeholderData: fallbackData,
-        enabled: !router.isServer
-    })
-
-    return { data: data!, avatar }
+  return { data: data!, avatar };
 }

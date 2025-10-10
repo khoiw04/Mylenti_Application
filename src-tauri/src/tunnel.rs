@@ -84,6 +84,41 @@ fn write_credentials_and_config(
 
 #[command]
 pub async fn setup_tunnel(user_name: String) -> Result<TunnelResult, String> {
+    let cloudflared_dir = dirs::home_dir()
+        .map(|home| home.join(".cloudflared"))
+        .ok_or_else(|| error(TunnelErrorCode::HomeDir, "Không tìm thấy thư mục home"))?;
+
+    let config_path = cloudflared_dir.join(format!("config_{}.yml", user_name));
+
+    if config_path.exists() {
+        println!("Tunnel config đã tồn tại, bỏ qua tạo mới.");
+
+        let config_content = fs::read_to_string(&config_path)
+            .map_err(|e| error(TunnelErrorCode::Parse, format!("Không đọc được config: {e}")))?;
+
+        let creds_path_str = config_content
+            .lines()
+            .find_map(|line| {
+                line.strip_prefix("credentials-file: ")
+                    .map(|s| s.trim().to_string())
+            })
+            .ok_or_else(|| error(TunnelErrorCode::Parse, "Không tìm thấy credentials-file trong config"))?;
+
+        let tunnel_uuid = PathBuf::from(&creds_path_str)
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("")
+            .to_string();
+
+        return Ok(TunnelResult {
+            tunnel_uuid,
+            creds_path: creds_path_str,
+            config_path: config_path.to_string_lossy().to_string(),
+            subdomain: None,
+        });
+    }
+
+    // Nếu chưa có config, tiến hành tạo tunnel
     match create_and_save_tunnel(user_name.clone()).await {
         Ok(result) => Ok(result),
         Err(e) => {
@@ -94,7 +129,7 @@ pub async fn setup_tunnel(user_name: String) -> Result<TunnelResult, String> {
             });
 
             let code = parsed.get("code").and_then(|c| c.as_str()).unwrap_or("");
-            if code == "1013" || code == "CREATE_TUNNEL_ERROR" || code == "PARSE_ERROR" {
+            if matches!(code, "1013" | "CREATE_TUNNEL_ERROR" | "PARSE_ERROR") {
                 println!("Falling back to ensure_credentials due to: {}", code);
                 ensure_credentials(user_name).await
             } else {

@@ -147,6 +147,8 @@
         }
       ]
     },
-    "window-state:default"
+    "window-state:default",
+    "shell:allow-spawn",
+    "shell:allow-kill"
   ]
 }

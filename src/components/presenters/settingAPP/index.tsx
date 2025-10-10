@@ -5,6 +5,7 @@ import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { motion } from "motion/react";
 import { useStore } from "@tanstack/react-store";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import type { Update } from '@tauri-apps/plugin-updater';
 import { 
     Sidebar,
@@ -21,17 +22,19 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
 import { ThemeStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
+import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
+import { APPCONFIG } from "@/data/config";
+import { toast } from "sonner";
 
 const items = [
   {
-    title: "API Key",
-    url: "#API_KEY",
+    title: "Đường Link",
+    url: "#Đường_Link",
     icon: LucideKeyRound,
   },
   {
@@ -41,9 +44,25 @@ const items = [
   }
 ] 
 
+const links = [
+    {
+        title: 'Webhook',
+        slag: '/webhook/sepay'
+    },
+    {
+        title: 'Donations',
+        slag: (user_name: string) => `/data/${user_name}/donations`
+    },
+    {
+        title: 'Health',
+        slag: '/health'
+    }
+] as const
+
 export default function SettingApp() {
     const [open, setOpen] = useState(false)
     const { theme, setTheme } = useStore(ThemeStore)
+    const { data: { user_name } } = useSQLiteDiscordInfo()    
     const [updateData, setUpdateData] = useState<{
         data: Update | null,
         allowUpdate: boolean,
@@ -133,15 +152,29 @@ export default function SettingApp() {
                         </SidebarTrigger>
                     </div>
                     <main className="relative flex flex-col pt-5 px-4 gap-12">
-                        <form className="flex flex-col gap-4 pt-4">
-                            <div id="API_KEY" className="flex flex-row gap-2 ml-1.5">
+                        <div id="Đường_Link" className="flex flex-col gap-4 pt-4">
+                            <div className="flex flex-row gap-2 ml-1.5">
                                 <LucideKeyRound size={16} />
                                 <Label id={items[0].url} className="font-medium">
                                     {items[0].title}
                                 </Label>
                             </div>
-                            <Input disabled placeholder="Cập nhật sau..." className="w-40" />
-                        </form>
+                            <ul className="flex flex-col gap-y-1.5 text-neutral-400 text-sm">
+                                {links.map((link, i) => {
+                                    const resolvedSlag = typeof link.slag === 'function' ? link.slag(user_name) : link.slag;
+                                    const linkURL = APPCONFIG.URL.APP_URL(user_name) + resolvedSlag
+                                    return (
+                                        <li 
+                                            key={`link_${i}`}
+                                            onClick={async () => {await writeText(linkURL); toast.success(`Đã lấy được link ${link.title}!`)}}
+                                            className="cursor-pointer text-neutral-400 text-sm"
+                                        >
+                                            {link.title}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
                         <div className="flex flex-col gap-3.75 pt-4 max-w-78">
                             <div id="UPDATE" className="flex flex-row gap-2 ml-0.5">
                                 <LucideInbox size={16} />
@@ -218,13 +251,10 @@ export default function SettingApp() {
                     </main>
                     <footer className="flex flex-row gap-2 fixed bottom-4 right-4">
                         <DialogClose asChild>
-                            <Button variant="ghost" type="button">
-                                Hủy
+                            <Button type="button">
+                                Áp dụng
                             </Button>
                         </DialogClose>
-                        <Button type="button">
-                            Áp dụng
-                        </Button>
                     </footer>
             </SidebarInset>
             <SidebarRail />
