@@ -135,7 +135,7 @@
             "tunnel",
             "--config",
             {
-              "validator": ".*config\\.yml$"
+              "validator": "^.*config(_[a-zA-Z0-9]+)?\\.yml$"
             },
             "run",
             {

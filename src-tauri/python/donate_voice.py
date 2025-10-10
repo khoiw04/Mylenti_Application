@@ -6,6 +6,7 @@ import glob
 import atexit
 import tempfile
 import shutil
+import signal
 
 app = Flask(__name__)
 CORS(app)
@@ -24,7 +25,6 @@ def cleanup_temp_files():
                 os.remove(file_path)
             except Exception as e:
                 print(f"❌ Không thể xóa file tạm: {file_path} → {e}")
-                
 
 def cleanup_mei_folders():
     temp_dir = tempfile.gettempdir()
@@ -36,6 +36,16 @@ def cleanup_mei_folders():
                 print(f"✅ Đã xóa: {folder_path}")
             except Exception as e:
                 print(f"❌ Không thể xóa {folder_path}: {e}")
+
+def handle_exit(signum, frame):
+    print("📦 Đang dọn dẹp trước khi thoát...")
+    cleanup_mei_folders()
+    cleanup_temp_files()
+    exit(0)
+
+atexit.register(cleanup_mei_folders)
+signal.signal(signal.SIGINT, handle_exit)
+signal.signal(signal.SIGTERM, handle_exit)
 
 @app.route("/tts", methods=["POST"])
 def tts():
@@ -72,6 +82,5 @@ def health():
     return jsonify({"status": "ok"}), 200
 
 if __name__ == "__main__":
+    cleanup_mei_folders()
     app.run(host="127.0.0.1", port=4545, debug=True)
-    
-atexit.register(cleanup_mei_folders)

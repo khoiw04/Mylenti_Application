@@ -26,11 +26,11 @@ export default function Main() {
     useWebsocketOBSOverlaySend()
     useDiscordSepayAlertSend()
 
-    useTauriInit()
     const { theme } = useStore(ThemeStore)
-  
+    
     const { appWindow } = useStore(AppWindowStore)
     if (isTauri())
+    useTauriInit()
 
     return (
         <>

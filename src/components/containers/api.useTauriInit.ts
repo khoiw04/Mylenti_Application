@@ -1,6 +1,6 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { invoke } from "@tauri-apps/api/core";
-import { homeDir } from '@tauri-apps/api/path';
+import { homeDir, join } from '@tauri-apps/api/path';
 import { Command } from '@tauri-apps/plugin-shell';
 import { AppWindowStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
@@ -62,10 +62,12 @@ export default function useTauriInit() {
     }, [])
 
     useTauriSafeEffect(() => {
-        if (!user_name) return
-        (async () => {
+    if (!user_name) return;
+    
+    (async () => {
+        try {
             const home = await homeDir();
-            const configPath = `${home}.cloudflared/config.yml`;
+            const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
 
             await Command.sidecar('bin/cloudflared', [
                 'tunnel',
@@ -74,6 +76,11 @@ export default function useTauriInit() {
                 'run',
                 user_name,
             ]).execute();
-        })()
-    }, [user_name])
+
+            console.log('Tunnel started!');
+        } catch (err) {
+            console.error('Lỗi khi chạy tunnel:', err);
+        }
+    })();
+    }, [user_name]);
 }

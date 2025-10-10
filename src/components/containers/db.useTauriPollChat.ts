@@ -100,7 +100,7 @@ export default function usePollingYoutubeChat() {
     } catch (err) {
       setIsError(true)
       setLastErrorMessage(String(err))
-      toast.error(`Lỗi Polling: ${err}`)
+      toast.error(`Lỗi Polling`, { description: `${err}`, } )
     }
   }
 

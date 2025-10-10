@@ -3,6 +3,7 @@ use crate::local_http_server::start_http_server;
 use crate::websocket::start_websocket_server;
 use crate::tunnel::create_and_save_tunnel;
 use crate::tunnel::ensure_credentials;
+use crate::tunnel::setup_tunnel;
 use sqlx::SqlitePool;
 use std::{
     path::PathBuf,
@@ -249,6 +250,7 @@ pub fn run() {
             ensure_credentials,
             update::run_update,
             log_frontend,
+            setup_tunnel,
             ping
         ])
         .build(tauri::generate_context!())
