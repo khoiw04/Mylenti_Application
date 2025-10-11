@@ -8,7 +8,6 @@ import { useStore } from "@tanstack/react-store";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "sonner";
 import { invoke } from "@tauri-apps/api/core";
-import { Command } from "@tauri-apps/plugin-shell";
 import type { Update } from '@tauri-apps/plugin-updater';
 import type { SettingItemsType } from "@/types";
 import { 
@@ -279,9 +278,18 @@ function SettingUpdates() {
 function SettingTunnel() {
     const { tunnelProcess } = useStore(tunnelProcessStore)
     const { data: { user_name } } = useSQLiteDiscordInfo()
+    const deleteTunnelFn = async () => {
+        if (tunnelProcess) {
+            await tunnelProcess.kill()
+            await new Promise(() => setTimeout(
+                () => tunnelProcessStore.setState(prev => ({...prev, tunnelProcess: null}))
+            , 1000))
+            await invoke('delete_tunnel', { userName: user_name })
+        }
+    }
     return (
         <>
-            <li>Trạng thái: Đang chạy</li>
+            <li>Trạng thái: {tunnelProcess ? 'Đang chạy' : 'Đã tắt'}</li>
             <div className="w-40 gap-2 mt-10 flex flex-row justify-between">
                 <TooltipProvider delayDuration={0}>
                     <Tooltip>
@@ -290,15 +298,9 @@ function SettingTunnel() {
                                 type="button"
                                 variant='secondary'
                                 className="aspect-square relative"
-                                onClick={async () => {
-                                    await tunnelProcess?.kill()
-                                    await Command.sidecar('bin/cloudflared', [
-                                        'tunnel',
-                                        'cleanup',
-                                        user_name,
-                                    ]).execute()                        
+                                onClick={() => {                    
                                     toast.promise(
-                                        invoke('delete_tunnel', { userName: user_name }),
+                                        deleteTunnelFn(),
                                         {
                                             loading: 'Đang xóa Tunnel...',
                                             success: 'Đã xóa Tunnel thành công!',
