@@ -1,0 +1,1 @@
+export type SettingItemsType = { label: { id: string, title: string }, child: React.ReactNode, icon: React.ReactNode }

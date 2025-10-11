@@ -139,7 +139,6 @@ pub async fn setup_tunnel(user_name: String) -> Result<TunnelResult, String> {
     }
 }
 
-#[command]
 pub async fn create_and_save_tunnel(user_name: String) -> Result<TunnelResult, String> {
     let res = reqwest::Client::new()
         .post("https://subdomain-mylenti.khoiwn04.com")
@@ -203,7 +202,6 @@ pub async fn create_and_save_tunnel(user_name: String) -> Result<TunnelResult, S
     )
 }
 
-#[command]
 pub async fn ensure_credentials(user_name: String) -> Result<TunnelResult, String> {
     let url = format!(
         "https://subdomain-mylenti.khoiwn04.com/get-tunnel?user_name={}",
@@ -257,4 +255,68 @@ pub async fn ensure_credentials(user_name: String) -> Result<TunnelResult, Strin
         config_path: config_path.to_string_lossy().to_string(),
         subdomain: data.subdomain,
     })
+}
+
+#[command]
+pub async fn delete_tunnel(user_name: String) -> Result<String, String> {
+    let url = format!(
+        "https://subdomain-mylenti.khoiwn04.com/delete-tunnel?user_name={}",
+        user_name
+    );
+
+    let res = reqwest::Client::new()
+        .delete(&url)
+        .send()
+        .await
+        .map_err(|e| error(TunnelErrorCode::Request, e))?;
+
+    let status = res.status();
+    let text = res.text().await.map_err(|e| error(TunnelErrorCode::Parse, e))?;
+    println!("Raw response (delete_tunnel): {}", text);
+
+    if text.trim().is_empty() {
+        return Err(error(TunnelErrorCode::Parse, "Empty response from server"));
+    }
+
+    if !status.is_success() {
+        return Err(text);
+    }
+
+    if let Some(home) = dirs::home_dir() {
+        let cloudflared_dir = home.join(".cloudflared");
+        let config_path = cloudflared_dir.join(format!("config_{}.yml", user_name));
+
+        let creds_path_opt = if config_path.exists() {
+            fs::read_to_string(&config_path)
+                .ok()
+                .and_then(|content| {
+                    content
+                        .lines()
+                        .find_map(|line| line.strip_prefix("credentials-file: ").map(|s| s.trim().to_string()))
+                })
+        } else {
+            None
+        };
+
+        if config_path.exists() {
+            if let Err(e) = fs::remove_file(&config_path) {
+                println!("Không thể xóa config: {}", e);
+            }
+        }
+
+        if let Some(creds_path_str) = creds_path_opt {
+            let creds_path = PathBuf::from(creds_path_str);
+            if creds_path.exists() {
+                if let Err(e) = fs::remove_file(&creds_path) {
+                    println!("Không thể xóa credentials: {}", e);
+                }
+            }
+        }
+    }
+
+    Ok(serde_json::json!({
+        "deleted": true,
+        "user_name": user_name
+    })
+    .to_string())
 }

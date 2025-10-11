@@ -131,6 +131,33 @@
       "identifier": "shell:allow-execute",
       "allow": [
         {
+          "name": "bin/cloudflared",
+          "sidecar": true,
+          "args": [
+            "tunnel",
+            "cleanup",
+            {
+              "validator": "\\S+" 
+            }
+          ]
+        },
+        {
+          "name": "bin/cloudflared",
+          "sidecar": true,
+          "args": [
+            "tunnel",
+            "delete",
+            {
+              "validator": "\\S+" 
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
           "args": [
             "tunnel",
             "--config",
@@ -147,8 +174,15 @@
         }
       ]
     },
-    "window-state:default",
-    "shell:allow-spawn",
-    "shell:allow-kill"
+    {
+      "identifier": "shell:allow-kill",
+      "allow": [
+        {
+          "name": "bin/cloudflared",
+          "sidecar": true
+        }
+      ]
+    },
+    "window-state:default"
   ]
 }

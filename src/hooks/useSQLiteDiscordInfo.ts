@@ -11,8 +11,6 @@ export default function useSQLiteDiscordInfo() {
     meta: { id, username, global_name, email, avatar },
   } = useDiscordCommunityUser().data;
 
-  const router = useRouter();
-
   const userPayload = {
     id,
     email,
@@ -51,6 +49,9 @@ export default function useSQLiteDiscordInfo() {
       }
     })();
   }, []);
+
+
+  const router = useRouter();
 
   const { data } = useQuery({
     ...profileQueries.discord(username),

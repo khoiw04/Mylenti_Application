@@ -56,7 +56,8 @@ export const authQueries = {
     discord: () =>    
         queryOptions({
             queryKey: [...authQueries.all, 'discord'],
-            queryFn: () => getDiscordUserInfo()
+            queryFn: () => getDiscordUserInfo(),
+            staleTime: 1000 * 60 * 60
         }),
 }
 
