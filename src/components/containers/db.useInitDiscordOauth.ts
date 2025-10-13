@@ -46,7 +46,7 @@ function useOAuthDiscordTauri() {
     const oauth = new OAuthServerManager()
     oauth.init({
       ports: [APPCONFIG.SNAKE.DISCORD_AUTH],
-      response: "Qua trình đăng nhập hoàn tất! Vui lòng đóng cửa sổ này.",
+      response: "Qua trinh dang nhap da hoan tat. Vui long dong cua so nay!",
       onCodeReceived: async (code) => {
         await getDiscordToken({ data: { code } })
         await router.navigate({ reloadDocument: true })

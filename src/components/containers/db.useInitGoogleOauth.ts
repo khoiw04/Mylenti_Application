@@ -5,7 +5,6 @@ import { isTauri } from "@tauri-apps/api/core";
 import { useRouter } from "@tanstack/react-router";
 import { GoogleState, GoogleStraregy } from "@/store"
 import { useDimension } from "@/hooks/useDimension";
-import { Route } from "@/routes";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
 import { APPCONFIG, getYoutubeScopeWithURL } from "@/data/config";
@@ -59,23 +58,16 @@ function handleOAuthMessage() {
     }, [])
 }
 
-function getAuthGoogleOBSCookie() {
-    const { onFinishGoogleOBSAuth } = useStore(GoogleStraregy)
-    const isGoogleOBSCookieAuth = Route.useLoaderData()
-    useEffect(() => {isGoogleOBSCookieAuth && onFinishGoogleOBSAuth()}, [isGoogleOBSCookieAuth])
-}
-
 function useOAuthGoogleTauri() {
   const router = useRouter()
-  const isGoogleOBSCookieAuth = Route.useLoaderData()
   const { finishGoogleOBSAuth } = useStore(GoogleState)
   useEffect(() => {
     const oauth = new OAuthServerManager()
-    if (!isGoogleOBSCookieAuth || !finishGoogleOBSAuth)
+    if (!finishGoogleOBSAuth)
     
     oauth.init({
       ports: [APPCONFIG.SNAKE.GOOGLE_AUTH],
-      response: "Qua trình đăng nhập hoàn tất! Vui lòng đóng cửa sổ này.",
+      response: "Qua trinh dang nhap da hoan tat. Vui long dong cua so nay!",
       onCodeReceived: async (code) => {
         await getTokenGoogleOBS({ data: { code } }),
         await router.navigate({ reloadDocument: true })
@@ -87,12 +79,11 @@ function useOAuthGoogleTauri() {
     return () => {
       oauth.cleanup()
     }
-  }, [isGoogleOBSCookieAuth, finishGoogleOBSAuth])
+  }, [finishGoogleOBSAuth])
 }
 
 export default function useInitGoogleOauth() {
     getGoogleOBSOauth()
     handleOAuthMessage()
     useOAuthGoogleTauri()
-    getAuthGoogleOBSCookie()
 }
