@@ -9,6 +9,7 @@ import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
 import { APPCONFIG, getYoutubeScopeWithURL } from "@/data/config";
 import { OAuthServerManager } from "@/class/OAuthServerManager";
+import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 
 function getGoogleOBSOauth() {
     const { x, y } = useDimension().dimension
@@ -61,7 +62,7 @@ function handleOAuthMessage() {
 function useOAuthGoogleTauri() {
   const router = useRouter()
   const { finishGoogleOBSAuth } = useStore(GoogleState)
-  useEffect(() => {
+  useTauriSafeEffect(() => {
     if (!finishGoogleOBSAuth)
     
     OAuthServerManager.init({

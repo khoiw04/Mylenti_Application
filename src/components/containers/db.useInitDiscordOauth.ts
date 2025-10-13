@@ -1,5 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import { isTauri } from '@tauri-apps/api/core';
 import { DiscordStraregy } from '@/store';
@@ -9,6 +9,7 @@ import { APPCONFIG } from '@/data/config';
 import { useDimension } from '@/hooks/useDimension';
 import { useDiscordCommunityUser } from '@/lib/queries';
 import { OAuthServerManager } from "@/class/OAuthServerManager";
+import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 
 function getDiscordOauth() {
     const { x, y } = useDimension().dimension
@@ -40,7 +41,7 @@ function useOAuthDiscordTauri() {
   const router = useRouter()
   const { isAuthenticated } = useDiscordCommunityUser().data
 
-  useEffect(() => {
+  useTauriSafeEffect(() => {
     if (isAuthenticated) return
 
     OAuthServerManager.init({
