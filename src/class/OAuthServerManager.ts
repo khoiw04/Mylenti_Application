@@ -3,7 +3,9 @@ import type { OauthConfig} from '@fabianlars/tauri-plugin-oauth';
 
 type OAuthOptions = { onCodeReceived: (code: string) => Promise<void> }
 
-export default class OAuthServerManager {
+let instance: OAuthServerManagerClass | null = null
+
+export class OAuthServerManagerClass {
     private port: number | null = null
 
     async init({ ports, response, onCodeReceived }: OauthConfig & OAuthOptions) {
@@ -26,3 +28,12 @@ export default class OAuthServerManager {
         }
     }
 }
+
+export function getOAuthServerManager(): OAuthServerManagerClass {
+    if (!instance) {
+        instance = new OAuthServerManagerClass()
+    }
+    return instance
+}
+
+export const OAuthServerManager = getOAuthServerManager()

@@ -3,6 +3,8 @@ import { exists } from "@tauri-apps/plugin-fs";
 import { Command } from "@tauri-apps/plugin-shell";
 import type { Child } from "@tauri-apps/plugin-shell";
 
+let instance: CloudflareControllerClass | null = null
+
 export class CloudflareControllerClass {
     private process: Child | null = null
 
@@ -29,6 +31,7 @@ export class CloudflareControllerClass {
                 user_name,
             ]).spawn()
         } catch (err) {
+            this.process = null
             console.error('Lỗi khi chạy tunnel:', err);
         }
     }
@@ -53,4 +56,11 @@ export class CloudflareControllerClass {
     }
 }
 
-export const CloudflareController = new CloudflareControllerClass
+export function getCloudflareController(): CloudflareControllerClass {
+    if (!instance) {
+        instance = new CloudflareControllerClass()
+    }
+    return instance
+}
+
+export const CloudflareController = getCloudflareController()

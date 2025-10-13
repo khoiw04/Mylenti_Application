@@ -6,7 +6,6 @@ export class DonateVoiceControllerClass {
 
     async start() {
         if (this.process) {
-            console.warn('donate_voice is already running.')
             return
         }
 
@@ -19,7 +18,6 @@ export class DonateVoiceControllerClass {
 
     async stop() {
         if (!this.process) {
-            console.warn('donate_voice is not running.')
             return
         }
 
@@ -38,4 +36,4 @@ export class DonateVoiceControllerClass {
     }
 }
 
-export const DonateVoiceController = new DonateVoiceControllerClass()
+export const DonateVoiceController = new DonateVoiceControllerClass

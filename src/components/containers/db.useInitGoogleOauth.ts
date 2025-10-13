@@ -8,7 +8,7 @@ import { useDimension } from "@/hooks/useDimension";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
 import { APPCONFIG, getYoutubeScopeWithURL } from "@/data/config";
-import OAuthServerManager from "@/class/OAuthServerManager";
+import { OAuthServerManager } from "@/class/OAuthServerManager";
 
 function getGoogleOBSOauth() {
     const { x, y } = useDimension().dimension
@@ -62,10 +62,9 @@ function useOAuthGoogleTauri() {
   const router = useRouter()
   const { finishGoogleOBSAuth } = useStore(GoogleState)
   useEffect(() => {
-    const oauth = new OAuthServerManager()
     if (!finishGoogleOBSAuth)
     
-    oauth.init({
+    OAuthServerManager.init({
       ports: [APPCONFIG.SNAKE.GOOGLE_AUTH],
       response: "Qua trinh dang nhap da hoan tat. Vui long dong cua so nay!",
       onCodeReceived: async (code) => {
@@ -77,7 +76,7 @@ function useOAuthGoogleTauri() {
     })
 
     return () => {
-      oauth.cleanup()
+      OAuthServerManager.cleanup()
     }
   }, [finishGoogleOBSAuth])
 }

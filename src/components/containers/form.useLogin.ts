@@ -8,13 +8,13 @@ import { loginFn } from "@/func/auth.SupabaseLog";
 import { logInWithOauth } from "@/func/fn.logInWithOauth";
 import { useDimension } from "@/hooks/useDimension";
 import { exchangeCodeForSession } from "@/func/auth.SupabaseOauth";
-import OAuthServerManager from "@/class/OAuthServerManager";
+import { OAuthServerManager } from "@/class/OAuthServerManager";
 
 function useListenGoogleLoginOauth() {
   const router = useRouter()
   useEffect(() => {
-    const oauth = new OAuthServerManager()
-    oauth.init({
+
+    OAuthServerManager.init({
       ports: [3001],
       response: "Qua trình đăng nhập hoàn tất! Vui lòng đóng cửa sổ này.",
       onCodeReceived: async (code) => {
@@ -26,7 +26,7 @@ function useListenGoogleLoginOauth() {
     })
 
     return () => {
-      oauth.cleanup()
+      OAuthServerManager.cleanup()
     }
   }, [])
 }

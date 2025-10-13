@@ -8,7 +8,7 @@ import { logInWithOauthStrategy } from '@/func/fn.stragery';
 import { APPCONFIG } from '@/data/config';
 import { useDimension } from '@/hooks/useDimension';
 import { useDiscordCommunityUser } from '@/lib/queries';
-import OAuthServerManager from '@/class/OAuthServerManager';
+import { OAuthServerManager } from "@/class/OAuthServerManager";
 
 function getDiscordOauth() {
     const { x, y } = useDimension().dimension
@@ -43,8 +43,7 @@ function useOAuthDiscordTauri() {
   useEffect(() => {
     if (isAuthenticated) return
 
-    const oauth = new OAuthServerManager()
-    oauth.init({
+    OAuthServerManager.init({
       ports: [APPCONFIG.SNAKE.DISCORD_AUTH],
       response: "Qua trinh dang nhap da hoan tat. Vui long dong cua so nay!",
       onCodeReceived: async (code) => {
@@ -56,7 +55,7 @@ function useOAuthDiscordTauri() {
     })
 
     return () => {
-      oauth.cleanup()
+      OAuthServerManager.cleanup()
     }
   }, [isAuthenticated])
 }

@@ -4,7 +4,7 @@ import type { ButtonFunctionType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export default function Main({ icon, title, description, align = 'center', src = "https://originui.com/dialog-content.png", onClick }: ButtonFunctionType) {
+export default function Main({ icon, title, description, align = 'center', src = "https://coss.com/origin/dialog-content.png", onClick }: ButtonFunctionType) {
     const [copied, setCopied] = useState(false)
 
     const handleClick = () => {

@@ -1,6 +1,6 @@
 import { debounce } from '@tanstack/react-pacer';
 import { useStore } from '@tanstack/react-store';
-import { BaseDirectory, tempDir } from '@tauri-apps/api/path';
+import { join, tempDir } from '@tauri-apps/api/path';
 import { readDir, remove } from '@tauri-apps/plugin-fs'
 import useTauriSafeEffect from './useTauriSideEffect';
 import { OBSOverlayTauriSettingsProps, loadOBSSetting, saveOBSSetting } from '@/store';
@@ -46,7 +46,8 @@ export function useSyncOBSDonateSetting() {
 
       for (const entry of entries) {
         if (entry.name.includes('_MEI')) {
-          await remove(entry.name, { recursive: true, baseDir: BaseDirectory.Temp })
+          const fullPath = await join(temp, entry.name)
+          await remove(fullPath, { recursive: true })
         }
       }
     } catch (err) {
@@ -55,14 +56,14 @@ export function useSyncOBSDonateSetting() {
   }
 
   useTauriSafeEffect(() => {
+    deleteAllMEIFolders()
+  }, [])
+
+  useTauriSafeEffect(() => {
     if (enableVoice) {
       DonateVoiceController.start()
     } else {
-      (async () => {
-        await deleteAllMEIFolders()
-      })()
       DonateVoiceController.stop()
     }
-    return () => DonateVoiceController.stop()
   }, [enableVoice])
 }

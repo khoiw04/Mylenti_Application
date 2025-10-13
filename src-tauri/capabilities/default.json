@@ -55,64 +55,34 @@
     "log:default",
     "sql:default",
     "sql:allow-execute",
+    "fs:allow-temp-read",
+    "fs:allow-temp-write-recursive",
     {
       "identifier": "fs:allow-rename",
-      "allow": [
-        {
-          "path": "$HOME/**/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-read",
-      "allow": [
-        {
-          "path": "$TEMP/*"
-        }
-      ]
+      "allow": [{ "path": "$HOME/**/*" }]
     },
     {
       "identifier": "fs:allow-remove",
-      "allow": [
-        {
-          "path": "$TEMP/*"
-        }
-      ]
+      "allow": [{ "path": "$TEMP/**/*" }]
     },
     {
       "identifier": "fs:allow-exists",
       "allow": [
-        {
-          "path": "$APPDATA/*"
-        },
-        {
-          "path": "$HOME/**/*"
-        }
+        { "path": "$APPDATA/*" },
+        { "path": "$HOME/**/*" }
       ]
     },
     {
       "identifier": "fs:allow-appdata-write",
-      "allow": [
-        {
-          "path": "$APPDATA/*"
-        }
-      ]
+      "allow": [{ "path": "$APPDATA/*" }]
     },
     {
       "identifier": "fs:scope-font-index",
-      "allow": [
-        {
-          "path": "$FONT/*"
-        }
-      ]
+      "allow": [{ "path": "$FONT/*" }]
     },
     {
       "identifier": "fs:scope-log-index",
-      "allow": [
-        {
-          "path": "$LOG/*"
-        }
-      ]
+      "allow": [{ "path": "$LOG/*" }]
     },
     {
       "identifier": "shell:allow-execute",
