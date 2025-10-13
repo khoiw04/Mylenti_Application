@@ -4,7 +4,7 @@ import { Toaster } from 'sonner';
 import useWebsocketOBSOverlaySend from "@/components/containers/db.useWebsocketOBSSettingsSend";
 import useTauriInit from '@/components/containers/api.useTauriInit'
 import { AppWindowStore, ThemeStore } from '@/store'
-import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings } from '@/hooks/useRustOBSSettingsSync'
+import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings, useSyncOBSDonateSetting } from '@/hooks/useRustOBSSettingsSync'
 import useSupabaseSepayAlertSend from '@/components/containers/db.useSupabaseSepayAlertSend'
 import useInitWebSocket from '@/components/containers/db.useInitWebSocket'
 import useTheme from '@/components/containers/db.useTheme';
@@ -20,6 +20,7 @@ export default function Main() {
     // OBSOVERLAY - SYNC
     useInitOBSOverlaySettings()
     useSyncOBSOverlaySettings()
+    useSyncOBSDonateSetting()
 
     // USERSETTING - SYNC
     useTheme()

@@ -82,10 +82,7 @@ pub fn run() {
     let port: u16 = 3000;
     let frontend_url: Url = format!("http://localhost:{}", port).parse().unwrap();
 
-    let donate_voice_process = Arc::new(Mutex::new(None));
     // let node_server_process = Arc::new(Mutex::new(None));
-
-    let donate_voice_process_for_exit = donate_voice_process.clone();
     // let node_server_process_for_exit = node_server_process.clone();
 
     tauri::Builder::default()
@@ -120,7 +117,6 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         // .plugin(tauri_plugin_localhost::Builder::new(port).build())
         .setup({
-            let donate_voice_process = donate_voice_process.clone();
             // let node_server_process = node_server_process.clone();
 
             move |app| {
@@ -140,9 +136,6 @@ pub fn run() {
                 let show_item = MenuItem::with_id(app, "show", "Hiện ứng dụng", true, None::<&str>)?;
                 let hide_item = MenuItem::with_id(app, "hide", "Ẩn ứng dụng", true, None::<&str>)?;
                 let tray_menu = Menu::with_items(app, &[&show_item, &hide_item, &quit_item])?;
-
-                let donate_voice = start_sidecar("donate_voice", &[], &app_handle);
-                *donate_voice_process.lock().unwrap() = donate_voice;
 
                 // start_sidecar("node_server", &[], &app_handle);
                 // let node_server = start_sidecar("node_server", &[], &app_handle);
@@ -255,10 +248,6 @@ pub fn run() {
         .expect("❌ Lỗi khi build ứng dụng Tauri")
         .run(move |_app_handle, event| {
             if let RunEvent::ExitRequested { .. } = event {
-                if let Some(child) = donate_voice_process_for_exit.lock().unwrap().take() {
-                    let _ = child.kill();
-                    log::info!("🛑 Đã dừng donate_voice");
-                }
                 // if let Some(child) = node_server_process_for_exit.lock().unwrap().take() {
                 //     let _ = child.kill();
                 //     log::info!("🛑 Đã dừng node_server");

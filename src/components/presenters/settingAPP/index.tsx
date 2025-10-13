@@ -7,8 +7,6 @@ import { motion } from "motion/react";
 import { useStore } from "@tanstack/react-store";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "sonner";
-import { Command } from "@tauri-apps/plugin-shell";
-import { homeDir, join } from "@tauri-apps/api/path";
 import type { Update } from '@tauri-apps/plugin-updater';
 import type { SettingItemsType } from "@/types";
 import { 
@@ -29,11 +27,12 @@ import { Label } from "@/components/ui/label"
 import { DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
-import { ThemeStore, tunnelProcessStore } from "@/store";
+import { ThemeStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
 import { APPCONFIG } from "@/data/config";
 import { items, links } from "@/data/setting-app";
+import { CloudflareController } from "@/class/CloudflareController";
 
 export default function SettingApp() {
     const { theme, setTheme } = useStore(ThemeStore)
@@ -277,45 +276,26 @@ function SettingUpdates() {
 }
 
 function SettingTunnel() {
-    const { tunnelProcess } = useStore(tunnelProcessStore)
     const { data: { user_name } } = useSQLiteDiscordInfo()
     const toogleTunnelFn = async () => {
-        if (tunnelProcess) {
-            await tunnelProcess.kill();
-            tunnelProcessStore.setState(prev => ({ ...prev, tunnelProcess: null }));
+        if (CloudflareController.isRunning()) {
+            await CloudflareController.stop()
             toast.success('Tunnel đã Tắt!')
         } else {
-            const home = await homeDir();
-            const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
-
-            if (!configPath) {
-                toast.error("Không có tunnel's config")
-                return
-            }
-
-            // eslint-disable-next-line no-shadow
-            const tunnelProcess = await Command.sidecar('bin/cloudflared', [
-                'tunnel',
-                '--config',
-                configPath,
-                'run',
-                user_name,
-            ]).spawn();
-
-            tunnelProcessStore.setState(prev => ({...prev, tunnelProcess}))
+            CloudflareController.start(user_name)
             toast.success('Tunnel đã Bật!')
         }
     };
     return (
         <>
-            <li>Trạng thái: {tunnelProcess ? 'Đang chạy' : 'Đã tắt'}</li>
+            <li>Trạng thái: {CloudflareController.isRunning() ? 'Đang chạy' : 'Đã tắt'}</li>
             <div className="w-40 gap-2 mt-10 flex flex-row justify-between">
                 <Button
                     type="button"
                     className="flex-1 overflow-clip relative"
                     onClick={toogleTunnelFn}
                 >
-                    {tunnelProcess ? 'Tắt' : 'Bật'}
+                    {CloudflareController.isRunning() ? 'Tắt' : 'Bật'}
                 </Button>
             </div>
         </>

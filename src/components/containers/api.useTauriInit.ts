@@ -1,11 +1,9 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { invoke } from "@tauri-apps/api/core";
-import { homeDir, join } from '@tauri-apps/api/path';
-import { Command } from '@tauri-apps/plugin-shell';
-import { exists } from "@tauri-apps/plugin-fs";
-import { AppWindowStore, tunnelProcessStore } from "@/store";
+import { AppWindowStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
+import { CloudflareController } from "@/class/CloudflareController";
 
 export default function useTauriInit() {
     const { data: { user_name } } = useSQLiteDiscordInfo()
@@ -63,31 +61,7 @@ export default function useTauriInit() {
     }, [])
 
     useTauriSafeEffect(() => {
-    if (!user_name) return;
-    
-    (async () => {
-        try {
-            const home = await homeDir();
-            const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
-
-            await new Promise(resolve => setTimeout(resolve, 6000));
-
-            const fileExists = await exists(configPath);
-            if (!fileExists) return
-
-            const tunnelProcess = await Command.sidecar('bin/cloudflared', [
-                'tunnel',
-                '--config',
-                configPath,
-                'run',
-                user_name,
-            ]).spawn();
-
-            tunnelProcessStore.setState(prev => ({...prev, tunnelProcess}))
-            return () => tunnelProcess.kill()
-        } catch (err) {
-            console.error('Lỗi khi chạy tunnel:', err);
-        }
-    })();
+        if (!user_name) return;
+        CloudflareController.start(user_name)
     }, [user_name]);
 }

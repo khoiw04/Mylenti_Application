@@ -28,6 +28,7 @@ export const APPCONFIG = {
         DONATE_FILE: 'donate-files.json',
         EMOJI_DONATE_KEY: 'emojis',
         SOUND_DONATE_KEY: 'sound',
+        VOICE_WARN_KEY: 'voice_warn'
     },
     SNAKE: {
         WEBSOCKET: 4455,

@@ -64,6 +64,22 @@
       ]
     },
     {
+      "identifier": "fs:allow-read",
+      "allow": [
+        {
+          "path": "$TEMP/*"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-remove",
+      "allow": [
+        {
+          "path": "$TEMP/*"
+        }
+      ]
+    },
+    {
       "identifier": "fs:allow-exists",
       "allow": [
         {
@@ -147,10 +163,28 @@
       ]
     },
     {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "bin/donate_voice",
+          "sidecar": true
+        }
+      ]
+    },
+    {
       "identifier": "shell:allow-kill",
       "allow": [
         {
           "name": "bin/cloudflared",
+          "sidecar": true
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-kill",
+      "allow": [
+        {
+          "name": "bin/donate_voice",
           "sidecar": true
         }
       ]

@@ -5,29 +5,17 @@ import EmojiFileUpload from "./EmojiFileUpload";
 import SoundFileUpload from "./SoundFileUpload";
 import VoiceWarnToogle from "./VoiceWarnToogle";
 import { ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger } from "@/components/ui/context-menu";
-import { OBSOverlayTauriSettingStragery, OBSOverlayTauriSettingsProps, loadSetting, saveSetting } from "@/store";
+import { OBSOverlayTauriSettingStragery, OBSOverlayTauriSettingsProps, loadSetting } from "@/store";
 import { overlayFieldConfigs } from "@/data/obs-overlay";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
+import { APPCONFIG } from "@/data/config";
 
 export default function ContextMenuContentMain() {
   const [dialogType, setDialogType] = useState<'image' | 'sound' | 'voice_warn' | null>(null)
-  const [voiceWarning, setVoiceWarning] = useState(false)
   const { ChatType, currentKeyChatType, showComment, DonateProps: { enableVoice } } = useStore(OBSOverlayTauriSettingsProps)
   const { currentKeyChatTypeStragery, showCommentStragery, showLabelStragery, toogleVoiceDonatePropsStragery } = useStore(OBSOverlayTauriSettingStragery)
-  useTauriSafeEffect(() => {
-    const fetchVoiceWarning = async () => {
-      let value = await loadSetting('voice_warn') as string
-      if (Array.isArray(value)) {
-        await saveSetting('voice_warn', 'false')
-        value = await loadSetting('voice_warn') as string
-      }
-      setVoiceWarning(value === 'true')
-    }
 
-    fetchVoiceWarning()
-  }, [])
     return (
       <AlertDialog>
         <Dialog>
@@ -78,8 +66,8 @@ export default function ContextMenuContentMain() {
             <AlertDialogTrigger asChild>
               <ContextMenuCheckboxItem
                 checked={enableVoice}
-                onClick={() => {
-                  if (!voiceWarning) {
+                onClick={async () => {
+                  if (Array.isArray(await loadSetting(APPCONFIG.FILE.VOICE_WARN_KEY))) {
                     setDialogType('voice_warn')
                   } else {
                     toogleVoiceDonatePropsStragery(!enableVoice)
@@ -137,7 +125,7 @@ export default function ContextMenuContentMain() {
             {dialogType === 'sound' && <SoundFileUpload />}
           </DialogContent>
         </Dialog>
-        {dialogType === 'voice_warn' && <VoiceWarnToogle setVoiceWarning={setVoiceWarning} />}
+        {dialogType === 'voice_warn' && <VoiceWarnToogle />}
       </AlertDialog>
     )
 }

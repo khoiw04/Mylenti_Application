@@ -1,5 +1,4 @@
 import { Store } from "@tanstack/store";
-import type { Child } from "@tauri-apps/plugin-shell";
 import type { Window } from "@tauri-apps/api/window";
 
 export const AppWindowStore = new Store<{
@@ -18,10 +17,4 @@ export const ThemeStore = new Store<{
             ...prev,
             theme: theme
         }))
-})
-
-export const tunnelProcessStore = new Store<{
-    tunnelProcess: Child | null
-}>({
-    tunnelProcess: null
 })
