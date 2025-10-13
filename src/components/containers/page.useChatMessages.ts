@@ -1,5 +1,5 @@
 import { useStore } from "@tanstack/react-store"
-import usePollingYoutubeChat from "./db.useTauriPollChat"
+import usePollingYoutubeChat from "./db.useYouTubePollChat"
 import { OBSOverlayTauriSettingStragery, OBSOverlayTauriSettingsProps, OBSOverlayWebsiteSettingStragery, OBSOverlayWebsiteSettingsStore } from "@/store"
 import { useWebsiteChatMessage } from "@/components/containers/db.YoutubeLiveChatCollections"
 

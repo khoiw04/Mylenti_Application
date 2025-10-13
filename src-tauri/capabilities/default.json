@@ -64,18 +64,13 @@
       ]
     },
     {
-      "identifier": "fs:allow-rename",
-      "deny": [
-        {
-          "path": "$HOME/.config/**/*"
-        }
-      ]
-    },
-    {
       "identifier": "fs:allow-exists",
       "allow": [
         {
           "path": "$APPDATA/*"
+        },
+        {
+          "path": "$HOME/**/*"
         }
       ]
     },
@@ -84,30 +79,6 @@
       "allow": [
         {
           "path": "$APPDATA/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-picture-read-recursive",
-      "allow": [
-        {
-          "path": "$PICTURE/Mylenti/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-picture-write-recursive",
-      "allow": [
-        {
-          "path": "$PICTURE/Mylenti/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-public-meta-recursive",
-      "allow": [
-        {
-          "path": "$PICTURE/Mylenti/*"
         }
       ]
     },
@@ -149,7 +120,8 @@
             "delete",
             {
               "validator": "\\S+" 
-            }
+            },
+            "--force"
           ]
         }
       ]

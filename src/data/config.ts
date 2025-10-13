@@ -11,7 +11,7 @@ export const APPCONFIG = {
         REDIRECTSUPABASEFORGETURL: 'http://localhost:3001/nho-mat-khau',
         REDIRECTSUPABASESIGNUPURL: 'http://localhost:3001/',
         DONATIONS_LINK: 'http://localhost:3000/runtime/obsdonate',
-        APP_URL: (user_name: string) => `https://${user_name}.mylenti.khoiwn04.com`
+        APP_URL: (user_name: string) => `https://${user_name}.khoiwn04.com`
     },
     TOKEN: {
         ACCESS_DISCORD: 'discordAccessToken',
@@ -30,11 +30,12 @@ export const APPCONFIG = {
         SOUND_DONATE_KEY: 'sound',
     },
     SNAKE: {
-        4455: 'WEBSOCKET',
-        8080: 'WEBHOOK',
-        3001: 'AUTH',
-        3000: 'MAIN',
-        4545: 'TTS'
+        WEBSOCKET: 4455,
+        WEBHOOK: 8080,
+        GOOGLE_AUTH: 3001,
+        DISCORD_AUTH: 3002,
+        MAIN: 3000,
+        TTS: 4545
     },
     NOTE: {
         CLOUDFLARE_TUNNEL: 'cloudflared tunnel --url http://localhost:8080'

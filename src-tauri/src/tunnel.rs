@@ -118,30 +118,12 @@ pub async fn setup_tunnel(user_name: String) -> Result<TunnelResult, String> {
         });
     }
 
-    // Nếu chưa có config, tiến hành tạo tunnel
-    match create_and_save_tunnel(user_name.clone()).await {
-        Ok(result) => Ok(result),
-        Err(e) => {
-            println!("create_and_save_tunnel failed: {}", e);
-
-            let parsed: serde_json::Value = serde_json::from_str(&e).unwrap_or_else(|_| {
-                serde_json::json!({ "code": "UNKNOWN_ERROR", "message": e })
-            });
-
-            let code = parsed.get("code").and_then(|c| c.as_str()).unwrap_or("");
-            if matches!(code, "1013" | "CREATE_TUNNEL_ERROR" | "PARSE_ERROR") {
-                println!("Falling back to ensure_credentials due to: {}", code);
-                ensure_credentials(user_name).await
-            } else {
-                Err(e)
-            }
-        }
-    }
+    create_and_save_tunnel(user_name.clone()).await
 }
 
 pub async fn create_and_save_tunnel(user_name: String) -> Result<TunnelResult, String> {
     let res = reqwest::Client::new()
-        .post("https://subdomain-mylenti.khoiwn04.com")
+        .post("https://subdomain-mylenti.khoiwn04.com/create-tunnel")
         .json(&serde_json::json!({ "user_name": user_name }))
         .send()
         .await
@@ -202,61 +184,6 @@ pub async fn create_and_save_tunnel(user_name: String) -> Result<TunnelResult, S
     )
 }
 
-pub async fn ensure_credentials(user_name: String) -> Result<TunnelResult, String> {
-    let url = format!(
-        "https://subdomain-mylenti.khoiwn04.com/get-tunnel?user_name={}",
-        user_name
-    );
-
-    let res = reqwest::get(&url).await.map_err(|e| format!("Request error: {e}"))?;
-    let status = res.status();
-    let text = res.text().await.map_err(|e| format!("Read error: {e}"))?;
-    println!("Raw response (ensure_credentials): {}", text);
-
-    if text.trim().is_empty() {
-        return Err("Empty response from server".to_string());
-    }
-
-    let parsed: serde_json::Value = serde_json::from_str(&text)
-        .map_err(|e| format!("Invalid JSON: {e}"))?;
-
-    if !status.is_success() || parsed.get("code").is_some() {
-        return Err(parsed.to_string());
-    }
-
-    let data: TunnelInfo = serde_json::from_value(parsed)
-        .map_err(|e| format!("Invalid TunnelInfo: {e}"))?;
-
-    if data.credentials.get("TunnelSecret").is_none() {
-        return Err("Credentials missing TunnelSecret".to_string());
-    }
-
-    let tunnel_uuid = data.tunnel_uuid.clone();
-    let home = dirs::home_dir().ok_or("Không tìm thấy home dir")?;
-    let cloudflared_dir = home.join(".cloudflared");
-    fs::create_dir_all(&cloudflared_dir).map_err(|e| e.to_string())?;
-
-    let creds_path = cloudflared_dir.join(format!("{}.json", tunnel_uuid));
-    let creds_json = serde_json::to_string_pretty(&data.credentials).map_err(|e| e.to_string())?;
-    fs::write(&creds_path, creds_json).map_err(|e| e.to_string())?;
-
-    // Ghi file config riêng cho từng tài khoản
-    let config_path = cloudflared_dir.join(format!("config_{}.yml", user_name));
-    let config_content = format!(
-        "tunnel: {tunnel_name}\ncredentials-file: {creds_file}\n\ningress:\n  - service: http://localhost:8080\n",
-        tunnel_name = user_name,
-        creds_file = creds_path.to_string_lossy()
-    );
-    fs::write(&config_path, config_content).map_err(|e| e.to_string())?;
-
-    Ok(TunnelResult {
-        tunnel_uuid,
-        creds_path: creds_path.to_string_lossy().to_string(),
-        config_path: config_path.to_string_lossy().to_string(),
-        subdomain: data.subdomain,
-    })
-}
-
 #[command]
 pub async fn delete_tunnel(user_name: String) -> Result<String, String> {
     let url = format!(
@@ -282,35 +209,51 @@ pub async fn delete_tunnel(user_name: String) -> Result<String, String> {
         return Err(text);
     }
 
-    if let Some(home) = dirs::home_dir() {
-        let cloudflared_dir = home.join(".cloudflared");
-        let config_path = cloudflared_dir.join(format!("config_{}.yml", user_name));
+    // Kiểm tra thư mục home
+    let Some(home) = dirs::home_dir() else {
+        eprintln!("Không thể xác định thư mục home của người dùng.");
+        return Err("Không thể xác định thư mục home".to_string());
+    };
 
-        let creds_path_opt = if config_path.exists() {
-            fs::read_to_string(&config_path)
-                .ok()
-                .and_then(|content| {
-                    content
-                        .lines()
-                        .find_map(|line| line.strip_prefix("credentials-file: ").map(|s| s.trim().to_string()))
-                })
-        } else {
-            None
-        };
+    let cloudflared_dir = home.join(".cloudflared");
+    let config_path = cloudflared_dir.join(format!("config_{}.yml", &user_name));
 
-        if config_path.exists() {
-            if let Err(e) = fs::remove_file(&config_path) {
-                println!("Không thể xóa config: {}", e);
+    // Đọc đường dẫn credentials từ file config nếu tồn tại
+    let creds_path_opt = if config_path.exists() {
+        match fs::read_to_string(&config_path) {
+            Ok(content) => content
+                .lines()
+                .find_map(|line| line.strip_prefix("credentials-file: ").map(|s| s.trim().to_string())),
+            Err(e) => {
+                eprintln!("Không thể đọc file config {}: {}", config_path.display(), e);
+                None
             }
         }
+    } else {
+        println!("File config không tồn tại: {}", config_path.display());
+        None
+    };
 
-        if let Some(creds_path_str) = creds_path_opt {
-            let creds_path = PathBuf::from(creds_path_str);
-            if creds_path.exists() {
-                if let Err(e) = fs::remove_file(&creds_path) {
-                    println!("Không thể xóa credentials: {}", e);
-                }
+    // Xóa file config nếu tồn tại
+    if config_path.exists() {
+        if let Err(e) = fs::remove_file(&config_path) {
+            eprintln!("Không thể xóa file config {}: {}", config_path.display(), e);
+        } else {
+            println!("Đã xóa file config: {}", config_path.display());
+        }
+    }
+
+    // Xóa file credentials nếu tồn tại
+    if let Some(creds_path_str) = creds_path_opt {
+        let creds_path = PathBuf::from(creds_path_str);
+        if creds_path.exists() {
+            if let Err(e) = fs::remove_file(&creds_path) {
+                eprintln!("Không thể xóa file credentials {}: {}", creds_path.display(), e);
+            } else {
+                println!("Đã xóa file credentials: {}", creds_path.display());
             }
+        } else {
+            println!("File credentials không tồn tại: {}", creds_path.display());
         }
     }
 

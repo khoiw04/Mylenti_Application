@@ -1,4 +1,3 @@
-import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
 import { useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
@@ -9,6 +8,7 @@ import { logInWithOauthStrategy } from '@/func/fn.stragery';
 import { APPCONFIG } from '@/data/config';
 import { useDimension } from '@/hooks/useDimension';
 import { useDiscordCommunityUser } from '@/lib/queries';
+import OAuthServerManager from '@/class/OAuthServerManager';
 
 function getDiscordOauth() {
     const { x, y } = useDimension().dimension
@@ -39,48 +39,29 @@ function getDiscordOauth() {
 function useOAuthDiscordTauri() {
   const router = useRouter()
   const { isAuthenticated } = useDiscordCommunityUser().data
-  useEffect(() => {
-    let portRef: number | null = null
-    if (isAuthenticated) return
-    try {
-      (async () => {
-        const port = await start({
-          ports: [3001],
-          response: "Qua trinh dang nhap hoan tat! Vui long dong cua so nay."
-        });
-        portRef = port
 
-        await onUrl(async (redirectUrl) => {
-            const urlObj = new URL(redirectUrl)
-            const code = urlObj.searchParams.get('code')
-            if (!code) {
-                toast.error('Không lấy được code trên đường Link')
-                return
-            }
-            
-            try {
-                await getDiscordToken({ data: { code } })
-                await Promise.all([
-                    cancel(port),
-                    router.navigate({ to: '/community/ngan-hang', reloadDocument: true })
-                ])
-            } catch (err) {
-                toast.error(`Lỗi xác thực Discord:, ${err}`);
-            }
-        })
-      })()
-    } catch (error) {
-      toast.error(`Lỗi khởi tạo OAuth server:, ${error}`);
-    }
+  useEffect(() => {
+    if (isAuthenticated) return
+
+    const oauth = new OAuthServerManager()
+    oauth.init({
+      ports: [APPCONFIG.SNAKE.DISCORD_AUTH],
+      response: "Qua trình đăng nhập hoàn tất! Vui lòng đóng cửa sổ này.",
+      onCodeReceived: async (code) => {
+        await getDiscordToken({ data: { code } })
+        await router.navigate({ reloadDocument: true })
+      }
+    }).catch((err) => {
+      toast.error(`Lỗi khởi tạo OAuth server: ${err}`)
+    })
+
     return () => {
-        if (portRef !== null) {
-            cancel(portRef)
-        }
+      oauth.cleanup()
     }
   }, [isAuthenticated])
 }
 
-export default function useCommunityBank() {
+export default function useInitDiscordOauth() {
     getDiscordOauth()
     useOAuthDiscordTauri()
 }

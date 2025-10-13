@@ -1,6 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
 import { toast } from "sonner";
 import { useAppForm } from "@/hooks/useFormHook";
 import { createMutation } from "@/hooks/createMutations";
@@ -9,39 +8,25 @@ import { loginFn } from "@/func/auth.SupabaseLog";
 import { logInWithOauth } from "@/func/fn.logInWithOauth";
 import { useDimension } from "@/hooks/useDimension";
 import { exchangeCodeForSession } from "@/func/auth.SupabaseOauth";
+import OAuthServerManager from "@/class/OAuthServerManager";
 
 function useListenGoogleLoginOauth() {
   const router = useRouter()
   useEffect(() => {
-    let portRef: number | null = null
-    try {
-      (async () => {
-        const port = await start({
-          ports: [3001],
-          response: "Qua trinh dang nhap hoan tat! Vui long dong cua so nay."
-        });
-        portRef = port
+    const oauth = new OAuthServerManager()
+    oauth.init({
+      ports: [3001],
+      response: "Qua trình đăng nhập hoàn tất! Vui lòng đóng cửa sổ này.",
+      onCodeReceived: async (code) => {
+        await exchangeCodeForSession({ data: { code } })
+        await router.navigate({ to: '/', reloadDocument: true })
+      }
+    }).catch((err) => {
+      toast.error(`Lỗi khởi tạo OAuth server: ${err}`)
+    })
 
-        await onUrl(async (redirectUrl) => {
-          const urlObj = new URL(redirectUrl)
-          const code = urlObj.searchParams.get('code')
-          if (code) {
-            await exchangeCodeForSession({ data: { code } })
-
-            await Promise.all([
-              cancel(port),
-              router.navigate({ to: '/', reloadDocument: true })
-            ])
-          }
-        })
-      })()
-    } catch (error) {
-      toast.error(`Lỗi khởi tạo OAuth server:, ${error}`);
-    }
     return () => {
-        if (portRef !== null) {
-            cancel(portRef)
-        }
+      oauth.cleanup()
     }
   }, [])
 }

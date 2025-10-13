@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 
 import { useRouter } from "@tanstack/react-router"
+import { useStore } from "@tanstack/react-store"
 import SettingApp from "@/components/presenters/settingAPP"
 import {
   Avatar,
@@ -31,10 +32,12 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import useLogOut from "@/components/containers/db.useLogOut"
 import { useDiscordCommunityUser } from "@/lib/queries"
 import { addAtPrefix } from "@/lib/utils"
+import { DiscordStraregy } from "@/store"
 
 export default function UserMenu() {
   const router = useRouter()
   const { handleLogOut } = useLogOut()
+  const { onDiscordLogInClick } = useStore(DiscordStraregy)
   const { isAuthenticated, display_avatar, display_name, email } = useAuthInfoExternalStore()
   const DiscordUser = useDiscordCommunityUser().data
 
@@ -120,7 +123,7 @@ export default function UserMenu() {
             <span>Đăng xuất</span>
           </DropdownMenuItem>
           :
-          <DropdownMenuItem onClick={() => router.navigate({ to: '/dang-nhap' })}>
+          <DropdownMenuItem onClick={onDiscordLogInClick}>
             <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
             <span>Đăng Nhập</span>
           </DropdownMenuItem>

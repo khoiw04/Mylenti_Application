@@ -9,6 +9,7 @@ import { PollingStatusStore, PollingStatusStragery } from '@/store'
 import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
+import { getValidGoogleOBSAccessToken } from '@/func/auth.googleOBS'
 
 const DEFAULT_INTERVAL = 6000
 const PAUSE_DURATION = 30000
@@ -135,10 +136,15 @@ export default function usePollingYoutubeChat() {
   }, [])
 
   useEffect(() => {
-    executePoll()
-    return () => {
-      clearTimeoutIfExists()
-    }
+    (async () => {
+      const accessToken = await getValidGoogleOBSAccessToken()
+      if (!accessToken) return
+
+      executePoll()
+      return () => {
+        clearTimeoutIfExists()
+      }
+    })()    
   }, [])
 
   return {

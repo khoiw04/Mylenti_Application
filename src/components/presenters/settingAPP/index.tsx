@@ -1,4 +1,4 @@
-import { LucideInbox, LucideLink2, LucideRotateCcw, LucideTrash, LucideWebhook } from "lucide-react"
+import { LucideInbox, LucideLink2, LucideWebhook } from "lucide-react"
 
 import React, { useState } from "react"
 import { check } from '@tauri-apps/plugin-updater';
@@ -7,7 +7,8 @@ import { motion } from "motion/react";
 import { useStore } from "@tanstack/react-store";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "sonner";
-import { invoke } from "@tauri-apps/api/core";
+import { Command } from "@tauri-apps/plugin-shell";
+import { homeDir, join } from "@tauri-apps/api/path";
 import type { Update } from '@tauri-apps/plugin-updater';
 import type { SettingItemsType } from "@/types";
 import { 
@@ -26,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { DialogClose } from "@/components/ui/dialog"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
 import { ThemeStore, tunnelProcessStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
@@ -278,53 +279,43 @@ function SettingUpdates() {
 function SettingTunnel() {
     const { tunnelProcess } = useStore(tunnelProcessStore)
     const { data: { user_name } } = useSQLiteDiscordInfo()
-    const deleteTunnelFn = async () => {
+    const toogleTunnelFn = async () => {
         if (tunnelProcess) {
-            await tunnelProcess.kill()
-            await new Promise(() => setTimeout(
-                () => tunnelProcessStore.setState(prev => ({...prev, tunnelProcess: null}))
-            , 1000))
-            await invoke('delete_tunnel', { userName: user_name })
+            await tunnelProcess.kill();
+            tunnelProcessStore.setState(prev => ({ ...prev, tunnelProcess: null }));
+            toast.success('Tunnel đã Tắt!')
+        } else {
+            const home = await homeDir();
+            const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
+
+            if (!configPath) {
+                toast.error("Không có tunnel's config")
+                return
+            }
+
+            // eslint-disable-next-line no-shadow
+            const tunnelProcess = await Command.sidecar('bin/cloudflared', [
+                'tunnel',
+                '--config',
+                configPath,
+                'run',
+                user_name,
+            ]).spawn();
+
+            tunnelProcessStore.setState(prev => ({...prev, tunnelProcess}))
+            toast.success('Tunnel đã Bật!')
         }
-    }
+    };
     return (
         <>
             <li>Trạng thái: {tunnelProcess ? 'Đang chạy' : 'Đã tắt'}</li>
             <div className="w-40 gap-2 mt-10 flex flex-row justify-between">
-                <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                type="button"
-                                variant='secondary'
-                                className="aspect-square relative"
-                                onClick={() => {                    
-                                    toast.promise(
-                                        deleteTunnelFn(),
-                                        {
-                                            loading: 'Đang xóa Tunnel...',
-                                            success: 'Đã xóa Tunnel thành công!',
-                                            error: 'Xóa Tunnel thất bại!'
-                                        }
-                                    )
-                                }}
-                            >
-                                <LucideTrash />
-                                {/* <LucideRotateCcw /> */}
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent className="px-2 py-1 text-xs" align="start" side="bottom" showArrow={true}>
-                            Xóa Tunnel khỏi Ứng dụng
-                            {/* Tạo lại Tunnel trên Ứng dụng */}
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
                 <Button
                     type="button"
                     className="flex-1 overflow-clip relative"
-                    onClick={async () => await tunnelProcess?.kill()}
+                    onClick={toogleTunnelFn}
                 >
-                    Tắt
+                    {tunnelProcess ? 'Tắt' : 'Bật'}
                 </Button>
             </div>
         </>

@@ -3,13 +3,13 @@ import { toast } from "sonner";
 import { useStore } from "@tanstack/react-store";
 import { isTauri } from "@tauri-apps/api/core";
 import { useRouter } from "@tanstack/react-router";
-import { cancel, onUrl, start } from '@fabianlars/tauri-plugin-oauth';
 import { GoogleState, GoogleStraregy } from "@/store"
 import { useDimension } from "@/hooks/useDimension";
 import { Route } from "@/routes";
 import { logInWithOauthStrategy } from "@/func/fn.stragery";
 import { clearGoogleOBSCookies, getTokenGoogleOBS } from "@/func/auth.googleOBS";
-import { getYoutubeScopeWithURL } from "@/data/config";
+import { APPCONFIG, getYoutubeScopeWithURL } from "@/data/config";
+import OAuthServerManager from "@/class/OAuthServerManager";
 
 function getGoogleOBSOauth() {
     const { x, y } = useDimension().dimension
@@ -70,42 +70,27 @@ function useOAuthGoogleTauri() {
   const isGoogleOBSCookieAuth = Route.useLoaderData()
   const { finishGoogleOBSAuth } = useStore(GoogleState)
   useEffect(() => {
-    let portRef: number | null = null
+    const oauth = new OAuthServerManager()
     if (!isGoogleOBSCookieAuth || !finishGoogleOBSAuth)
-    try {
-      (async () => {
-        const port = await start({
-          ports: [3001],
-          response: "Qua trinh dang nhap hoan tat! Vui long dong cua so nay."
-        });
-        portRef = port
+    
+    oauth.init({
+      ports: [APPCONFIG.SNAKE.GOOGLE_AUTH],
+      response: "Qua trình đăng nhập hoàn tất! Vui lòng đóng cửa sổ này.",
+      onCodeReceived: async (code) => {
+        await getTokenGoogleOBS({ data: { code } }),
+        await router.navigate({ reloadDocument: true })
+      }
+    }).catch((err) => {
+      toast.error(`Lỗi khởi tạo OAuth server: ${err}`)
+    })
 
-        await onUrl(async (redirectUrl) => {
-            const urlObj = new URL(redirectUrl)
-            const code = urlObj.searchParams.get('code')
-            if (!code) {
-                toast.error('Không lấy được code trên đường Link')
-                return
-            }
-            await getTokenGoogleOBS({ data: { code } }),
-            await Promise.all([
-                cancel(port),
-                router.navigate({ to: '/', reloadDocument: true })
-            ])
-        })
-      })()
-    } catch (error) {
-      toast.error(`Lỗi khởi tạo OAuth server:, ${error}`);
-    }
     return () => {
-        if (portRef !== null) {
-            cancel(portRef)
-        }
+      oauth.cleanup()
     }
   }, [isGoogleOBSCookieAuth, finishGoogleOBSAuth])
 }
 
-export default function useIndex() {
+export default function useInitGoogleOauth() {
     getGoogleOBSOauth()
     handleOAuthMessage()
     useOAuthGoogleTauri()

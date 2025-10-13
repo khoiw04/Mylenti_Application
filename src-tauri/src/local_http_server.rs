@@ -336,7 +336,7 @@ pub async fn start_http_server(pool: SqlitePool) -> Result<(), Box<dyn Error>> {
         .route("/data/{user_name}/donations", get(donations_handler))
         .route("/data/{user_name}/donations", post(post_donation_handler))
         .route("/data/{user_name}/donations", options(|| async { StatusCode::OK }))
-        .route("/{user_name}/webhook/sepay", post(webhook_sepay_handler))
+        .route("/webhook/sepay", post(webhook_sepay_handler))
         .layer(cors)
         .with_state(pool.clone());
 

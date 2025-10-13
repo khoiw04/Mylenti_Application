@@ -9,8 +9,14 @@ import useSupabaseSepayAlertSend from '@/components/containers/db.useSupabaseSep
 import useInitWebSocket from '@/components/containers/db.useInitWebSocket'
 import useTheme from '@/components/containers/db.useTheme';
 import useDiscordSepayAlertSend from '@/hooks/useDiscordSepayAlertSend';
+import useInitDiscordOauth from '@/components/containers/db.useInitDiscordOauth';
+import useInitGoogleOauth from '@/components/containers/db.useInitGoogleOauth';
 
 export default function Main() {
+    // OAuth - INIT
+    useInitDiscordOauth()
+    useInitGoogleOauth()
+
     // OBSOVERLAY - SYNC
     useInitOBSOverlaySettings()
     useSyncOBSOverlaySettings()

@@ -2,6 +2,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { invoke } from "@tauri-apps/api/core";
 import { homeDir, join } from '@tauri-apps/api/path';
 import { Command } from '@tauri-apps/plugin-shell';
+import { exists } from "@tauri-apps/plugin-fs";
 import { AppWindowStore, tunnelProcessStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
@@ -68,6 +69,11 @@ export default function useTauriInit() {
         try {
             const home = await homeDir();
             const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
+
+            await new Promise(resolve => setTimeout(resolve, 6000));
+
+            const fileExists = await exists(configPath);
+            if (!fileExists) return
 
             const tunnelProcess = await Command.sidecar('bin/cloudflared', [
                 'tunnel',
