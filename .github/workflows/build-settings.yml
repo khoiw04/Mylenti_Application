@@ -29,15 +29,22 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Setup Bun
+      - name: Install Bun (Windows)
+        if: runner.os == 'Windows'
         run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            iwr https://bun.sh/install.ps1 -UseBasicParsing | iex
-            echo "$HOME\.bun\bin" >> $env:GITHUB_PATH
-          else
-            curl -fsSL https://bun.sh/install | bash
-            echo "$HOME/.bun/bin" >> $GITHUB_PATH
-          fi
+          iwr https://bun.sh/install.ps1 -UseBasicParsing | iex
+          echo "$env:USERPROFILE\.bun\bin" | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+
+      - name: Install Bun (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Verify Bun install
+        run: |
+          bun --version
+          which bun || echo "bun not found"
 
       - name: Setup Python
         uses: actions/setup-python@v4
