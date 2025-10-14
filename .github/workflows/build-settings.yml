@@ -63,8 +63,8 @@ jobs:
       - name: Install frontend dependencies
         run: bun install
 
-      - name: Install nexe
-        run: bun install -g nexe
+      - name: Install nexe locally
+        run: npm install nexe --save-dev
 
       - name: Run pre-build scripts
         run: |
