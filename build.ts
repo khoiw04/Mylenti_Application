@@ -36,6 +36,7 @@ try {
   console.log("🧪 Expecting nexe to write to:", tempExe);
   execSync(`nexe -i "${join(outputDir, "server", "index.mjs")}" -o "${tempExe}" --build`, { stdio: "inherit" });
 
+  mkdirSync(path.dirname(finalExe), { recursive: true });
   renameSync(tempExe, finalExe);
 
   console.log(`✅ Done! Sidecar binary is at ${finalExe}`);
