@@ -60,6 +60,9 @@ jobs:
           bun --version
           which bun || echo "bun not found"
 
+      - name: Install frontend dependencies
+        run: bun install
+
       - name: Run pre-build scripts
         run: |
           bun build.ts
