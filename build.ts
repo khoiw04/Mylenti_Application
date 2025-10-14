@@ -33,7 +33,7 @@ try {
 
   console.log("🔨 Packing server with nexe...");
   const tempExe = join(root, "node_server_temp" + ext);
-  execSync(`nexe -i "${join(outputDir, "server", "index.mjs")}" -o "${tempExe}" --build`, { stdio: "inherit" });
+  execSync(`npx nexe -i "${join(outputDir, "server", "index.mjs")}" -o "${tempExe}" --build`, { stdio: "inherit" });
 
   renameSync(tempExe, finalExe);
 
