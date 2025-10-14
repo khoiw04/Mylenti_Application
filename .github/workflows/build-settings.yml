@@ -64,7 +64,7 @@ jobs:
         run: bun install
 
       - name: Install nexe locally
-        run: npm install nexe --save-dev
+        run: bun i nexe -g
 
       - name: Run pre-build scripts
         run: |
