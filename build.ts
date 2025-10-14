@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 import { cpSync, mkdirSync, renameSync, rmSync } from "node:fs";
-import { join } from "node:path";
+import path, { join } from "node:path";
 
 const root = process.cwd();
 const outputDir = join(root, ".output");
@@ -32,7 +32,8 @@ try {
   cpSync(join(outputDir, "server", "chunks"), join(targetDir, "server", "chunks"), { recursive: true });
 
   console.log("🔨 Packing server with nexe...");
-  const tempExe = join(root, "node_server_temp" + ext);
+  const tempExe = path.resolve("node_server_temp" + ext);
+  console.log("🧪 Expecting nexe to write to:", tempExe);
   execSync(`nexe -i "${join(outputDir, "server", "index.mjs")}" -o "${tempExe}" --build`, { stdio: "inherit" });
 
   renameSync(tempExe, finalExe);

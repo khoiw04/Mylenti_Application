@@ -60,11 +60,11 @@ jobs:
           bun --version
           which bun || echo "bun not found"
 
-      - name: Run pre-build scripts
-        run: |
-          bun build.ts
-          python build.py
-          python download-cloudflare.py
+      - name: Install frontend dependencies
+        run: bun install
+
+      - name: Install nexe locally
+        run: bun i nexe -g
 
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0.5.23
