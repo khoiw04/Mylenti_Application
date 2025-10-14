@@ -111,6 +111,7 @@
     "browser-image-compression": "^2.0.2",
     "image-size": "^2.0.2",
     "jsdom": "^26.0.0",
+    "mitt": "^3.0.1",
     "motion": "^12.23.15",
     "obs-websocket-js": "^5.0.6",
     "prettier": "^3.5.3",

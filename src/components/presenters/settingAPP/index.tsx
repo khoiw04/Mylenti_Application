@@ -1,6 +1,6 @@
 import { LucideInbox, LucideLink2, LucideWebhook } from "lucide-react"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { motion } from "motion/react";
@@ -9,6 +9,7 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "sonner";
 import type { Update } from '@tauri-apps/plugin-updater';
 import type { SettingItemsType } from "@/types";
+import type { TunnelStatus } from "@/class/CloudflareController";
 import { 
     Sidebar,
     SidebarContent,
@@ -277,25 +278,46 @@ function SettingUpdates() {
 
 function SettingTunnel() {
     const { data: { user_name } } = useSQLiteDiscordInfo()
+    const [status, setStatus] = useState<TunnelStatus>('running')
+
+    useEffect(() => {
+        const handleStatusChange = (running: TunnelStatus) => {
+            setStatus(running)
+        }
+
+        CloudflareController.onStatusChange(handleStatusChange)
+        return () => {
+            CloudflareController.offStatusChange(handleStatusChange)
+        }
+    }, [])
+
     const toogleTunnelFn = async () => {
-        if (CloudflareController.isRunning()) {
+        if (status === 'running') {
             await CloudflareController.stop()
             toast.success('Tunnel đã Tắt!')
         } else {
-            CloudflareController.start(user_name)
+            await CloudflareController.start(user_name)
             toast.success('Tunnel đã Bật!')
         }
-    };
+    }
+
     return (
         <>
-            <li>Trạng thái: {CloudflareController.isRunning() ? 'Đang chạy' : 'Đã tắt'}</li>
+            <li>Trạng thái: {" "}
+                {
+                    status === 'running' ? 'Đang chạy' :
+                    status === 'starting' ? 'Đang khởi động' :
+                    'Đã tắt'
+                }
+            </li>
             <div className="w-40 gap-2 mt-10 flex flex-row justify-between">
                 <Button
                     type="button"
                     className="flex-1 overflow-clip relative"
+                    disabled={status === 'starting'}
                     onClick={toogleTunnelFn}
                 >
-                    {CloudflareController.isRunning() ? 'Tắt' : 'Bật'}
+                    {status === 'running' ? 'Tắt' : 'Bật'}
                 </Button>
             </div>
         </>
