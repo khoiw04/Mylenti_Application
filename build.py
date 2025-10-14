@@ -4,7 +4,7 @@ import os
 import shutil
 import importlib.util
 
-print(f"🐍 Using Python: {sys.executable}")
+print(f"Using Python: {sys.executable}")
 
 def get_target_triple():
     try:
