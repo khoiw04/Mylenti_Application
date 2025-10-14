@@ -26,7 +26,7 @@ def copy_vietvoicetts():
         if os.path.exists(target_dir):
             shutil.rmtree(target_dir)
         shutil.copytree(source_dir, target_dir)
-        print(f"📦 Đã copy vietvoicetts tu site-packages → {target_dir}")
+        print(f"Da copy vietvoicetts tu site-packages → {target_dir}")
     else:
         print("Khong tim thay vietvoicetts trong site-packages")
         sys.exit(1)
@@ -60,7 +60,7 @@ def build_executable():
         "--clean",
         script_path
     ]
-    print("🔧 Đang build donate_voice.exe...")
+    print("Dang build donate_voice.exe...")
     subprocess.run(cmd, check=True)
 
 def move_executable(target_triple):
