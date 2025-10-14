@@ -37,8 +37,11 @@ jobs:
       - name: Install core Python packages
         run: pip install pyinstaller flask flask-cors
 
-      - name: Install VietVoice-TTS
-        run: pip install git+https://github.com/nguyenvulebinh/VietVoice-TTS.git
+      - name: Clone VietVoice
+        run: git clone https://github.com/nguyenvulebinh/VietVoice-TTS.git
+
+      - name: Install VietVoice locally
+        run: pip install ./VietVoice-TTS
 
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0.5.23
