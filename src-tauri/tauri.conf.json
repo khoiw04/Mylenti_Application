@@ -19,9 +19,10 @@
         "resizable": true,
         "fullscreen": false,
         "decorations": false,
-        "devtools": true,
+        "devtools": false,
         "create": true,
-        "hiddenTitle": true
+        "hiddenTitle": true,
+        "url": "http://localhost:3000"
       }
     ],
     "security": {

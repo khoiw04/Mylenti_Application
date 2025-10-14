@@ -49,31 +49,6 @@ jobs:
           pip install pyinstaller flask flask-cors
           pip install git+https://github.com/nguyenvulebinh/VietVoice-TTS.git
 
-      - name: Run Python build script
-        run: python src-tauri/python/build.py
-
-      - name: Rename Python binary
-        run: |
-          OS="${{ runner.os }}"
-          if [ "$OS" = "Windows" ]; then
-            mv bin/donate_voice.exe bin/donate_voice-x86_64-pc-windows-msvc.exe
-          elif [ "$OS" = "macOS" ]; then
-            mv bin/donate_voice bin/donate_voice-x86_64-apple-darwin
-          else
-            mv bin/donate_voice bin/donate_voice-x86_64-unknown-linux-gnu
-          fi
-
-      - name: Rename Node.js binary
-        run: |
-          OS="${{ runner.os }}"
-          if [ "$OS" = "Windows" ]; then
-            mv bin/node_server.exe bin/node_server-x86_64-pc-windows-msvc.exe
-          elif [ "$OS" = "macOS" ]; then
-            mv bin/node_server bin/node_server-x86_64-apple-darwin
-          else
-            mv bin/node_server bin/node_server-x86_64-unknown-linux-gnu
-          fi
-
       - name: Install Tauri CLI
         run: bun add -d @tauri-apps/cli
 

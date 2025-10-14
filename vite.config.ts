@@ -7,17 +7,13 @@ import tailwindcss from '@tailwindcss/vite'
 import { wrapVinxiConfigWithSentry } from '@sentry/tanstackstart-react'
 
 const config = defineConfig({
-  base: '',
   plugins: [
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
     tanstackStart({
-      customViteReactPlugin: true,
-      spa: {
-        enabled: false
-      },
+      customViteReactPlugin: true
     }),
     viteReact(),
   ]

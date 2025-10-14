@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 const root = process.cwd();
 const outputDir = join(root, ".output");
-const targetDir = join(root, "src-tauri", "bin", ".output");
+const targetDir = join(root, "src-tauri", ".output");
 
 const ext = process.platform === "win32" ? ".exe" : "";
 
