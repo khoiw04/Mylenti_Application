@@ -10,8 +10,7 @@
     "test": "bun test",
     "lint": "bunx eslint .",
     "format": "bunx prettier --write .",
-    "check": "bunx prettier --write . && bunx eslint --fix",
-    "tauri:build": "tauri build"
+    "check": "bunx prettier --write . && bunx eslint --fix"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.1",
