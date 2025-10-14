@@ -10,7 +10,8 @@
     "test": "bun test",
     "lint": "bunx eslint .",
     "format": "bunx prettier --write .",
-    "check": "bunx prettier --write . && bunx eslint --fix"
+    "check": "bunx prettier --write . && bunx eslint --fix",
+    "prepare": "bun build.ts && python build.py && python download-cloudflare.py"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^2.0.1",
