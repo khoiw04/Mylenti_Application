@@ -10,16 +10,14 @@ import { websocketSendType } from '@/data/settings'
 import { safeSend } from '@/lib/socket.safeJSONMessage'
 import { OBSTauriWebSocket } from '@/class/WebSocketTauriManager'
 import { getValidGoogleOBSAccessToken } from '@/func/auth.googleOBS'
-
-const DEFAULT_INTERVAL = 6000
-const PAUSE_DURATION = 30000
-const MAX_EMPTY_POLLS = 2
+import { APPCONFIG } from '@/data/config'
 
 export default function usePollingYoutubeChat() {
   const { data: messages } = useTauriChatMessage()
   const hasPolledOnceRef = useRef(false)
   const { isError, isPaused, lastErrorMessage } = useStore(PollingStatusStore)
   const { setIsError, setIsPaused, setLastErrorMessage, setManualRetry } = useStore(PollingStatusStragery)
+  const { DEFAULT_INTERVAL, MAX_EMPTY_POLLS, PAUSE_DURATION } = APPCONFIG.YOUTUBE
 
   const stateRef = useRef({
     nextPageToken: '',

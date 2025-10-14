@@ -12,10 +12,10 @@ def get_target_triple():
         for line in rust_info.splitlines():
             if line.startswith("host:"):
                 return line.split("host:")[1].strip()
-        print("❌ Không xác định được target triple từ rustc")
+        print("Khong xac dinh duoc target triple tu rustc")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Lỗi khi chạy rustc -vV: {e}")
+        print(f"Loi khi chay rustc -vV: {e}")
         sys.exit(1)
 
 def copy_vietvoicetts():
@@ -26,17 +26,17 @@ def copy_vietvoicetts():
         if os.path.exists(target_dir):
             shutil.rmtree(target_dir)
         shutil.copytree(source_dir, target_dir)
-        print(f"📦 Đã copy vietvoicetts từ site-packages → {target_dir}")
+        print(f"📦 Đã copy vietvoicetts tu site-packages → {target_dir}")
     else:
-        print("❌ Không tìm thấy vietvoicetts trong site-packages")
+        print("Khong tim thay vietvoicetts trong site-packages")
         sys.exit(1)
 
 def ensure_vietvoicetts_installed():
     try:
         import vietvoicetts
-        print("✅ Thư viện vietvoicetts đã được cài.")
+        print("Thu vien vietvoicetts da duoc cai dat.")
     except ImportError:
-        print("❌ Chưa cài vietvoicetts. Đang cài đặt...")
+        print("Chua cai vietvoicetts. Dang cai dat...")
         subprocess.run([sys.executable, "-m", "pip", "install", "vietvoicetts"], check=True)
 
 def clean_previous_build():
@@ -69,9 +69,9 @@ def move_executable(target_triple):
     target_path = f"src-tauri/bin/donate_voice-{target_triple}{ext}"
     if os.path.exists(dist_path):
         os.replace(dist_path, target_path)
-        print(f"✅ Đã di chuyển: {dist_path} → {target_path}")
+        print(f"Da di chuyen: {dist_path} → {target_path}")
     else:
-        print("❌ Build thất bại: Không tìm thấy donate_voice.exe")
+        print("Build that bai: Khong tim thay donate_voice.exe")
 
 if __name__ == "__main__":
     ensure_vietvoicetts_installed()

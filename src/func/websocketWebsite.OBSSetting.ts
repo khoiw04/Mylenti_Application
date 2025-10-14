@@ -21,6 +21,4 @@ export default function WebSocketOBSSetting(
       ...data,
       DonateProps: mergedDonateProps,
     })
-
-    console.log(OBSOverlayWebsiteSettingsStore)
 }

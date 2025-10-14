@@ -10,10 +10,10 @@ def get_target_triple():
         for line in output.splitlines():
             if line.startswith("host:"):
                 return line.split("host:")[1].strip()
-        print("❌ Không tìm thấy target triple")
+        print("Khong tim thay target triple")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Lỗi khi chạy rustc -vV: {e}")
+        print(f"Loi khi chay rustc -vV: {e}")
         sys.exit(1)
 
 def get_download_url():
@@ -25,7 +25,7 @@ def get_download_url():
     elif platform.startswith("darwin"):
         return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64"
     else:
-        print("❌ Hệ điều hành không được hỗ trợ")
+        print("He dieu hanh khong duoc ho tro")
         sys.exit(1)
 
 def download_and_rename(target_triple):
@@ -34,19 +34,19 @@ def download_and_rename(target_triple):
     temp_file = f"cloudflared_temp{ext}"
     final_path = os.path.join("src-tauri", "bin", f"cloudflared-{target_triple}{ext}")
 
-    print(f"🌐 Đang tải Cloudflared từ: {url}")
+    print(f"Dang tai tu Cloudflare tu: {url}")
     try:
         urllib.request.urlretrieve(url, temp_file)
         os.makedirs(os.path.dirname(final_path), exist_ok=True)
 
         if os.path.exists(final_path):
             os.remove(final_path)
-            print(f"🧹 Đã xóa file cũ: {final_path}")
+            print(f"Da xoa file cu: {final_path}")
 
         shutil.move(temp_file, final_path)
-        print(f"✅ Đã lưu tại: {final_path}")
+        print(f"Da luu tai: {final_path}")
     except Exception as e:
-        print(f"❌ Lỗi khi tải hoặc di chuyển file: {e}")
+        print(f"Loi khi tai hoac da di chuyen file: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

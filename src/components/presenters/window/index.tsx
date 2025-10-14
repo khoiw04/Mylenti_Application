@@ -36,7 +36,7 @@ export default function Main() {
     const { theme } = useStore(ThemeStore)
     
     const { appWindow } = useStore(AppWindowStore)
-    if (isTauri())
+    if (!isTauri()) return null
     useTauriInit()
 
     return (

@@ -20,7 +20,7 @@ export default function Main({ icon, title, description, align = 'center', src =
                 <Button
                     type="button"
                     variant="outline"
-                    className="popup_button_animation"
+                    className="popup_button_animation bg-background/45 hover:bg-background/60"
                     onClick={handleClick}
                 >
                     {!copied && icon}

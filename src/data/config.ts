@@ -41,6 +41,11 @@ export const APPCONFIG = {
     NOTE: {
         CLOUDFLARE_TUNNEL: 'cloudflared tunnel --url http://localhost:8080'
     },
+    YOUTUBE: {
+        DEFAULT_INTERVAL: 3000,
+        PAUSE_DURATION: 30000,
+        MAX_EMPTY_POLLS: 8
+    },
     TABLE: {
         DISCORD: 'users',
         DONATE_EVENT: 'donate_events'
