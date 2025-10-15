@@ -38,7 +38,7 @@
     "active": true,
     "targets": ["msi", "dmg", "deb", "appimage"],
     "createUpdaterArtifacts": true,
-    "resources": ["bin/.output"],
+    "resources": [".output"],
     "externalBin": ["bin/donate_voice", "bin/node_server", "bin/cloudflared"],
     "icon": [
       "icons/32x32.png",
