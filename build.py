@@ -1,3 +1,5 @@
+VERBOSE = True
+
 import subprocess
 import sys
 import os
@@ -26,7 +28,7 @@ def copy_vietvoicetts():
         if os.path.exists(target_dir):
             shutil.rmtree(target_dir)
         shutil.copytree(source_dir, target_dir)
-        print(f"Da copy vietvoicetts tu site-packages → {target_dir}")
+        print(f"Da copy vietvoicetts tu site-packages -> {target_dir}")
     else:
         print("Khong tim thay vietvoicetts trong site-packages")
         sys.exit(1)
@@ -67,11 +69,12 @@ def move_executable(target_triple):
     dist_path = "dist/donate_voice.exe"
     ext = ".exe" if sys.platform == "win32" else ""
     target_path = f"src-tauri/bin/donate_voice-{target_triple}{ext}"
+    os.makedirs(os.path.dirname(target_path), exist_ok=True)
     if os.path.exists(dist_path):
         os.replace(dist_path, target_path)
-        print(f"Da di chuyen: {dist_path} → {target_path}")
+        print(f"Da di chuyen: {dist_path} -> {target_path}")
     else:
-        print("Build that bai: Khong tim thay donate_voice.exe")
+        print(f"Build that bai: Khong tim thay file tai {os.path.abspath(dist_path)}")
 
 if __name__ == "__main__":
     ensure_vietvoicetts_installed()
