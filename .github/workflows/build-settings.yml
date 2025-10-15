@@ -68,8 +68,6 @@ jobs:
 
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0.5.23
-        with:
-          args: build
 
       - name: Generate SHA256 checksums
         run: |
