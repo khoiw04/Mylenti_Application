@@ -5,8 +5,13 @@ import sys
 import os
 import shutil
 import importlib.util
+import requests
 
 print(f"Using Python: {sys.executable}")
+
+MODEL_URL = "https://huggingface.co/nguyenvulebinh/VietVoice-TTS/resolve/main/model-bin.pt"
+MODEL_PATH = "src-tauri/python/models/model-bin.pt"
+SCRIPT_PATH = "src-tauri/python/donate_voice.py"
 
 def get_target_triple():
     try:
@@ -48,19 +53,33 @@ def clean_previous_build():
     if os.path.exists("donate_voice.spec"):
         os.remove("donate_voice.spec")
 
+def download_model_if_missing():
+    if not os.path.exists(MODEL_PATH):
+        print("Model chua ton tai. Dang tai tu Hugging Face...")
+        os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+        try:
+            response = requests.get(MODEL_URL)
+            response.raise_for_status()
+            with open(MODEL_PATH, "wb") as f:
+                f.write(response.content)
+            print("Da tai model thanh cong:", MODEL_PATH)
+        except Exception as e:
+            print("Loi khi tai model:", e)
+            sys.exit(1)
+    else:
+        print("Model da ton tai:", MODEL_PATH)
+
 def build_executable():
-    script_path = "src-tauri/python/donate_voice.py"
-    models_path = "src-tauri/python/models"
     cmd = [
         "pyinstaller",
         "--onefile",
         "--console",
         "--add-data", "src-tauri/python/vietvoicetts;vietvoicetts",
-        "--add-data", f"{models_path};models",
+        "--add-data", f"{MODEL_PATH};models",
         "--hidden-import", "vietvoicetts",
         "--collect-submodules", "vietvoicetts",
         "--clean",
-        script_path
+        SCRIPT_PATH
     ]
     print("Dang build donate_voice.exe...")
     subprocess.run(cmd, check=True)
@@ -80,6 +99,7 @@ if __name__ == "__main__":
     ensure_vietvoicetts_installed()
     copy_vietvoicetts()
     clean_previous_build()
+    download_model_if_missing()
     build_executable()
     target_triple = get_target_triple()
     move_executable(target_triple)

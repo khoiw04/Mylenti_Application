@@ -35,7 +35,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install core Python packages
-        run: pip install pyinstaller flask flask-cors
+        run: pip install pyinstaller flask flask-cors requests
 
       - name: Clone VietVoice
         run: git clone https://github.com/nguyenvulebinh/VietVoice-TTS.git
