@@ -36,7 +36,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["msi", "dmg", "deb", "appimage"],
+    "targets": ["msi", "dmg", "app", "deb", "appimage"],
     "createUpdaterArtifacts": true,
     "resources": [".output"],
     "externalBin": ["bin/donate_voice", "bin/node_server", "bin/cloudflared"],
