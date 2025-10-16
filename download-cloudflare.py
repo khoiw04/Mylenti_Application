@@ -1,4 +1,5 @@
 import os
+import platform
 import sys
 import subprocess
 import urllib.request
@@ -17,13 +18,21 @@ def get_target_triple():
         sys.exit(1)
 
 def get_download_url():
-    platform = sys.platform
-    if platform.startswith("win"):
+    platform_name = sys.platform
+    arch = platform.machine()
+
+    if platform_name.startswith("win"):
         return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe"
-    elif platform.startswith("linux"):
+    elif platform_name.startswith("linux"):
         return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
-    elif platform.startswith("darwin"):
-        return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64"
+    elif platform_name.startswith("darwin"):
+        if arch == "arm64":
+            return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-arm64"
+        elif arch == "x86_64":
+            return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64"
+        else:
+            print(f"Khong ho tro kien truc: {arch}")
+            sys.exit(1)
     else:
         print("He dieu hanh khong duoc ho tro")
         sys.exit(1)
