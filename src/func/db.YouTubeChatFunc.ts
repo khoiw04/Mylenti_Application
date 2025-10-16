@@ -5,6 +5,18 @@ import type { YouTubeChatResponse } from '@/types'
 import { clearCachedCookie, getCachedCookie, nativeFetch, setCachedCookie } from '@/lib/utils'
 import { APPCONFIG } from '@/data/config'
 
+function extractGoogleApiError(data: any): string {
+  if (data?.error?.message) {
+    return `Lỗi từ Google API: ${data.error.message}`;
+  }
+
+  if (!data.items) {
+    return `Không nhận được danh sách tin nhắn — có thể liveChatId không hợp lệ hoặc stream chưa bắt đầu.`;
+  }
+
+  return "Đã xảy ra lỗi không xác định khi gọi API.";
+}
+
 export const clearYouTubeOBSLiveStream = createServerFn()
   .handler(async () => {
     await clearCachedCookie({ data: { key: APPCONFIG.COOKIE.VIDEO_ID }})
@@ -127,7 +139,7 @@ export const getYouTubeOBSLiveChatMessage = createServerFn({ method: 'GET' })
     const data = await res.json()
 
     if (!data.items) {
-      throw new Error(JSON.stringify(data, null, 2))
+      throw new Error(extractGoogleApiError(data));
     }
 
     return {

@@ -1,8 +1,6 @@
 import { LucideInbox, LucideLink2, LucideWebhook } from "lucide-react"
 
 import React, { useEffect, useState } from "react"
-import { check } from '@tauri-apps/plugin-updater';
-import { relaunch } from '@tauri-apps/plugin-process';
 import { motion } from "motion/react";
 import { useStore } from "@tanstack/react-store";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -29,11 +27,11 @@ import { DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
 import { ThemeStore } from "@/store";
-import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
 import { APPCONFIG } from "@/data/config";
 import { items, links } from "@/data/setting-app";
 import { CloudflareController } from "@/class/CloudflareController";
+import { AutoUpdateTauriManager } from "@/class/AutoUpdateTauriManager";
 
 export default function SettingApp() {
     const { theme, setTheme } = useStore(ThemeStore)
@@ -154,56 +152,16 @@ function SettingLinks() {
 }
 
 function SettingUpdates() {
-    const [updateData, setUpdateData] = useState<{
-        data: Update | null,
-        allowUpdate: boolean,
-        tracking: string,
-        percent: number
-    }>({
-        data: null,
-        allowUpdate: false,
-        tracking: '',
-        percent: 0
-    })
+    const [progress, setProgress] = useState({ updateData: null as Update | null, tracking: '', percent: '0.00', allowUpdate: false });
 
-    useTauriSafeEffect(() => {
-        (async () => {
-            const update = await check()
-            if (update) {
-                setUpdateData((prev) => ({ ...prev, data: update }))
-            }
-        })()
-    }, [])
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setProgress(AutoUpdateTauriManager.getData());
+        }, 500);
 
-    useTauriSafeEffect(() => {
-        (async () => {
-            if (updateData.allowUpdate && updateData.data) {
-                let downloaded = 0;
-                let contentLength = 0;
+        return () => clearInterval(interval);
+    }, []);
 
-                await updateData.data.downloadAndInstall((event) => {
-                    switch (event.event) {
-                        case 'Started':
-                            contentLength = event.data.contentLength!;
-                            break;
-                        case 'Progress': {
-                            downloaded += event.data.chunkLength;
-                            const percent = ((downloaded / contentLength) * 100);
-                            setUpdateData((prev) => ({
-                                ...prev,
-                                tracking: `${downloaded} / ${contentLength} bytes`,
-                                percent: percent
-                            }))
-                            break;
-                        }
-                    }
-                });
-
-                await relaunch()
-                return () => updateData.data?.close()
-            }
-        })()
-    }, [updateData.allowUpdate, updateData.data])
 
     return (
         <>
@@ -214,21 +172,16 @@ function SettingUpdates() {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Button
-                        disabled={updateData.allowUpdate || !updateData.data}
                         type="button" 
+                        disabled={!progress.updateData || progress.allowUpdate}
                         className="w-40 mt-10 overflow-clip relative"
-                        onClick={() => {
-                            setUpdateData(prev => ({
-                                ...prev,
-                                allowUpdate: true
-                            }))
-                        }}
+                        onClick={() => AutoUpdateTauriManager.setUpdate(true)}
                     >
                         Cập Nhật
-                        {updateData.allowUpdate &&
+                        {progress.allowUpdate &&
                         <motion.span
                             style={{
-                                width: `${updateData.percent}%`
+                                width: `${progress.percent}%`
                             }}
                             className="
                                 absolute 
@@ -241,15 +194,15 @@ function SettingUpdates() {
                         }
                     </Button>
                     </TooltipTrigger>
-                    {!updateData.allowUpdate &&
+                    {progress.allowUpdate &&
                     <TooltipContent side="bottom" align="start" className="px-1 py-0.5 text-xs">
-                        {updateData.tracking}
+                        {progress.tracking}
                         <kbd className="bg-background text-muted-foreground/70 ms-2 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
-                            {updateData.percent.toFixed(2)}
+                            {progress.percent}
                         </kbd>
                     </TooltipContent>
                     }
-                    {!updateData.allowUpdate && 
+                    {!progress.allowUpdate && progress.updateData &&
                     <TooltipContent side="bottom" align="start" className="py-3">
                         <div className="space-y-3">
                             <div className="space-y-1">
@@ -257,7 +210,7 @@ function SettingUpdates() {
                                 Bản cập nhật mới
                             </h2>
                             <p className="text-muted-foreground text-sm">
-                                {updateData.data?.body}
+                                {progress.updateData.body}
                             </p>
                             </div>
                             <div className="text-muted-foreground flex items-center gap-2 text-xs">
@@ -265,7 +218,7 @@ function SettingUpdates() {
                             <span>·</span>
                             <span>
                                 Đã cập nhật:
-                                {updateData.data?.date}
+                                {progress.updateData.date}
                             </span>
                             </div>
                         </div>
