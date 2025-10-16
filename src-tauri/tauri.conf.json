@@ -54,7 +54,7 @@
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMwRUY5NkYzQThDOTIwMUYKUldRZklNbW84NWJ2TUxxbnN3RGMzRzNROFZIbUNUYXlrOGRjSis0dGJNeS9uSTlXTFZYa2pEWFgK",
       "endpoints": [
-        "https://github.com/khoiw04/OBS_Mylenti/releases/latest/download/latest.json"
+        "https://github.com/khoiw04/Mylenti_Application/releases/latest/download/latest.json"
       ]
     },
     "windows": {

@@ -152,7 +152,7 @@ function SettingLinks() {
 }
 
 function SettingUpdates() {
-    const [progress, setProgress] = useState({ updateData: null as Update | null, tracking: '', percent: '0.00', allowUpdate: false });
+    const [progress, setProgress] = useState({ updateData: null as Update | null, tracking: '', percent: '0.00', allowUpdate: false });    
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -161,7 +161,6 @@ function SettingUpdates() {
 
         return () => clearInterval(interval);
     }, []);
-
 
     return (
         <>

@@ -27,9 +27,9 @@ def get_download_url():
         return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
     elif platform_name.startswith("darwin"):
         if arch == "arm64":
-            return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-arm64"
+            return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz"
         elif arch == "x86_64":
-            return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64"
+            return "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-arm64.tgz"
         else:
             print(f"Khong ho tro kien truc: {arch}")
             sys.exit(1)

@@ -4,6 +4,7 @@ import { AppWindowStore } from "@/store";
 import useTauriSafeEffect from "@/hooks/useTauriSideEffect";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
 import { CloudflareController } from "@/class/CloudflareController";
+import { AutoUpdateTauriManager } from "@/class/AutoUpdateTauriManager";
 
 export default function useTauriInit() {
     const { data: { user_name } } = useSQLiteDiscordInfo()
@@ -62,6 +63,10 @@ export default function useTauriInit() {
 
     useTauriSafeEffect(() => {
         if (!user_name) return;
-        CloudflareController.start(user_name)
+        (async () => await CloudflareController.start(user_name))
     }, [user_name]);
+
+    useTauriSafeEffect(() => {
+        (async () => await AutoUpdateTauriManager.init())
+    }, [])
 }
