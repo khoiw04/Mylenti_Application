@@ -70,23 +70,25 @@ def download_model_if_missing():
         print("Model da ton tai:", MODEL_PATH)
 
 def build_executable():
+    sep = ";" if sys.platform == "win32" else ":"
+
     cmd = [
         "pyinstaller",
         "--onefile",
         "--console",
-        "--add-data", "src-tauri/python/vietvoicetts;vietvoicetts",
-        "--add-data", f"{MODEL_PATH};models",
+        "--add-data", f"src-tauri/python/vietvoicetts{sep}vietvoicetts",
+        "--add-data", f"{MODEL_PATH}{sep}models",
         "--hidden-import", "vietvoicetts",
         "--collect-submodules", "vietvoicetts",
         "--clean",
         SCRIPT_PATH
     ]
-    print("Dang build donate_voice.exe...")
+    print("Dang build donate_voice...")
     subprocess.run(cmd, check=True)
 
 def move_executable(target_triple):
-    dist_path = "dist/donate_voice.exe"
     ext = ".exe" if sys.platform == "win32" else ""
+    dist_path = f"dist/donate_voice{ext}"
     target_path = f"src-tauri/bin/donate_voice-{target_triple}{ext}"
     os.makedirs(os.path.dirname(target_path), exist_ok=True)
     if os.path.exists(dist_path):
