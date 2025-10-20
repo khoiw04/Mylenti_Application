@@ -76,8 +76,8 @@ fn get_app_db_path() -> PathBuf {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    // let node_server_process = Arc::new(Mutex::new(None));
-    // let node_server_process_for_exit = node_server_process.clone();
+    let node_server_process = Arc::new(Mutex::new(None));
+    let node_server_process_for_exit = node_server_process.clone();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_window_state::Builder::new().build())
@@ -110,7 +110,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
         .setup({
-            // let node_server_process = node_server_process.clone();
+            let node_server_process = node_server_process.clone();
 
             move |app| {
                 log::info!("🔧 Đang chạy setup Tauri");
@@ -128,8 +128,8 @@ pub fn run() {
                 let hide_item = MenuItem::with_id(app, "hide", "Ẩn ứng dụng", true, None::<&str>)?;
                 let tray_menu = Menu::with_items(app, &[&show_item, &hide_item, &quit_item])?;
 
-                // let node_server = start_sidecar("node_server", &[], &app_handle);
-                // *node_server_process.lock().unwrap() = node_server;
+                let node_server = start_sidecar("node_server", &[], &app_handle);
+                *node_server_process.lock().unwrap() = node_server;
 
                 tauri::async_runtime::spawn(async move {
                     let pool = match SqlitePool::connect(&db_url_for_http).await {
@@ -224,11 +224,11 @@ pub fn run() {
         .build(tauri::generate_context!())
         .expect("❌ Lỗi khi build ứng dụng Tauri")
         .run(move |_app_handle, event| {
-            // if let RunEvent::ExitRequested { .. } = event {
-            //     if let Some(child) = node_server_process_for_exit.lock().unwrap().take() {
-            //         let _ = child.kill();
-            //         log::info!("🛑 Đã dừng node_server");
-            //     }
-            // }
+            if let RunEvent::ExitRequested { .. } = event {
+                if let Some(child) = node_server_process_for_exit.lock().unwrap().take() {
+                    let _ = child.kill();
+                    log::info!("🛑 Đã dừng node_server");
+                }
+            }
         });
 }
