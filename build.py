@@ -6,6 +6,7 @@ import os
 import shutil
 import importlib.util
 import requests
+import platform
 
 print(f"Using Python: {sys.executable}")
 
@@ -14,16 +15,23 @@ MODEL_PATH = "src-tauri/python/models/model-bin.pt"
 SCRIPT_PATH = "src-tauri/python/donate_voice.py"
 
 def get_target_triple():
-    try:
-        rust_info = subprocess.check_output(["rustc", "-vV"], text=True)
-        for line in rust_info.splitlines():
-            if line.startswith("host:"):
-                return line.split("host:")[1].strip()
-        print("Khong xac dinh duoc target triple tu rustc")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Loi khi chay rustc -vV: {e}")
-        sys.exit(1)
+    arch = platform.machine().lower()
+    system = sys.platform
+
+    print(f"[DEBUG] Kiến trúc: {arch}, Hệ điều hành: {system}")
+
+    if system == "darwin":
+        if arch == "arm64":
+            return "aarch64-apple-darwin"
+        elif arch == "x86_64":
+            return "x86_64-apple-darwin"
+    elif system == "linux":
+        return "x86_64-unknown-linux-gnu"
+    elif system == "win32":
+        return "x86_64-pc-windows-msvc"
+
+    print(f"[ERROR] Không xác định được target triple cho hệ thống: {system}, kiến trúc: {arch}")
+    sys.exit(1)
 
 def copy_vietvoicetts():
     spec = importlib.util.find_spec("vietvoicetts")

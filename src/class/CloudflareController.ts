@@ -1,16 +1,14 @@
 import { homeDir, join } from "@tauri-apps/api/path";
 import { exists } from "@tauri-apps/plugin-fs";
 import { Command } from "@tauri-apps/plugin-shell";
-import mitt from 'mitt'
 import type { Child } from "@tauri-apps/plugin-shell";
+import { tunnelStore } from '@/store';
 
-let instance: CloudflareControllerClass | null = null
 export type TunnelStatus = 'idle' | 'starting' | 'running' | 'stopping'
-type Events = { statusChange: TunnelStatus }
+let instance: CloudflareControllerClass | null = null
 
-export class CloudflareControllerClass {
+class CloudflareControllerClass {
     private process: Child | null = null
-    private emitter = mitt<Events>()
     private status: TunnelStatus = 'idle'
     private pollingInterval: ReturnType<typeof setInterval> | null = null
 
@@ -30,17 +28,11 @@ export class CloudflareControllerClass {
             this.pollingInterval = null
         }
     }
-    onStatusChange(cb: (running: TunnelStatus) => void) {
-        this.emitter.on('statusChange', cb)
-    }
-
-    offStatusChange(cb: (running: TunnelStatus) => void) {
-        this.emitter.off('statusChange', cb)
-    }
 
     private setStatus(newStatus: TunnelStatus) {
+        console.log('[CloudflareController] setStatus:', newStatus)
         this.status = newStatus
-        this.emitter.emit('statusChange', newStatus)
+        tunnelStore.setState({ status: newStatus })
     }
 
     async start(user_name: string) {
@@ -51,7 +43,10 @@ export class CloudflareControllerClass {
 
         const home = await homeDir();
         const configPath = await join(home, '.cloudflared', `config_${user_name}.yml`);
-        if (!(await exists(configPath))) return
+        if (!(await exists(configPath))) {
+            console.warn('[CloudflareController] Config file not found:', configPath)
+            return
+        }
         
         try {
             this.setStatus('starting')
@@ -101,11 +96,12 @@ export class CloudflareControllerClass {
     }
 }
 
-export function getCloudflareController(): CloudflareControllerClass {
+function getCloudflareController(): CloudflareControllerClass {
     if (!instance) {
         instance = new CloudflareControllerClass()
     }
     return instance
 }
+
 
 export const CloudflareController = getCloudflareController()

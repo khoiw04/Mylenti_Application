@@ -1,10 +1,10 @@
-import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "@tanstack/react-router"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { homeDir, join } from "@tauri-apps/api/path"
 import { exists } from "@tauri-apps/plugin-fs"
+import useTauriSafeEffect from "./useTauriSideEffect"
 import { profileQueries, useDiscordCommunityUser } from "@/lib/queries"
 import { fallbackData, upsertDiscordUser } from "@/data/discord.sqlite"
 
@@ -21,16 +21,15 @@ export default function useSQLiteDiscordInfo() {
     avatar,
   };
 
-  useEffect(() => {
+  useTauriSafeEffect(() => {
     if (!username) return
 
     (async () => {
       try {
         const home = await homeDir();
         const configPath = await join(home, '.cloudflared', `config_${username}.yml`);
-        const fileExists = await exists(configPath);
 
-        if (!fileExists) {
+        if (!(await exists(configPath))) {
           await invoke("setup_tunnel", { userName: username });
         } 
 

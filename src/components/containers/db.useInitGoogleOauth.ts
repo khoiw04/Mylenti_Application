@@ -73,7 +73,9 @@ function useOAuthGoogleTauri() {
         await router.navigate({ reloadDocument: true })
       }
     }).catch((err) => {
-      toast.error(`Lỗi khởi tạo OAuth server: ${err}`)
+      toast.error('Lỗi khởi tạo OAuth server:', {
+        description: err
+      })
     })
 
     return () => {

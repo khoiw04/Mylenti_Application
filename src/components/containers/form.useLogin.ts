@@ -22,7 +22,9 @@ function useListenGoogleLoginOauth() {
         await router.navigate({ to: '/', reloadDocument: true })
       }
     }).catch((err) => {
-      toast.error(`Lỗi khởi tạo OAuth server: ${err}`)
+      toast.error('Lỗi khởi tạo OAuth server:', {
+        description: err
+      })
     })
 
     return () => {

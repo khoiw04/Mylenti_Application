@@ -108,6 +108,7 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "browser-image-compression": "^2.0.2",
+    "events": "^3.3.0",
     "image-size": "^2.0.2",
     "jsdom": "^26.0.0",
     "mitt": "^3.0.1",

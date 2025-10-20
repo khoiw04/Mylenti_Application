@@ -1,13 +1,10 @@
 import { LucideInbox, LucideLink2, LucideWebhook } from "lucide-react"
 
-import React, { useEffect, useState } from "react"
 import { motion } from "motion/react";
 import { useStore } from "@tanstack/react-store";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "sonner";
-import type { Update } from '@tauri-apps/plugin-updater';
 import type { SettingItemsType } from "@/types";
-import type { TunnelStatus } from "@/class/CloudflareController";
 import { 
     Sidebar,
     SidebarContent,
@@ -26,12 +23,12 @@ import { Label } from "@/components/ui/label"
 import { DialogClose } from "@/components/ui/dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ui/kibo-ui/theme-switcher";
-import { ThemeStore } from "@/store";
+import { ThemeStore, updateStore } from "@/store";
 import useSQLiteDiscordInfo from "@/hooks/useSQLiteDiscordInfo";
 import { APPCONFIG } from "@/data/config";
 import { items, links } from "@/data/setting-app";
-import { CloudflareController } from "@/class/CloudflareController";
 import { AutoUpdateTauriManager } from "@/class/AutoUpdateTauriManager";
+import useTunnelStatus from "@/hooks/useTunnelStatus";
 
 export default function SettingApp() {
     const { theme, setTheme } = useStore(ThemeStore)
@@ -152,16 +149,7 @@ function SettingLinks() {
 }
 
 function SettingUpdates() {
-    const [progress, setProgress] = useState({ updateData: null as Update | null, tracking: '', percent: '0.00', allowUpdate: false });    
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress(AutoUpdateTauriManager.getData());
-        }, 500);
-
-        return () => clearInterval(interval);
-    }, []);
-
+    const { allowUpdate, percent, tracking, updateData } = useStore(updateStore)
     return (
         <>
             <ul className="flex flex-col gap-y-1.5 text-neutral-400 text-sm">
@@ -172,15 +160,15 @@ function SettingUpdates() {
                 <TooltipTrigger asChild>
                     <Button
                         type="button" 
-                        disabled={!progress.updateData || progress.allowUpdate}
+                        disabled={!updateData || allowUpdate}
                         className="w-40 mt-10 overflow-clip relative"
-                        onClick={() => AutoUpdateTauriManager.setUpdate(true)}
+                        onClick={async () => await AutoUpdateTauriManager.update()}
                     >
                         Cập Nhật
-                        {progress.allowUpdate &&
+                        {allowUpdate &&
                         <motion.span
                             style={{
-                                width: `${progress.percent}%`
+                                width: `${percent}%`
                             }}
                             className="
                                 absolute 
@@ -193,15 +181,15 @@ function SettingUpdates() {
                         }
                     </Button>
                     </TooltipTrigger>
-                    {progress.allowUpdate &&
+                    {allowUpdate &&
                     <TooltipContent side="bottom" align="start" className="px-1 py-0.5 text-xs">
-                        {progress.tracking}
+                        {tracking}
                         <kbd className="bg-background text-muted-foreground/70 ms-2 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
-                            {progress.percent}
+                            {percent}
                         </kbd>
                     </TooltipContent>
                     }
-                    {!progress.allowUpdate && progress.updateData &&
+                    {!allowUpdate && updateData &&
                     <TooltipContent side="bottom" align="start" className="py-3">
                         <div className="space-y-3">
                             <div className="space-y-1">
@@ -209,7 +197,7 @@ function SettingUpdates() {
                                 Bản cập nhật mới
                             </h2>
                             <p className="text-muted-foreground text-sm">
-                                {progress.updateData.body}
+                                {updateData.body}
                             </p>
                             </div>
                             <div className="text-muted-foreground flex items-center gap-2 text-xs">
@@ -217,7 +205,7 @@ function SettingUpdates() {
                             <span>·</span>
                             <span>
                                 Đã cập nhật:
-                                {progress.updateData.date}
+                                {updateData.date}
                             </span>
                             </div>
                         </div>
@@ -229,36 +217,14 @@ function SettingUpdates() {
 }
 
 function SettingTunnel() {
-    const { data: { user_name } } = useSQLiteDiscordInfo()
-    const [status, setStatus] = useState<TunnelStatus>('running')
-
-    useEffect(() => {
-        const handleStatusChange = (running: TunnelStatus) => {
-            setStatus(running)
-        }
-
-        CloudflareController.onStatusChange(handleStatusChange)
-        return () => {
-            CloudflareController.offStatusChange(handleStatusChange)
-        }
-    }, [])
-
-    const toogleTunnelFn = async () => {
-        if (status === 'running') {
-            await CloudflareController.stop()
-            toast.success('Tunnel đã Tắt!')
-        } else {
-            await CloudflareController.start(user_name)
-            toast.success('Tunnel đã Bật!')
-        }
-    }
+    const { isStarting, isRunning, toggleTunnelFn } = useTunnelStatus()
 
     return (
         <>
             <li>Trạng thái: {" "}
                 {
-                    status === 'running' ? 'Đang chạy' :
-                    status === 'starting' ? 'Đang khởi động' :
+                    isRunning ? 'Đang chạy' :
+                    isStarting ? 'Đang khởi động' :
                     'Đã tắt'
                 }
             </li>
@@ -266,10 +232,10 @@ function SettingTunnel() {
                 <Button
                     type="button"
                     className="flex-1 overflow-clip relative"
-                    disabled={status === 'starting'}
-                    onClick={toogleTunnelFn}
+                    disabled={isStarting}
+                    onClick={toggleTunnelFn}
                 >
-                    {status === 'running' ? 'Tắt' : 'Bật'}
+                    {isRunning ? 'Tắt' : 'Bật'}
                 </Button>
             </div>
         </>

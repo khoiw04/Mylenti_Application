@@ -1,19 +1,29 @@
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check } from "@tauri-apps/plugin-updater";
 import type { Update } from "@tauri-apps/plugin-updater";
+import { updateStore } from "@/store";
 
 export class AutoUpdateTauriManagerClass {
     private updateData: Update | null = null
-    private allowUpdate = false
     private tracking = ''
     private percent = 0
 
+    private setState() {
+        updateStore.setState(prev => ({
+            ...prev,
+            tracking: this.tracking,
+            percent: this.percent.toFixed(2),
+            updateData: this.updateData
+        }))
+    }
+
     async init() {
         this.updateData = await check()
+        this.setState()
     }
 
     async update() {
-        if (this.updateData && this.allowUpdate) {
+        if (this.updateData) {
             let downloaded = 0;
             let contentLength = 0;
 
@@ -27,6 +37,7 @@ export class AutoUpdateTauriManagerClass {
                         const percent = ((downloaded / contentLength) * 100);
                         this.tracking = `${downloaded} / ${contentLength} bytes`,
                         this.percent = percent
+                        this.setState()
                         break;
                     }
                 }
@@ -35,19 +46,6 @@ export class AutoUpdateTauriManagerClass {
             await relaunch()
             return () => this.updateData?.close()
         }
-    }
-
-    getData() {
-        return {
-            tracking: this.tracking,
-            allowUpdate: this.allowUpdate,
-            percent: this.percent.toFixed(2),
-            updateData: this.updateData
-        }
-    }
-
-    setUpdate(boolean: boolean) {
-        this.allowUpdate = boolean
     }
 }
 

@@ -20,8 +20,7 @@
         "fullscreen": false,
         "decorations": false,
         "create": true,
-        "hiddenTitle": true,
-        "url": "http://localhost:3000"
+        "hiddenTitle": true
       }
     ],
     "security": {

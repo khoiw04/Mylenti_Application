@@ -6,11 +6,12 @@ import useTauriInit from '@/components/containers/api.useTauriInit'
 import { AppWindowStore, ThemeStore } from '@/store'
 import useSyncOBSOverlaySettings, { useInitOBSOverlaySettings, useSyncOBSDonateSetting } from '@/hooks/useRustOBSSettingsSync'
 import useSupabaseSepayAlertSend from '@/components/containers/db.useSupabaseSepayAlertSend'
-import useInitWebSocket from '@/components/containers/db.useInitWebSocket'
+import useInitWebSocket, { useAutoUpdateInit } from '@/components/containers/db.useInitWebSocket'
 import useTheme from '@/components/containers/db.useTheme';
 import useDiscordSepayAlertSend from '@/hooks/useDiscordSepayAlertSend';
 import useInitDiscordOauth from '@/components/containers/db.useInitDiscordOauth';
 import useInitGoogleOauth from '@/components/containers/db.useInitGoogleOauth';
+import useTunnelStatus from '@/hooks/useTunnelStatus';
 
 export default function Main() {
     // OAuth - INIT
@@ -32,12 +33,14 @@ export default function Main() {
     useSupabaseSepayAlertSend()
     useWebsocketOBSOverlaySend()
     useDiscordSepayAlertSend()
-
+    
     const { theme } = useStore(ThemeStore)
     
     const { appWindow } = useStore(AppWindowStore)
     if (!isTauri()) return null
     useTauriInit()
+    useTunnelStatus()
+    useAutoUpdateInit()
 
     return (
         <>

@@ -4,6 +4,7 @@ import useTauriSafeEffect from "@/hooks/useTauriSideEffect"
 import { safeParse, safeSend } from "@/lib/socket.safeJSONMessage"
 import { OBSOverlayTauriSettingsProps } from "@/store"
 import { websocketSendType } from '@/data/settings'
+import { AutoUpdateTauriManager } from "@/class/AutoUpdateTauriManager"
 
 export default function useInitWebSocket() {
   const OBSOverlayTauriSettingsRuntime = useStore(OBSOverlayTauriSettingsProps)
@@ -28,4 +29,10 @@ export default function useInitWebSocket() {
       OBSTauriWebSocket.disconnect()
     }
   }, [OBSOverlayTauriSettingsRuntime])
+}
+
+export function useAutoUpdateInit() {
+  useTauriSafeEffect(() => {
+      (async () => await AutoUpdateTauriManager.init())
+  }, [])
 }
