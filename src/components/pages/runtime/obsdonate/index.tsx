@@ -5,7 +5,7 @@ import { useStore } from "@tanstack/react-store";
 import DonateComponent from "@/components/presenters/ui-donatetype/component";
 import { OBSOverlayDataDonateWebsiteStore } from "@/store/obs-overlay-donate-website";
 import { OBSOverlayWebsiteSettingsStore } from "@/store";
-import { BinarytoBLOB, RandomNumberInRange } from "@/lib/utils";
+import { RandomNumberInRange } from "@/lib/utils";
 
 type DonatePayload = {
   name: string
@@ -64,7 +64,7 @@ export default function OBSDonate() {
           const res = await fetch('http://127.0.0.1:4545/tts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
+            body: JSON.stringify({ text, voice: 'vi' })
           });
 
           const blob = await res.blob();
@@ -87,7 +87,7 @@ export default function OBSDonate() {
             setCurrentDonate(null); 
             URL.revokeObjectURL(next.sound); 
             URL.revokeObjectURL(next.emoji); 
-          }, 10000);
+          }, 8000);
         });
 
         emojiAudio.onended = () => {

@@ -17,11 +17,14 @@ use tauri::{
 use tauri_plugin_shell::ShellExt;
 use tauri_plugin_shell::process::CommandChild;
 
+mod utils;
+mod gtts;
 mod donate_events;
 mod local_http_server;
 mod update;
 mod websocket;
 mod tunnel;
+mod tts_http_server;
 
 #[tauri::command]
 fn ping() -> String {
@@ -143,6 +146,10 @@ pub fn run() {
                     if let Err(e) = start_http_server(pool).await {
                         log::error!("❌ Lỗi khi chạy HTTP server: {:?}", e);
                     }
+                });
+
+                tauri::async_runtime::spawn(async {
+                    crate::tts_http_server::start_tts_http_server().await;
                 });
 
                 tauri::async_runtime::spawn(async move {

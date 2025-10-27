@@ -5,7 +5,7 @@ import { readDir, remove } from '@tauri-apps/plugin-fs'
 import useTauriSafeEffect from './useTauriSideEffect';
 import { OBSOverlayTauriSettingsProps, loadOBSSetting, saveOBSSetting } from '@/store';
 import { sanitizeOBSOverlaySettings } from '@/func/db.sanitizeOBSOverlaySettings';
-import { DonateVoiceController } from '@/class/DonateVoiceController';
+// import { DonateVoiceController } from '@/class/DonateVoiceController';
 
 export const useInitOBSOverlaySettings = () => {
   useTauriSafeEffect(() => {
@@ -59,11 +59,11 @@ export function useSyncOBSDonateSetting() {
     deleteAllMEIFolders()
   }, [])
 
-  useTauriSafeEffect(() => {
-    if (enableVoice) {
-      DonateVoiceController.start()
-    } else {
-      DonateVoiceController.stop()
-    }
-  }, [enableVoice])
+  // useTauriSafeEffect(() => {
+  //   if (enableVoice) {
+  //     DonateVoiceController.start()
+  //   } else {
+  //     DonateVoiceController.stop()
+  //   }
+  // }, [enableVoice])
 }
