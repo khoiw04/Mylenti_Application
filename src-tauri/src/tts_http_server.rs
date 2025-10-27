@@ -14,6 +14,7 @@ use std::{
 use tokio::{net::TcpListener, sync::RwLock};
 use std::time::Instant;
 use lazy_static::lazy_static;
+use tower_http::cors::{CorsLayer, Any};
 
 use crate::gtts::{get_tts, get_random_ipv6, State};
 
@@ -73,6 +74,7 @@ pub async fn start_tts_http_server() {
     let app = Router::new()
         .route("/tts", post(tts_handler))
         .route("/health", axum::routing::get(health_handler))
+        .layer(CorsLayer::new().allow_origin(Any))
         .layer(Extension(state));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 4545));
