@@ -153,7 +153,7 @@ function SettingUpdates() {
     return (
         <>
             <ul className="flex flex-col gap-y-1.5 text-neutral-400 text-sm">
-                <li>Phiên bản: 0.1.0</li>
+                <li>Phiên bản: 0.1.01</li>
                 <li>Ngày cập nhật: 18/09/2025</li>
             </ul>
             <Tooltip>
