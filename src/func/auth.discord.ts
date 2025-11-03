@@ -25,8 +25,8 @@ export const getDiscordToken = createServerFn({ method: 'POST' })
     const tokenData = await response.json()
 
     if (!response.ok) {
-      const message = tokenData.error_description || response.statusText
-      throw new Error(message)
+      // const message = tokenData.error_description || response.statusText
+      return { access_token: '', refresh_token: '', expires_in: '' }
     }
 
     const { access_token, refresh_token, expires_in } = tokenData
@@ -67,8 +67,7 @@ export const refreshDiscordToken = createServerFn({ method: 'POST' })
     const tokenData = await response.json()
 
     if (!response.ok) {
-      const message = tokenData.error_description || response.statusText
-      throw new Error(message)
+      return { access_token: '', expires_in: '' }
     }
 
     const { access_token, expires_in } = tokenData

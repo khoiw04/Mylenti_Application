@@ -84,5 +84,5 @@ pub async fn start_tts_http_server() {
 
     axum::serve(listener, app.into_make_service())
         .await
-        .expect("Không thể khởi động Axum server");
+        .expect("Không thể khởi động TTS server");
 }
