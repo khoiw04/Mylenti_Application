@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Mylenti",
-  "version": "0.1.01",
+  "version": "0.1.1",
   "identifier": "com.khoiw04.mylenti",
   "build": {
     "frontendDist": "../.output/public",
