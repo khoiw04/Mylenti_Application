@@ -15,7 +15,7 @@ const config = defineConfig({
     tanstackStart({
       customViteReactPlugin: true
     }),
-    viteReact(),
+    viteReact()
   ]
 })
 

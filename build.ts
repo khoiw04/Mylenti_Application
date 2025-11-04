@@ -31,6 +31,9 @@ try {
   console.log("Copying .output/server/chunks...");
   cpSync(join(outputDir, "server", "chunks"), join(targetDir, "server", "chunks"), { recursive: true });
 
+  console.log("Copying .output/server/node_modules...");
+  cpSync(join(outputDir, "server", "node_modules"), join(targetDir, "server", "node_modules"), { recursive: true });
+
   console.log("Packing server with nexe...");
   const tempExe = path.resolve("node_server_temp" + ext);
   console.log("Expecting nexe to write to:", tempExe);

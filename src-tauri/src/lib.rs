@@ -113,7 +113,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_shell::init())
         .setup({
-            let node_server_process = node_server_process.clone();
+            // let node_server_process = node_server_process.clone();
 
             move |app| {
                 log::info!("🔧 Đang chạy setup Tauri");
@@ -186,7 +186,7 @@ pub fn run() {
                     .tooltip("Ứng dụng đang chạy")
                     .menu(&tray_menu)
                     .on_menu_event(|app, event| {
-                        let window = app.get_webview_window("main1").unwrap();
+                        let window = app.get_webview_window("main").unwrap();
                         match event.id.as_ref() {
                             "show" => {
                                 window.show().unwrap();
@@ -208,7 +208,7 @@ pub fn run() {
                             ..
                         } => {
                             let app = tray.app_handle();
-                            if let Some(window) = app.get_webview_window("main1") {
+                            if let Some(window) = app.get_webview_window("main") {
                                 let _ = window.unminimize();
                                 let _ = window.show();
                                 let _ = window.set_focus();

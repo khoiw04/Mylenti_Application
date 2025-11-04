@@ -126,8 +126,18 @@ function SettingItems({ label, child, icon }: SettingItemsType) {
 
 function SettingLinks() {
     const { data: { user_name } } = useSQLiteDiscordInfo()    
+    const mainURL = `${APPCONFIG.URL.WEBSITE_URL}/community/${user_name}`
     return (
     <>
+        <li 
+            className="cursor-pointer text-neutral-400 text-sm w-fit *:hover:underline"
+        >
+            <button
+                onClick={async () => {await writeText(mainURL); toast.success(`Đã lấy được link Main!`)}}
+            >
+                Main
+            </button>
+        </li>    
         {links.map((link, i) => {
             const resolvedSlag = typeof link.slag === 'function' ? link.slag(user_name) : link.slag;
             const linkURL = APPCONFIG.URL.APP_URL(user_name) + resolvedSlag
@@ -135,7 +145,7 @@ function SettingLinks() {
                 <li 
                     key={`link_${i}`}
                     className="cursor-pointer text-neutral-400 text-sm w-fit *:hover:underline"
-                    >
+                >
                     <button
                         onClick={async () => {await writeText(linkURL); toast.success(`Đã lấy được link ${link.title}!`)}}
                     >

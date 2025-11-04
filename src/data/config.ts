@@ -11,7 +11,8 @@ export const APPCONFIG = {
         REDIRECTSUPABASEFORGETURL: 'http://localhost:3001/nho-mat-khau',
         REDIRECTSUPABASESIGNUPURL: 'http://localhost:3001/',
         DONATIONS_LINK: 'http://localhost:3000/runtime/obsdonate',
-        APP_URL: (user_name: string) => `https://${user_name}.khoiwn04.com`
+        APP_URL: (user_name: string) => `https://${user_name}.khoiwn04.com`,
+        WEBSITE_URL: 'https://mylenti.khoiwn04.com',
     },
     TOKEN: {
         ACCESS_DISCORD: 'discordAccessToken',
